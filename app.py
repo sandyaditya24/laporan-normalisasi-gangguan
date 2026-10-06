@@ -1,4 +1,4 @@
-﻿from flask import Flask, render_template_string, request, send_file, redirect, url_for
+from flask import Flask, render_template_string, request, send_file, redirect, url_for
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -200,15 +200,90 @@ HTML_TEMPLATE = """
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for i in range(1, 13) %}
+                                                {% set items_b = [
+                                                    ("PMT / CB Masukan dari Trafo I", "Dikelurkan"),
+                                                    ("PMT / CB Trafo I 20 / 70 KV 10 MVA", "Dikelurkan"),
+                                                    ("PMT / CB Trafo II 70 / 6,3 KV 5 MVA", "Dikelurkan"),
+                                                    ("PMT / CB Trafo III 70 / 6,3 KV 5 MVA", "Dikelurkan"),
+                                                    ("Riset Semua Gangguan", "Clear"),
+                                                    ("Koordinasi dengan Kontrol Building", "Siap Dimasukan"),
+                                                    ("PMT / CB Jatiluhur / Kosambi", "Dimasukan"),
+                                                    ("PMT / CB Trafo I 20 / 70 KV 10 MVA", "Dimasukan"),
+                                                    ("PMT / CB Masukan dari Trafo I", "Dimasukan"),
+                                                    ("PMT / CB Trafo II 70 / 6,3 KV 5 MVA Posisi TC", "Dimasukan"),
+                                                    ("PMT / CB Trafo III 70 / 6,3 KV 5 MVA Posisi TC", "Dimasukan"),
+                                                    ("Riset Semua Gangguan", "Clear")
+                                                ] %}
+                                                {% for desc, default_pos in items_b %}
                                                 <tr>
-                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b{{i}}" value="on" checked></td>
-                                                    <td class="text-center">{{i}}</td>
-                                                    <td>Item Pemeriksaan B{{i}}</td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_b{{i}}" value="Standar"></td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_b{{i}}"></td>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b{{ loop.index }}" value="on" checked></td>
+                                                    <td class="text-center">{{ loop.index }}</td>
+                                                    <td>{{ desc }}</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_b{{ loop.index }}" value="{{ default_pos }}"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_b{{ loop.index }}"></td>
                                                 </tr>
                                                 {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Bagian C -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded mt-3">C. RUANG PANEL 6 KV</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr>
+                                                    <th width="5%">Pilih</th>
+                                                    <th width="5%">No</th>
+                                                    <th width="45%">Uraian</th>
+                                                    <th width="25%">Keadaan / Posisi</th>
+                                                    <th width="20%">Pukul (Jam)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% set items_c = [
+                                                    ("Riset Semua Gangguan", "Clear"),
+                                                    ("PMT / CB Panel Masukan dari Trafo II", "Dimasukan"),
+                                                    ("PMT / CB Panel Masukan dari Trafo III", "Dimasukan"),
+                                                    ("PMT / CB Panel Trafo 500 KVA / Trafo I", "Dimasukan"),
+                                                    ("PMT / CB Panel Trafo 500 KVA / Trafo II", "Dimasukan"),
+                                                    ("PMT / CB Panel Keluaran 6 MB2", "Dimasukan"),
+                                                    ("Riset Semua Gangguan", "Clear")
+                                                ] %}
+                                                {% for desc, default_pos in items_c %}
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_c{{ loop.index }}" value="on" checked></td>
+                                                    <td class="text-center">{{ loop.index }}</td>
+                                                    <td>{{ desc }}</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_c{{ loop.index }}" value="{{ default_pos }}"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_c{{ loop.index }}"></td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Bagian D -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded mt-3">D. CB PANEL DISTRIBUSI 380 V AC TARUM BARAT</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr>
+                                                    <th width="5%">Pilih</th>
+                                                    <th width="5%">No</th>
+                                                    <th width="45%">Uraian</th>
+                                                    <th width="25%">Keadaan / Posisi</th>
+                                                    <th width="20%">Pukul (Jam)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_d1" value="on" checked></td>
+                                                    <td class="text-center">1</td>
+                                                    <td>CB Panel Distribusi 380 V AC Tarum Barat</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_d1" value="Dimasukan"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_d1"></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -881,7 +956,7 @@ def generate():
     doc.build(story)
 
     joined_details = "\n".join(wa_details)
-    raw_message = f"📢 *LAPORAN NORMALISASI / MANUVER* 📢\n\n📌 Kategori: {kategori}\n⚠️️ Kegiatan: {jenis_gangguan}\n📅 Waktu: {waktu}\n\n⚙️ *Detail Pelaksanaan:*\n{joined_details}\n\n✍️ *Pembuat Laporan:* {nama_group} ({nama_petugas})\n\n_(Laporan otomatis tercatat)_"
+    raw_message = f"📢 *LAPORAN NORMALISASI / MANUVER* 📢\n\n📌 Kategori: {kategori}\n⚠ Kegiatan: {jenis_gangguan}\n📅 Waktu: {waktu}\n\n⚙️ *Detail Pelaksanaan:*\n{joined_details}\n\n✍️ *Pembuat Laporan:* {nama_group} ({nama_petugas})\n\n_(Laporan otomatis tercatat)_"
     wa_message = urllib.parse.quote(raw_message)
 
     return render_template_string(RESULT_TEMPLATE, filename=filename, wa_message=wa_message)
@@ -889,8 +964,6 @@ def generate():
 @app.route("/download/<filename>")
 def download(filename):
     return send_file(os.path.join(PDF_FOLDER, filename), as_attachment=True)
-
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
