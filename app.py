@@ -19,8 +19,16 @@ PDF_FOLDER = "static"
 if not os.path.exists(PDF_FOLDER):
     os.makedirs(PDF_FOLDER)
 
-# Inisialisasi Google GenAI Client (mengambil API key dari environment variable sistem)
-ai_client = genai.Client()
+# Google GenAI Client dibuat saat endpoint AI dipanggil.
+# Dengan cara ini aplikasi utama tetap bisa berjalan jika API key belum diset.
+def get_ai_client():
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise RuntimeError(
+            "GEMINI_API_KEY belum diset. Set environment variable GEMINI_API_KEY "
+            "dengan API key Google Gemini terlebih dahulu."
+        )
+    return genai.Client(api_key=api_key)
 
 # In-memory database sederhana untuk menyimpan riwayat laporan baru & checklist
 HISTORY_LAPORAN_DB = []
@@ -1475,7 +1483,7 @@ AI_CHAT_TEMPLATE = """
                 const data = await response.json();
                 document.getElementById(loadingId).remove();
 
-                if (response.ok) {
+                if (response.ok && data.success !== false && data.answer) {
                     appendMessage(data.answer, 'ai');
                 } else {
                     appendMessage('Maaf, terjadi kesalahan: ' + (data.error || 'Gagal merespons'), 'ai');
@@ -1529,38 +1537,93 @@ def index():
 
 @app.route("/ai-chat", methods=["GET"])
 def ai_chat_page():
-    """Rute halaman antarmuka asisten AI Q&A"""
+    """Halaman antarmuka Asisten AI Q&A."""
     return render_template_string(AI_CHAT_TEMPLATE)
 
-@app.route("/ai-chat", methods=["GET"])
-def ai_chat_page():
-    """Rute halaman antarmuka asisten AI Q&A"""
-    return render_template_string(AI_CHAT_TEMPLATE)
 
 @app.route("/api/ask-ai", methods=["POST"])
 def ask_ai():
-    """Endpoint API backend untuk memproses pertanyaan menggunakan Gemini AI"""
-    data = request.get_json()
-    user_question = data.get("question", "")
-    
+    """Endpoint untuk menjawab pertanyaan pengguna dengan Google Gemini."""
+    data = request.get_json(silent=True) or {}
+    user_question = str(data.get("question", "")).strip()
+
     if not user_question:
-        return jsonify({"error": "Pertanyaan tidak boleh kosong"}), 400
-    
+        return jsonify({
+            "success": False,
+            "error": "Pertanyaan tidak boleh kosong."
+        }), 400
+
+    # Batasi input agar request tidak terlalu besar.
+    if len(user_question) > 8000:
+        return jsonify({
+            "success": False,
+            "error": "Pertanyaan terlalu panjang. Maksimal 8.000 karakter."
+        }), 400
+
+    system_instruction = (
+        "Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug "
+        "dan Perum Jasa Tirta II (PJT II). "
+        "Jawab dalam bahasa Indonesia yang jelas, ringkas, dan profesional. "
+        "Bantu menjelaskan operasi PLTA, gardu induk, gangguan, normalisasi, "
+        "checklist, SOP, keselamatan kerja, dan informasi umum. "
+        "Jangan mengarang data teknis, nomor SOP, nilai setting proteksi, atau "
+        "instruksi switching yang tidak diberikan pengguna. Jika informasi "
+        "tidak tersedia, katakan bahwa informasi tersebut perlu diverifikasi "
+        "dengan SOP/dokumen resmi dan petugas berwenang. "
+        "Untuk pekerjaan kelistrikan bertegangan atau switching, jangan menggantikan "
+        "prosedur keselamatan dan otorisasi petugas."
+    )
+
     try:
-        # Menggunakan model gemini-3.8-flash untuk respon teks yang cepat dan akurat
-        response = ai_client.models.generate_content(
+        client = get_ai_client()
+
+        response = client.models.generate_content(
             model="gemini-3.8-flash",
-            contents=(
-                "Anda adalah asisten virtual profesional untuk Sistem Manajemen PLTA Curug "
-                "dan Perum Jasa Tirta II (PJT II). Tugas Anda adalah membantu operator atau staf "
-                "menjawab pertanyaan teknis, SOP penanganan gangguan, normalisasi gardu induk, "
-                "maupun informasi umum secara ramah, akurat, dan profesional dalam bahasa Indonesia.\n\n"
-                f"Pertanyaan Pengguna: {user_question}"
-            )
+            contents=user_question,
+            config={
+                "system_instruction": system_instruction,
+                "temperature": 0.4,
+                "max_output_tokens": 1200,
+            },
         )
-        return jsonify({"answer": response.text})
+
+        answer = getattr(response, "text", None)
+
+        if not answer:
+            return jsonify({
+                "success": False,
+                "error": "Gemini tidak mengembalikan jawaban teks."
+            }), 502
+
+        return jsonify({
+            "success": True,
+            "answer": answer.strip()
+        })
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        # Jangan tampilkan detail internal Python ke pengguna.
+        print(f"[AI ERROR] {type(e).__name__}: {e}")
+
+        error_message = str(e).lower()
+        if "api key" in error_message or "gemini_api_key" in error_message:
+            message = (
+                "API Gemini belum dikonfigurasi. "
+                "Pastikan GEMINI_API_KEY sudah diset pada environment server."
+            )
+        elif "quota" in error_message or "resource_exhausted" in error_message:
+            message = "Kuota Gemini sedang habis/terbatas. Silakan coba lagi nanti."
+        elif "permission" in error_message or "unauthorized" in error_message:
+            message = "API key Gemini tidak memiliki izin yang diperlukan."
+        elif "not found" in error_message or "404" in error_message:
+            message = "Model Gemini tidak tersedia pada API key/versi API yang digunakan."
+        else:
+            message = "Terjadi kesalahan saat menghubungi layanan AI. Silakan coba lagi."
+
+        return jsonify({
+            "success": False,
+            "error": message
+        }), 500
+
 
 @app.route("/generate-laporan-baru", methods=["POST"])
 def generate_laporan_baru():
