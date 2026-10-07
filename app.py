@@ -1527,11 +1527,6 @@ def index():
     pdf_files = sorted(pdf_files, key=lambda x: x['date'], reverse=True)
     return render_template_string(HTML_TEMPLATE, pdf_files=pdf_files, history_laporan_baru=HISTORY_LAPORAN_DB)
 
-@app.route("/ai-chat", methods=["GET"])
-def ai_chat_page():
-    """Rute halaman antarmuka asisten AI Q&A"""
-    return render_template_string(AI_CHAT_TEMPLATE)
-
 @app.route("/api/ask-ai", methods=["POST"])
 def ask_ai():
     """Endpoint API backend untuk memproses pertanyaan menggunakan Gemini AI"""
@@ -1542,9 +1537,9 @@ def ask_ai():
         return jsonify({"error": "Pertanyaan tidak boleh kosong"}), 400
     
     try:
-        # Menggunakan model gemini-3.8-flash untuk respon teks yang cepat dan akurat
+        # Menggunakan model flash terbaru yang kompatibel dan stabil
         response = ai_client.models.generate_content(
-            model="gemini-3.8-flash",
+            model="gemini-flash-latest",
             contents=(
                 "Anda adalah asisten virtual profesional untuk Sistem Manajemen PLTA Curug "
                 "dan Perum Jasa Tirta II (PJT II). Tugas Anda adalah membantu operator atau staf "
