@@ -252,7 +252,7 @@ HTML_TEMPLATE = """
                         </div>
                         <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
                             <span class="badge bg-primary px-3 py-2 rounded-pill fs-6 fw-normal shadow-sm">
-                                <i class="fa-solid fa-shield-halved me-1"></i> Enterprise v3.5
+                                <i class="fa-solid fa-shield-halved me-1"></i> Enterprise v3.4
                             </span>
                             <div class="mt-2">
                                 <span class="badge bg-dark bg-switcher-badge px-3 py-2 rounded-pill fs-7 shadow-sm" onclick="gantiBackgroundPJT()">
@@ -497,13 +497,13 @@ HTML_TEMPLATE = """
                             </div>
 
                             <div class="mb-4" id="wrapper-jenis-otomatis" style="display: none;">
-                                <label for="jenis_gangguan_otomatis" class="form-label fw-bold text-secondary">Jenis Gangguan/Pengoperasian (Prosedur Panel Control Room)</label>
+                                <label for="jenis_gangguan_otomatis" class="form-label fw-bold text-secondary">Jenis Gangguan/Pengoperasian</label>
                                 <select class="form-select" id="jenis_gangguan_otomatis" name="jenis_gangguan_otomatis" onchange="switchOtomatisSub(this.value)">
-                                    <option value="" disabled selected>-- Pilih Checklist & Prosedur Operasi --</option>
+                                    <option value="" disabled selected>-- Pilih Jenis Checklist Otomatis --</option>
                                     <option value="CHECK LIST PENGAMANAN GANGGUAN / TRIP (GARDU INDUK 70 / 6,3 KV CURUG)">1. CHECK LIST PENGAMANAN GANGGUAN / TRIP (GARDU INDUK 70 / 6,3 KV CURUG)</option>
-                                    <option value="PROSEDUR PENGOPERASIAN & CONTROL ROOM (PLTA MINI HYDRO / CURUG)">2. PROSEDUR PENGOPERASIAN PANEL CONTROL ROOM & UNIT PLTA</option>
-                                    <option value="CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV JATILUHUR KE PENGHANTAR 70 KV KOSAMBI (PLN)">3. CHECK LIST PINDAH LINE (JATILUHUR -> KOSAMBI)</option>
-                                    <option value="CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV KOSAMBI KE PENGHANTAR 70 KV JATILUHUR (PLN)">4. CHECK LIST PINDAH LINE (KOSAMBI -> JATILUHUR)</option>
+                                    <option value="CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV JATILUHUR KE PENGHANTAR 70 KV KOSAMBI (PLN)">2. CHECK LIST PINDAH LINE (JATILUHUR -> KOSAMBI)</option>
+                                    <option value="CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV KOSAMBI KE PENGHANTAR 70 KV JATILUHUR (PLN)">3. CHECK LIST PINDAH LINE (KOSAMBI -> JATILUHUR)</option>
+                                    <option value="CHECK LIST OPERASI PLTA MINI HYDRO CURUG">4. CHECK LIST OPERASI PLTA MINI HYDRO CURUG</option>
                                 </select>
                             </div>
 
@@ -548,6 +548,7 @@ HTML_TEMPLATE = """
                                     <div class="alert alert-warning border-0 shadow-sm rounded-4 text-center">
                                         <b>CHECK LIST PENGAMANAN GANGGUAN / TRIP (GARDU INDUK 70 / 6,3 KV CURUG)</b>
                                     </div>
+
                                     <!-- A. RUANG PANEL 6,3 KV -->
                                     <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">A. RUANG PANEL 6,3 KV</h6>
                                     <div class="table-responsive mb-3">
@@ -562,137 +563,365 @@ HTML_TEMPLATE = """
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
 
-                                <!-- SUB-SECTION 2: PROSEDUR PANEL CONTROL ROOM & UNIT PLTA (BARU & PRESISI SESUAI GAMBAR) -->
-                                <div id="sub-section-control-room" style="display: none;">
-                                    <div class="alert alert-info border-0 shadow-sm rounded-4 text-center">
-                                        <b>PROSEDUR OPERASIONAL PANEL CONTROL ROOM & UNIT PLTA</b>
-                                    </div>
-                                    
-                                    <div class="p-3 mb-3 bg-light border rounded-3 text-secondary small">
-                                        <em>Catatan Penting:</em> TMA Udik 26–36 mohon diperhatikan apabila beban sudah turun dan air Udik kecil, maka Mini Hydro Stop (utamakan air Tr. TT & Tr Barat).
-                                    </div>
-
-                                    <!-- A. RUANG PANEL CONTROL ROOM -->
-                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">A. RUANG PANEL CONTROL ROOM</h6>
+                                    <!-- B. RUANG PANEL 20 KV BUILDING -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">B. RUANG PANEL 20 KV BUILDING</h6>
                                     <div class="table-responsive mb-3">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
-                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Posisi / Indikasi</th><th width="25%">Paraf / Keterangan</th></tr>
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
                                             </thead>
                                             <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b1" value="on" checked></td><td class="text-center">1</td><td>PMT / CB Masukan dari Trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b1" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b2" value="on" checked></td><td class="text-center">2</td><td>PMT / CB Trafo I 20 / 70 KV 10 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b2" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b3" value="on" checked></td><td class="text-center">3</td><td>PMT / CB Trafo II 70 / 6,3 KV 5 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b3" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b4" value="on" checked></td><td class="text-center">4</td><td>PMT / CB Trafo III 70 / 6,3 KV 5 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b4" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b4"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b5" value="on" checked></td><td class="text-center">5</td><td>Riset Semua Gangguan</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b5" value="Clear"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b5"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b6" value="on" checked></td><td class="text-center">6</td><td>Koordinasi dengan Kontrol Building</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b6" value="Siap Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b6"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b7" value="on" checked></td><td class="text-center">7</td><td>PMT / CB Jatiluhur / Kosambi</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b7" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b7"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b8" value="on" checked></td><td class="text-center">8</td><td>PMT / CB Trafo I 20 / 70 KV 10 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b8" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b8"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b9" value="on" checked></td><td class="text-center">9</td><td>PMT / CB Masukan dari Trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b9" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b9"></td></tr>
                                                 <tr>
-                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="cr_chk_1" value="on" checked></td>
-                                                    <td class="text-center">1</td>
-                                                    <td>Pada jendela alarm tidak ada indikasi gangguan</td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_pos_1" value="Normal"></td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_paraf_1" placeholder="Paraf"></td>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b10" value="on" checked></td>
+                                                    <td class="text-center">10</td>
+                                                    <td>
+                                                        PMT / CB Trafo II 70 / 6,3 KV 5 MVA Posisi TC. 
+                                                        <select class="form-select form-select-sm d-inline-block w-auto" name="tc_b10" style="display:inline-block; width:80px;">
+                                                            {% for i in range(1, 21) %}
+                                                            <option value="{{ i }}">{{ i }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_b10" value="Dimasukan"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_b10"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="cr_chk_2" value="on" checked></td>
-                                                    <td class="text-center">2</td>
-                                                    <td>Tinggi Muka Air (TMA Udik / Hilir) & Posisi saring sampah unit</td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_pos_2" value="Stabil / Aman"></td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_paraf_2" placeholder="Paraf"></td>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b11" value="on" checked></td>
+                                                    <td class="text-center">11</td>
+                                                    <td>
+                                                        PMT / CB Trafo III 70 / 6,3 KV 5 MVA Posisi TC. 
+                                                        <select class="form-select form-select-sm d-inline-block w-auto" name="tc_b11" style="display:inline-block; width:80px;">
+                                                            {% for i in range(1, 21) %}
+                                                            <option value="{{ i }}">{{ i }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_b11" value="Dimasukan"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_b11"></td>
                                                 </tr>
-                                                <tr>
-                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="cr_chk_3" value="on" checked></td>
-                                                    <td class="text-center">3</td>
-                                                    <td>Kriteria berhenti pada posisi stabil / indikator tombol stop</td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_pos_3" value="Menyala"></td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_paraf_3" placeholder="Paraf"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="cr_chk_4" value="on" checked></td>
-                                                    <td class="text-center">4</td>
-                                                    <td>Posisi Pintu Pembuangan</td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_pos_4" value="Tutup (Menyala)"></td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_paraf_4" placeholder="Paraf"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="cr_chk_5" value="on" checked></td>
-                                                    <td class="text-center">5</td>
-                                                    <td>Indikasi DS Phase Cubicle / GTA 030 JD</td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_pos_5" value="Masuk"></td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_paraf_5" placeholder="Paraf"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="cr_chk_6" value="on" checked></td>
-                                                    <td class="text-center">6</td>
-                                                    <td>Indikasi Earthing Switch / GTA 031 JS</td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_pos_6" value="Keluar"></td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_paraf_6" placeholder="Paraf"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="cr_chk_7" value="on" checked></td>
-                                                    <td class="text-center">7</td>
-                                                    <td>Indikasi CB 20 KV / LGB 001 JD (TPL Menyala)</td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_pos_7" value="Keluar"></td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_paraf_7" placeholder="Paraf"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="cr_chk_8" value="on" checked></td>
-                                                    <td class="text-center">8</td>
-                                                    <td>Indikasi Earthing Switch / LGB 031 JS</td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_pos_8" value="Keluar"></td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_paraf_8" placeholder="Paraf"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="cr_chk_9" value="on" checked></td>
-                                                    <td class="text-center">9</td>
-                                                    <td>Indikasi Unit Siap Jalan</td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_pos_9" value="Menyala"></td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="cr_paraf_9" placeholder="Paraf"></td>
-                                                </tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b12" value="on" checked></td><td class="text-center">12</td><td>Riset Semua Gangguan</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b12" value="Clear"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b12"></td></tr>
                                             </tbody>
                                         </table>
                                     </div>
 
-                                    <!-- B. CARA PENGOPERASIAN -->
-                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">B. CARA PENGOPERASIAN & STARTING UNIT</h6>
+                                    <!-- C. RUANG PANEL 6 KV -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">C. RUANG PANEL 6 KV</h6>
                                     <div class="table-responsive mb-3">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
-                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian Langkah</th><th width="25%">Setting / Pilihan</th><th width="20%">Keterangan / Jam</th></tr>
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
                                             </thead>
                                             <tbody>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="op_chk_1" value="on" checked></td><td class="text-center">1</td><td>Sistim Pengatur Unit</td><td><input type="text" class="form-control form-control-sm text-center" name="op_pos_1" value="Lokal"></td><td><input type="text" class="form-control form-control-sm text-center" name="op_ket_1"></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="op_chk_2" value="on" checked></td><td class="text-center">2</td><td>Sistim Komando Unit</td><td><input type="text" class="form-control form-control-sm text-center" name="op_pos_2" value="Manual / Auto"></td><td><input type="text" class="form-control form-control-sm text-center" name="op_ket_2"></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="op_chk_3" value="on" checked></td><td class="text-center">3</td><td>Sinkronisasi (Alat portable jika manual)</td><td><input type="text" class="form-control form-control-sm text-center" name="op_pos_3" value="Auto / Manual"></td><td><input type="text" class="form-control form-control-sm text-center" name="op_ket_3"></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="op_chk_4" value="on" checked></td><td class="text-center">4</td><td>Duga Muka Air / Kontrol Water Level</td><td><input type="text" class="form-control form-control-sm text-center" name="op_pos_4" value="ON"></td><td><input type="text" class="form-control form-control-sm text-center" name="op_ket_4"></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="op_chk_5" value="on" checked></td><td class="text-center">5</td><td>Pengoperasian Unit (Putaran Tanpa Beban -> Eksitasi -> Generator)</td><td><input type="text" class="form-control form-control-sm text-center" name="op_pos_5" value="Berkedip / Siap"></td><td><input type="text" class="form-control form-control-sm text-center" name="op_ket_5" placeholder="Tunggu Tombol Tdk Berkedip"></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="op_chk_6" value="on" checked></td><td class="text-center">6</td><td>Sinkronisasi Paralel dengan Jaringan (CB LGB001JD)</td><td><input type="text" class="form-control form-control-sm text-center" name="op_pos_6" value="Putar ke ON"></td><td><input type="text" class="form-control form-control-sm text-center" name="op_ket_6" placeholder="Pukul ... wib"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_c1" value="on" checked></td><td class="text-center">1</td><td>Riset Semua Gangguan</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_c1" value="Clear"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_c1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_c2" value="on" checked></td><td class="text-center">2</td><td>PMT / CB Panel Masukan dari Trafo II</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_c2" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_c2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_c3" value="on" checked></td><td class="text-center">3</td><td>PMT / CB Panel Masukan dari Trafo III</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_c3" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_c3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_c4" value="on" checked></td><td class="text-center">4</td><td>PMT / CB Panel Trafo 500 KVA / Trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_c4" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_c4"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_c5" value="on" checked></td><td class="text-center">5</td><td>PMT / CB Panel Trafo 500 KVA / Trafo II</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_c5" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_c5"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_c6" value="on" checked></td><td class="text-center">6</td><td>PMT / CB Panel Keluaran 6 MB2</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_c6" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_c6"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_c7" value="on" checked></td><td class="text-center">7</td><td>Riset Semua Gangguan</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_c7" value="Clear"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_c7"></td></tr>
                                             </tbody>
                                         </table>
                                     </div>
 
-                                    <!-- C. PENGATURAN BEBAN -->
-                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">C. PENGATURAN BEBAN</h6>
-                                    <div class="mb-3 p-3 bg-white border rounded-3">
-                                        <label class="form-label fw-bold text-secondary">Target Beban / Frekuensi:</label>
-                                        <div class="row g-2">
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" name="target_mw" placeholder="Masukkan Target MW (Cth: 5.5 MW)">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" name="metode_beban" value="Secara Bertahap" readonly>
-                                            </div>
-                                        </div>
+                                    <!-- D. CB PANEL DISTRIBUSI 380 V AC TARUM BARAT -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">D. CB PANEL DISTRIBUSI 380 V AC TARUM BARAT</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_d1" value="on" checked></td><td class="text-center">1</td><td>PMT / CB Panel Distribusi 380 V AC Tarum Barat</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_d1" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_d1"></td></tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
 
-                                <!-- SUB-SECTION 3: CHECK LIST PINDAH LINE (JTL -> KSB) -->
+                                <!-- SUB-SECTION 2: CHECK LIST PINDAH LINE (JATILUHUR -> KOSAMBI) -->
                                 <div id="sub-section-pindah-line-jtl-ksb" style="display: none;">
                                     <div class="alert alert-primary border-0 shadow-sm rounded-4 text-center">
                                         <b>CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI JATILUHUR KE KOSAMBI (F-20/DPL/IK.12-01)</b>
                                     </div>
+
+                                    <!-- A. RUANG PANEL 6 KV -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">A. RUANG PANEL 6 KV</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_a1" value="on" checked></td><td class="text-center">1</td><td>PMT/CB panel Trafo 500 KVA / Trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_a1" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_a1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_a2" value="on" checked></td><td class="text-center">2</td><td>PMT/CB panel Trafo 500 KVA / Trafo II</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_a2" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_a2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_a3" value="on" checked></td><td class="text-center">3</td><td>PMT/CB panel keluaran 6 MB2</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_a3" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_a3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_a4" value="on" checked></td><td class="text-center">4</td><td>PMT/CB panel masukan dari Trafo II</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_a4" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_a4"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_a5" value="on" checked></td><td class="text-center">5</td><td>PMT/CB panel masukan dari Trafo III</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_a5" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_a5"></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- B. RUANG PANEL 20 KV BUILDING -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">B. RUANG PANEL 20 KV BUILDING</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_b1" value="on" checked></td><td class="text-center">1</td><td>PMT/CB Masukan dari trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_b1" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_b1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_b2" value="on" checked></td><td class="text-center">2</td><td>PMT/CB Trafo I 20 / 70 KV 10 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_b2" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_b2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_b3" value="on" checked></td><td class="text-center">3</td><td>PMT/CB Trafo II 70 / 6,3 KV 5 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_b3" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_b3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_b4" value="on" checked></td><td class="text-center">4</td><td>PMT/CB Trafo III 70 / 6,3 KV 5 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_b4" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_b4"></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- C. PMT JATILUHUR BAY -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">C. PMT JATILUHUR BAY</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_c1" value="on" checked></td><td class="text-center">1</td><td>PMT / CB 70 KV Jatiluhur Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_c1" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_c1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_c2" value="on" checked></td><td class="text-center">2</td><td>PMS / DS Line 70 KV Jatiluhur Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_c2" value="Tdk. dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_c2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_c3" value="on" checked></td><td class="text-center">3</td><td>PMS / DS Arde Line 70 KV Jatiluhur Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_c3" value="Keluar"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_c3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_c4" value="on" checked></td><td class="text-center">4</td><td>PMS / DS Rel 70 KV Jatiluhur Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_c4" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_c4"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_c5" value="on" checked></td><td class="text-center">5</td><td>PMS / DS Arde Rel 70 KV Jatiluhur Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_c5" value="Keluar"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_c5"></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- D. PMT KOSAMBI BAY -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">D. PMT KOSAMBI BAY</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_d1" value="on" checked></td><td class="text-center">1</td><td>PMS / DS Arde Line 70 KV Kosambi Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_d1" value="Keluar"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_d1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_d2" value="on" checked></td><td class="text-center">2</td><td>PMS / DS Line 70 KV Kosambi Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_d2" value="Masuk"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_d2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_d3" value="on" checked></td><td class="text-center">3</td><td>PMS / DS Arde Rel 70 KV Kosambi Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_d3" value="Keluar"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_d3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_d4" value="on" checked></td><td class="text-center">4</td><td>PMS / DS Rel 70 KV Kosambi Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_d4" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_d4"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_d5" value="on" checked></td><td class="text-center">5</td><td>PMT / CB 70 KV Kosambi Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_d5" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_d5"></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- E. RUANG PANEL 20 KV BUILDING -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">E. RUANG PANEL 20 KV BUILDING</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_e1" value="on" checked></td><td class="text-center">1</td><td>PMT/CB Trafo I 20 / 70 KV 10 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_e1" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_e1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_e2" value="on" checked></td><td class="text-center">2</td><td>PMT/CB Masukan dari trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_e2" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_e2"></td></tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_e3" value="on" checked></td>
+                                                    <td class="text-center">3</td>
+                                                    <td>
+                                                        PMT/CB Trafo II 70 / 6,3 KV 5 MVA Posisi TC. 
+                                                        <select class="form-select form-select-sm d-inline-block w-auto" name="tc_pl_e3" style="display:inline-block; width:80px;">
+                                                            {% for i in range(1, 21) %}
+                                                            <option value="{{ i }}">{{ i }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_e3" value="Dimasukan"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_e3"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_e4" value="on" checked></td>
+                                                    <td class="text-center">4</td>
+                                                    <td>
+                                                        PMT/CB Trafo III 70 / 6,3 KV 5 MVA Posisi TC. 
+                                                        <select class="form-select form-select-sm d-inline-block w-auto" name="tc_pl_e4" style="display:inline-block; width:80px;">
+                                                            {% for i in range(1, 21) %}
+                                                            <option value="{{ i }}">{{ i }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_e4" value="Dimasukan"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_e4"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- F. RUANG PANEL 6 KV -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">F. RUANG PANEL 6 KV</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_f1" value="on" checked></td><td class="text-center">1</td><td>PMT/CB panel masukan dari Trafo II</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_f1" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_f1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_f2" value="on" checked></td><td class="text-center">2</td><td>PMT/CB panel masukan dari Trafo III</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_f2" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_f2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_f3" value="on" checked></td><td class="text-center">3</td><td>PMT/CB panel Trafo 500 KVA / Trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_f3" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_f3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_f4" value="on" checked></td><td class="text-center">4</td><td>PMT/CB panel Trafo 500 KVA / Trafo II</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_f4" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_f4"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_pl_f5" value="on" checked></td><td class="text-center">5</td><td>PMT/CB panel keluaran 6 MB2</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_pl_f5" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_pl_f5"></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Pelaporan Akhir -->
+                                    <div class="p-3 bg-light border rounded-3 mt-3">
+                                        <h6 class="fw-bold text-dark mb-2">Instruksi Akhir:</h6>
+                                        <p class="small text-secondary mb-0">IV. Melaporkan hasil pelaksanaan manuver (pindah line) ke kontrol Building.</p>
+                                    </div>
                                 </div>
 
-                                <!-- SUB-SECTION 4: CHECK LIST PINDAH LINE (KSB -> JTL) -->
+                                <!-- SUB-SECTION 3: CHECK LIST PINDAH LINE (KOSAMBI -> JATILUHUR) [F-20/DPL/IK.12-02] -->
                                 <div id="sub-section-pindah-line-ksb-jtl" style="display: none;">
                                     <div class="alert alert-success border-0 shadow-sm rounded-4 text-center">
                                         <b>CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI KOSAMBI KE JATILUHUR (F-20/DPL/IK.12-02)</b>
+                                    </div>
+
+                                    <!-- A. RUANG PANEL 6 KV -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">A. RUANG PANEL 6 KV</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_a1" value="on" checked></td><td class="text-center">1</td><td>PMT / CB panel trafo 500 KVA / Trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_a1" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_a1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_a2" value="on" checked></td><td class="text-center">2</td><td>PMT / CB panel trafo 500 KVA / Trafo II</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_a2" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_a2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_a3" value="on" checked></td><td class="text-center">3</td><td>PMT / CB panel keluaran 6 MB2</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_a3" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_a3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_a4" value="on" checked></td><td class="text-center">4</td><td>PMT / CB panel masukan dari Trafo II</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_a4" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_a4"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_a5" value="on" checked></td><td class="text-center">5</td><td>PMT / CB panel masukan dari Trafo III</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_a5" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_a5"></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- B. RUANG PANEL 20 KV BUILDING -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">B. RUANG PANEL 20 KV BUILDING</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_b1" value="on" checked></td><td class="text-center">1</td><td>PMT / CB Masukan dari trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_b1" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_b1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_b2" value="on" checked></td><td class="text-center">2</td><td>PMT / CB Trafo I 20 / 70 KV 10 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_b2" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_b2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_b3" value="on" checked></td><td class="text-center">3</td><td>PMT / CB Trafo II 70 / 6,3 KV 5 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_b3" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_b3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_b4" value="on" checked></td><td class="text-center">4</td><td>PMT / CB Trafo III 70 / 6,3 KV 5 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_b4" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_b4"></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- C. PMT KOSAMBI BAY -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">C. PMT KOSAMBI BAY</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_c1" value="on" checked></td><td class="text-center">1</td><td>PMT / CB 70 KV Kosambi Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_c1" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_c1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_c2" value="on" checked></td><td class="text-center">2</td><td>PMS / DS Line 70 KV Kosambi Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_c2" value="Tdk. dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_c2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_c3" value="on" checked></td><td class="text-center">3</td><td>PMS / DS Arde Line 70 KV Kosambi Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_c3" value="Keluar"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_c3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_c4" value="on" checked></td><td class="text-center">4</td><td>PMS / DS Rel 70 KV Kosambi Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_c4" value="Dikeluarkan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_c4"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_c5" value="on" checked></td><td class="text-center">5</td><td>PMS / DS Arde Rel 70 KV Kosambi Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_c5" value="Keluar"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_c5"></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- D. PMT JATILUHUR BAY -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">D. PMT JATILUHUR BAY</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_d1" value="on" checked></td><td class="text-center">1</td><td>PMS / DS Arde Line 70 KV Jatiluhur Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_d1" value="Keluar"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_d1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_d2" value="on" checked></td><td class="text-center">2</td><td>PMS / DS Line 70 KV Jatiluhur Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_d2" value="Masuk"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_d2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_d3" value="on" checked></td><td class="text-center">3</td><td>PMS / DS Arde Rel 70 KV Jatiluhur Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_d3" value="Keluar"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_d3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_d4" value="on" checked></td><td class="text-center">4</td><td>PMS / DS Rel 70 KV Jatiluhur Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_d4" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_d4"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_d5" value="on" checked></td><td class="text-center">5</td><td>PMT / CB 70 KV Jatiluhur Bay</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_d5" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_d5"></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- E. RUANG PANEL 20 KV BUILDING -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">E. RUANG PANEL 20 KV BUILDING</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_e1" value="on" checked></td><td class="text-center">1</td><td>PMT / CB Trafo I 20 / 70 KV 10 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_e1" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_e1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_e2" value="on" checked></td><td class="text-center">2</td><td>PMT / CB Masukan dari trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_e2" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_e2"></td></tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_e3" value="on" checked></td>
+                                                    <td class="text-center">3</td>
+                                                    <td>
+                                                        PMT / CB Trafo II 70 / 6,3 KV 5 MVA Posisi TC. 
+                                                        <select class="form-select form-select-sm d-inline-block w-auto" name="tc_ksb_e3" style="display:inline-block; width:80px;">
+                                                            {% for i in range(1, 21) %}
+                                                            <option value="{{ i }}">{{ i }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_e3" value="Dimasukan"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_e3"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_e4" value="on" checked></td>
+                                                    <td class="text-center">4</td>
+                                                    <td>
+                                                        PMT / CB Trafo III 70 / 6,3 KV 5 MVA Posisi TC. 
+                                                        <select class="form-select form-select-sm d-inline-block w-auto" name="tc_ksb_e4" style="display:inline-block; width:80px;">
+                                                            {% for i in range(1, 21) %}
+                                                            <option value="{{ i }}">{{ i }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_e4" value="Dimasukan"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_e4"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- F. RUANG PANEL 6 KV -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">F. RUANG PANEL 6 KV</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="20%">Pukul (Jam)</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_f1" value="on" checked></td><td class="text-center">1</td><td>PMT / CB panel masukan dari Trafo II</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_f1" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_f1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_f2" value="on" checked></td><td class="text-center">2</td><td>PMT / CB panel masukan dari Trafo III</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_f2" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_f2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_f3" value="on" checked></td><td class="text-center">3</td><td>PMT / CB panel Trafo 500 KVA / Trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_f3" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_f3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_f4" value="on" checked></td><td class="text-center">4</td><td>PMT / CB panel Trafo 500 KVA / Trafo II</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_f4" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_f4"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_ksb_f5" value="on" checked></td><td class="text-center">5</td><td>PMT / CB panel keluaran 6 MB2</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_ksb_f5" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_ksb_f5"></td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Pelaporan Akhir -->
+                                    <div class="p-3 bg-light border rounded-3 mt-3">
+                                        <h6 class="fw-bold text-dark mb-2">Instruksi Akhir:</h6>
+                                        <p class="small text-secondary mb-0">IV. Melaporkan hasil pelaksanaan manuver (pindah line) ke kontrol Building.</p>
                                     </div>
                                 </div>
 
@@ -829,7 +1058,6 @@ HTML_TEMPLATE = """
 
         function switchOtomatisSub(val) {
             document.getElementById('sub-section-gi-curug').style.display = val.includes("CHECK LIST PENGAMANAN GANGGUAN") ? 'block' : 'none';
-            document.getElementById('sub-section-control-room').style.display = val.includes("PROSEDUR PENGOPERASIAN & CONTROL ROOM") ? 'block' : 'none';
             document.getElementById('sub-section-pindah-line-jtl-ksb').style.display = val.includes("DARI PENGHANTAR 70 KV JATILUHUR KE PENGHANTAR 70 KV KOSAMBI") ? 'block' : 'none';
             document.getElementById('sub-section-pindah-line-ksb-jtl').style.display = val.includes("DARI PENGHANTAR 70 KV KOSAMBI") ? 'block' : 'none';
         }
@@ -916,7 +1144,7 @@ RESULT_TEMPLATE = """
                         <h4 class="mb-0 fw-bold"><i class="fa-solid fa-circle-check me-2"></i> Laporan Berhasil Dibuat!</h4>
                     </div>
                     <div class="card-body p-4 p-md-5">
-                        <p class="text-muted mb-0">Laporan dan file PDF telah berhasil disusun serta otomatis tersimpan ke Hystori Gangguan.</p>
+                        <p class="text-muted mb-4">Laporan dan file PDF telah berhasil disusun serta otomatis tersimpan ke Hystori Gangguan.</p>
                         <a href="/download/{{ filename }}" class="btn btn-primary w-100 mb-3 shadow-sm" target="_blank">
                             <i class="fa-solid fa-download me-2"></i> Unduh File PDF
                         </a>
@@ -1014,16 +1242,16 @@ def generate():
     doc = SimpleDocTemplate(filepath, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
     styles = getSampleStyleSheet()
     story = [
-        Paragraph("<b>LAPORAN NORMALISASI & CHECKLIST OPERASIONAL</b>", ParagraphStyle("Title", parent=styles["Heading1"], alignment=1, fontSize=14, spaceAfter=10)),
+        Paragraph("<b>LAPORAN NORMALISASI & CHECKLIST</b>", ParagraphStyle("Title", parent=styles["Heading1"], alignment=1, fontSize=14, spaceAfter=10)),
         Paragraph(f"<b>Kategori:</b> {kategori}", styles["Normal"]),
         Spacer(1, 4),
-        Paragraph(f"<b>Kegiatan / Modul:</b> {jenis_gangguan}", styles["Normal"]),
+        Paragraph(f"<b>Kegiatan:</b> {jenis_gangguan}", styles["Normal"]),
         Spacer(1, 4),
         Paragraph(f"<b>Waktu:</b> {waktu}", styles["Normal"])
     ]
     doc.build(story)
 
-    raw_msg = f"📢 *CHECKLIST NORMALISASI & OPERASIONAL* 📢\n\n📌 Kategori: {kategori}\n⚠ Kegiatan: {jenis_gangguan}\n📅 Waktu: {waktu}"
+    raw_msg = f"📢 *CHECKLIST NORMALISASI* 📢\n\n📌 Kategori: {kategori}\n⚠ Kegiatan: {jenis_gangguan}\n📅 Waktu: {waktu}"
     wa_message = urllib.parse.quote(raw_msg)
 
     return render_template_string(RESULT_TEMPLATE, filename=filename, wa_message=wa_message)
