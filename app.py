@@ -7,6 +7,7 @@ import os
 import re
 import urllib.parse
 from datetime import datetime
+import time
 from pegawai import pegawai_bp
 from faq import faq_bp
 from google import genai  # Pustaka untuk Google Gemini AI
@@ -1429,24 +1430,24 @@ AI_CHAT_TEMPLATE = """
         .typing-dots span:nth-child(2) { animation-delay: -1.1s; }
         .typing-dots span:nth-child(3) { animation-delay: -0.9s; }
         @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
-        /* Tambahan untuk merapikan teks dan poin jawaban AI */
-    .chat-message-content {
-        line-height: 1.6;
-        font-size: 14px;
-    }
-    .chat-message-content p {
-        margin-bottom: 10px;
-    }
-    .chat-message-content ul, 
-    .chat-message-content ol {
-        margin-top: 5px;
-        margin-bottom: 10px;
-        padding-left: 20px;
-    }
-    .chat-message-content li {
-        margin-bottom: 6px;
-    }
-</style>
+        
+        /* Tambahan CSS untuk merapikan teks dan poin jawaban AI */
+        .chat-message-content {
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        .chat-message-content p {
+            margin-bottom: 10px;
+        }
+        .chat-message-content ul, 
+        .chat-message-content ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+        .chat-message-content li {
+            margin-bottom: 6px;
+        }
     </style>
 </head>
 <body>
@@ -1537,8 +1538,14 @@ AI_CHAT_TEMPLATE = """
             avatarDiv.innerHTML = sender === 'user' ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
             
             const bubbleDiv = document.createElement('div');
-            bubbleDiv.className = 'bubble';
-            bubbleDiv.textContent = text;
+            bubbleDiv.className = 'bubble chat-message-content';
+            
+            // Menggunakan innerHTML agar tag poin/list atau teks tebal dari AI ter-render rapi
+            if (sender === 'ai') {
+                bubbleDiv.innerHTML = text.replace(/\\n/g, '<br>');
+            } else {
+                bubbleDiv.textContent = text;
+            }
             
             messageDiv.appendChild(avatarDiv);
             messageDiv.appendChild(bubbleDiv);
@@ -1579,7 +1586,6 @@ AI_CHAT_TEMPLATE = """
 
 @app.route("/")
 def index():
-    # Mengambil daftar file PDF tersimpan di folder static untuk riwayat
     pdf_files = []
     if os.path.exists(PDF_FOLDER):
         for f in os.listdir(PDF_FOLDER):
@@ -1589,7 +1595,6 @@ def index():
                 date_str = datetime.fromtimestamp(mod_time).strftime('%Y-%m-%d %H:%M:%S')
                 pdf_files.append({"name": f, "date": date_str})
     
-    # Urutkan berdasarkan waktu terbaru
     pdf_files = sorted(pdf_files, key=lambda x: x['date'], reverse=True)
     return render_template_string(HTML_TEMPLATE, pdf_files=pdf_files, history_laporan_baru=HISTORY_LAPORAN_DB)
 
@@ -1597,10 +1602,6 @@ def index():
 def ai_chat_page():
     """Halaman antarmuka Asisten AI Q&A."""
     return render_template_string(AI_CHAT_TEMPLATE)
-
-import time  # Pastikan modul time sudah diimpor di bagian atas app.py jika belum
-
-import time  # Pastikan modul time ada di bagian paling atas file app.py
 
 @app.route("/api/ask-ai", methods=["POST"])
 def ask_ai():
@@ -1617,7 +1618,7 @@ def ask_ai():
 
         client = genai.Client(api_key=api_key)
         
-       formatted_prompt = (
+        formatted_prompt = (
             "Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug & PJT II. "
             "Berikan jawaban secara langsung, to the point, dan terstruktur rapi menggunakan poin-poin. "
             "JANGAN gunakan kalimat basa-basi pembuka seperti 'Selamat siang', 'Selamat malam', atau 'Terima kasih atas pertanyaan Anda'. "
@@ -1625,7 +1626,6 @@ def ask_ai():
             f"Pertanyaan: {user_question}"
         )
 
-        # Menggunakan model produksi terbaru yang aktif di akun Google AI Studio Anda
         response = client.models.generate_content(
             model="gemini-3.5-flash",
             contents=formatted_prompt,
@@ -1640,7 +1640,6 @@ def ask_ai():
     except Exception as e:
         print(f"[AI ERROR] {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
-
 
 @app.route("/generate-laporan-baru", methods=["POST"])
 def generate_laporan_baru():
