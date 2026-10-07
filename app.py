@@ -1580,14 +1580,10 @@ def ask_ai():
     if not api_key:
         return jsonify({"success": False, "error": "API Gemini belum dikonfigurasi. Set GEMINI_API_KEY pada environment server."}), 500
 
-  try:
-        from google.genai import types
-        client = genai.Client(
-            api_key=api_key,
-            http_options=types.HttpOptions(timeout=45000)
-        )
-    except Exception:
+    try:
         client = get_ai_client()
+    except Exception as e:
+        return jsonify({"success": False, "error": f"Gagal menginisialisasi AI Client: {str(e)}"}), 500
 
     max_retries = 3
     delay = 2
@@ -1596,15 +1592,14 @@ def ask_ai():
 
     for attempt in range(max_retries):
         try:
-            # Gunakan format pemanggilan model eksplisit
             response = client.models.generate_content(
                 model="gemini-1.5-flash",
                 contents=user_question,
-                config=types.GenerateContentConfig(
-                    system_instruction=system_instruction,
-                    temperature=0.4,
-                    max_output_tokens=1200,
-                )
+                config={
+                    "system_instruction": system_instruction,
+                    "temperature": 0.4,
+                    "max_output_tokens": 1200,
+                },
             )
             answer = getattr(response, "text", None)
             if answer:
@@ -1625,14 +1620,9 @@ def ask_ai():
             err = str(last_exception).lower()
             if "quota" in err or "resource_exhausted" in err:
                 msg = "Kuota Gemini sedang habis atau terbatas. Silakan coba lagi nanti."
-            elif "503" in err or "unavailable" in err or "overloaded" in err:
-                msg = "Layanan AI sedang mengalami lonjakan permintaan tinggi (503). Silakan coba beberapa saat lagi."
             elif "not found" in err or "404" in err:
                 msg = "Model AI tidak ditemukan. Periksa konfigurasi nama model di server."
-            elif "timeout" in err:
-                msg = "Koneksi ke layanan AI terlalu lama. Periksa internet/server lalu coba lagi."
             else:
-                # Menampilkan detail error asli di pesan agar mudah dilacak jika masih terjadi kendala
                 msg = f"Terjadi kesalahan AI: {type(last_exception).__name__} - {str(last_exception)}"
         else:
             msg = "Gemini tidak mengembalikan jawaban teks."
