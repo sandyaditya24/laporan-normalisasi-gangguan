@@ -1532,11 +1532,6 @@ def ai_chat_page():
     """Rute halaman antarmuka asisten AI Q&A"""
     return render_template_string(AI_CHAT_TEMPLATE)
 
-@app.route("/ai-chat", methods=["GET"])
-def ai_chat_page():
-    """Rute halaman antarmuka asisten AI Q&A"""
-    return render_template_string(AI_CHAT_TEMPLATE)
-
 @app.route("/api/ask-ai", methods=["POST"])
 def ask_ai():
     """Endpoint API backend untuk memproses pertanyaan menggunakan Gemini AI"""
