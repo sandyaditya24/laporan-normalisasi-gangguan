@@ -1551,10 +1551,11 @@ def ai_chat_page():
     """Halaman antarmuka Asisten AI Q&A."""
     return render_template_string(AI_CHAT_TEMPLATE)
 
+import time  # Pastikan modul time sudah diimpor di bagian atas app.py jika belum
 
 @app.route("/api/ask-ai", methods=["POST"])
 def ask_ai():
-    """Endpoint untuk memproses pertanyaan menggunakan Google Gemini."""
+    """Endpoint untuk memproses pertanyaan menggunakan Google Gemini dengan mekanisme retry."""
     data = request.get_json(silent=True) or {}
     user_question = str(data.get("question", "")).strip()
 
@@ -1573,54 +1574,69 @@ def ask_ai():
         "dengan SOP resmi dan petugas berwenang."
     )
 
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return jsonify({"success": False, "error": "API Gemini belum dikonfigurasi. Set GEMINI_API_KEY pada environment server."}), 500
+
     try:
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            raise RuntimeError("GEMINI_API_KEY belum diset.")
-
-        try:
-            from google.genai import types
-            client = genai.Client(
-                api_key=api_key,
-                http_options=types.HttpOptions(timeout=45000)
-            )
-        except Exception:
-            client = get_ai_client()
-
-        response = client.models.generate_content(
-            model="gemini-3.8-flash",
-            contents=user_question,
-            config={
-                "system_instruction": system_instruction,
-                "temperature": 0.4,
-                "max_output_tokens": 1200,
-            },
+        from google.genai import types
+        client = genai.Client(
+            api_key=api_key,
+            http_options=types.HttpOptions(timeout=45000)
         )
+    except Exception:
+        client = get_ai_client()
 
-        answer = getattr(response, "text", None)
-        if not answer:
-            return jsonify({"success": False, "error": "Gemini tidak mengembalikan jawaban teks."}), 502
+    # Mekanisme Retry otomatis hingga 3 kali jika terjadi gangguan sementara (misal 503 Service Unavailable)
+    max_retries = 3
+    delay = 2
+    answer = None
+    last_exception = None
 
-        return jsonify({"success": True, "answer": answer.strip()})
+    for attempt in range(max_retries):
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",  # Menggunakan model stabil yang cepat dan handal
+                contents=user_question,
+                config={
+                    "system_instruction": system_instruction,
+                    "temperature": 0.4,
+                    "max_output_tokens": 1200,
+                },
+            )
+            answer = getattr(response, "text", None)
+            if answer:
+                break
+        except Exception as e:
+            last_exception = e
+            err_str = str(e).lower()
+            # Jika error berkaitan dengan server sibuk (503 / unavailable / overloaded), coba lagi
+            if "503" in err_str or "unavailable" in err_str or "overloaded" in err_str:
+                time.sleep(delay)
+                delay *= 2  # Exponential backoff
+                continue
+            else:
+                break  # Keluar loop jika error selain server sibuk
 
-    except Exception as e:
-        print(f"[AI ERROR] {type(e).__name__}: {e}")
-        err = str(e).lower()
-
-        if "api key" in err or "gemini_api_key" in err:
-            msg = "API Gemini belum dikonfigurasi. Set GEMINI_API_KEY pada environment server."
-        elif "quota" in err or "resource_exhausted" in err:
-            msg = "Kuota Gemini sedang habis atau terbatas. Silakan coba lagi nanti."
-        elif "permission" in err or "unauthorized" in err:
-            msg = "API key Gemini tidak memiliki izin yang diperlukan."
-        elif "not found" in err or "404" in err:
-            msg = "Model Gemini tidak tersedia pada API key atau versi API yang digunakan."
-        elif "timeout" in err or "timed out" in err:
-            msg = "Koneksi ke layanan AI terlalu lama. Periksa internet/server lalu coba lagi."
+    if not answer:
+        if last_exception:
+            print(f"[AI ERROR] {type(last_exception).__name__}: {last_exception}")
+            err = str(last_exception).lower()
+            if "quota" in err or "resource_exhausted" in err:
+                msg = "Kuota Gemini sedang habis atau terbatas. Silakan coba lagi nanti."
+            elif "503" in err or "unavailable" in err or "overloaded" in err:
+                msg = "Layanan AI sedang mengalami lonjakan permintaan tinggi (503). Silakan coba beberapa saat lagi."
+            elif "timeout" in err:
+                msg = "Koneksi ke layanan AI terlalu lama. Periksa internet/server lalu coba lagi."
+            else:
+                msg = "Terjadi kesalahan saat menghubungi layanan AI. Cek terminal Flask untuk detail."
         else:
-            msg = "Terjadi kesalahan saat menghubungi layanan AI. Cek terminal Flask untuk detail."
+            msg = "Gemini tidak mengembalikan jawaban teks."
+        
+        return jsonify({"success": False, "error": msg}), 502
 
-        return jsonify({"success": False, "error": msg}), 500
+    return jsonify({"success": True, "answer": answer.strip()})
+
 
 
 @app.route("/generate-laporan-baru", methods=["POST"])
