@@ -3,7 +3,7 @@ from flask import Blueprint, render_template_string
 # Membuat Blueprint untuk modul Pegawai
 pegawai_bp = Blueprint('pegawai', __name__)
 
-# Template HTML khusus untuk bagian Struktural Pegawai (Kiri: Operasional, Kanan: Pemeliharaan, Tema Unsur Kimia/Sains)
+# Template HTML khusus untuk bagian Struktural Pegawai (Operasional: Kelompok I - IV berurutan)
 PEGAWAI_SECTION_TEMPLATE = """
 <style>
     .chemistry-plant-container {
@@ -14,7 +14,6 @@ PEGAWAI_SECTION_TEMPLATE = """
         overflow: hidden;
         color: #f8fafc;
     }
-    /* Efek latar belakang unsur kimia / molekul abstrak */
     .chemistry-plant-container::before {
         content: "⚗️ ⚛️ 🧪 ⚡";
         position: absolute;
@@ -59,12 +58,10 @@ PEGAWAI_SECTION_TEMPLATE = """
         background: linear-gradient(135deg, #e0f2fe, #bae6fd);
         border-color: #0284c7;
     }
-    /* Sisi Kiri: Operasional (Nuansa Kimia Air / Cyan - Teal) */
     .card-operasional {
         background: linear-gradient(135deg, #f0fdf4, #ccfbf1);
         border-color: #14b8a6;
     }
-    /* Sisi Kanan: Pemeliharaan (Nuansa Energi / Amber - Copper) */
     .card-pemeliharaan {
         background: linear-gradient(135deg, #fefce8, #fef08a);
         border-color: #eab308;
@@ -177,7 +174,7 @@ PEGAWAI_SECTION_TEMPLATE = """
                 <div class="chem-card card-operasional">
                     <span class="chem-badge badge-operasional"><i class="fa-solid fa-droplet me-1"></i> Formula Operasi</span>
                     <h6 class="fw-bold mb-1 text-dark">Endang Maryadi</h6>
-                    <p class="small text-teal fw-semibold mb-0" style="color: #0d9488;">Asisten Manajer Operasi Jaringan</p>
+                    <p class="small fw-semibold mb-0" style="color: #0d9488;">Asisten Manajer Operasi Jaringan</p>
                 </div>
 
                 <!-- KANAN: ASISTEN MANAJER PEMELIHARAAN -->
@@ -197,21 +194,21 @@ PEGAWAI_SECTION_TEMPLATE = """
             <!-- LEVEL 4: PEMISAHAN KOLOM (KIRI = OPERASI, KANAN = PEMELIHARAAN) -->
             <div class="branch-container">
                 
-                <!-- KOLOM KIRI: OPERASIONAL -->
+                <!-- KOLOM KIRI: OPERASIONAL (KELOMPOK I - IV) -->
                 <div class="branch-column">
-                    <div class="branch-title bg-teal text-white" style="background: #0d9488;">
+                    <div class="branch-title text-white" style="background: #0d9488;">
                         <i class="fa-solid fa-arrows-split-up-and-left me-1"></i> Sektor Operasional (Kiri)
                     </div>
 
-                    <!-- Ahlan Sopiana -->
+                    <!-- 1. Saepudin (Kelompok I) -->
                     <div class="chem-card card-operasional w-100" style="max-width: 100%;">
-                        <span class="chem-badge badge-operasional">Kelompok IV</span>
-                        <h6 class="fw-bold mb-1 text-dark">Ahlan Sopiana</h6>
+                        <span class="chem-badge badge-operasional">Kelompok I</span>
+                        <h6 class="fw-bold mb-1 text-dark">Saepudin</h6>
                         <p class="small text-muted mb-1">Supervisor Operasi Mini Hydro, GI & PETT</p>
-                        <span class="team-badge"><strong>Tim:</strong> Lugi Rama Diansyah, Rizal Kurniawan</span>
+                        <span class="team-badge"><strong>Tim:</strong> Ibnu Aulia, Willy Wiriawan</span>
                     </div>
 
-                    <!-- Yadi Suwarma -->
+                    <!-- 2. Yadi Suwarma (Kelompok II) -->
                     <div class="chem-card card-operasional w-100" style="max-width: 100%;">
                         <span class="chem-badge badge-operasional">Kelompok II</span>
                         <h6 class="fw-bold mb-1 text-dark">Yadi Suwarma</h6>
@@ -219,7 +216,7 @@ PEGAWAI_SECTION_TEMPLATE = """
                         <span class="team-badge"><strong>Tim:</strong> Achmad Hidayat, Angga Hermawan</span>
                     </div>
 
-                    <!-- Andriana -->
+                    <!-- 3. Andriana (Kelompok III) -->
                     <div class="chem-card card-operasional w-100" style="max-width: 100%;">
                         <span class="chem-badge badge-operasional">Kelompok III</span>
                         <h6 class="fw-bold mb-1 text-dark">Andriana, ST</h6>
@@ -227,18 +224,18 @@ PEGAWAI_SECTION_TEMPLATE = """
                         <span class="team-badge"><strong>Tim:</strong> Ejan Suryadi, Yanuar Utomo</span>
                     </div>
 
-                    <!-- Saepudin -->
+                    <!-- 4. Ahlan Sopiana (Kelompok IV) -->
                     <div class="chem-card card-operasional w-100" style="max-width: 100%;">
-                        <span class="chem-badge badge-operasional">Kelompok I</span>
-                        <h6 class="fw-bold mb-1 text-dark">Saepudin</h6>
+                        <span class="chem-badge badge-operasional">Kelompok IV</span>
+                        <h6 class="fw-bold mb-1 text-dark">Ahlan Sopiana</h6>
                         <p class="small text-muted mb-1">Supervisor Operasi Mini Hydro, GI & PETT</p>
-                        <span class="team-badge"><strong>Tim:</strong> Ibnu Aulia, Willy Wiriawan</span>
+                        <span class="team-badge"><strong>Tim:</strong> Lugi Rama Diansyah, Rizal Kurniawan</span>
                     </div>
                 </div>
 
                 <!-- KOLOM KANAN: PEMELIHARAAN -->
                 <div class="branch-column">
-                    <div class="branch-title bg-warning text-dark" style="background: #eab308;">
+                    <div class="branch-title text-dark" style="background: #eab308;">
                         <i class="fa-solid fa-gears me-1"></i> Sektor Pemeliharaan (Kanan)
                     </div>
 
