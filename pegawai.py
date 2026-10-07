@@ -29,62 +29,62 @@ PEGAWAI_SECTION_TEMPLATE = """
                     <tr>
                         <td class="text-center fw-bold">1</td>
                         <td class="fw-semibold">General Manajer PLTA</td>
-                        <td>BUDIYO, ST[cite: 15]</td>
+                        <td>BUDIYO, ST</td>
                         <td class="text-muted small">-</td>
                     </tr>
                     <tr>
                         <td class="text-center fw-bold">2</td>
                         <td class="fw-semibold">Manajer Operasional Jaringan</td>
-                        <td>CARTONO, ST[cite: 14]</td>
+                        <td>CARTONO, ST</td>
                         <td class="text-muted small">-</td>
                     </tr>
                     <tr>
                         <td class="text-center fw-bold">3</td>
                         <td class="fw-semibold">Asisten Manajer Pemeliharaan</td>
-                        <td>SUMITRA DJARNUDJI, ST[cite: 13]</td>
-                        <td class="text-muted small">Gardu Induk Curug, Mini Hydro, dll[cite: 13]</td>
+                        <td>SUMITRA DJARNUDJI, ST</td>
+                        <td class="text-muted small">Gardu Induk Curug, Mini Hydro, dll</td>
                     </tr>
                     <tr>
                         <td class="text-center fw-bold">4</td>
                         <td class="fw-semibold">Supervisor Pemeliharaan Mini Hydro & GI Curug</td>
-                        <td>Mulyadi[cite: 12]</td>
-                        <td class="text-muted small">Kholidin Tri Sandy Nasution, Sandy Aditya, dll[cite: 12]</td>
+                        <td>Mulyadi</td>
+                        <td class="text-muted small">Kholidin Tri Sandy Nasution, Sandy Aditya, dll</td>
                     </tr>
                     <tr>
                         <td class="text-center fw-bold">5</td>
                         <td class="fw-semibold">Supervisor Operasi Mini Hydro (Kel. IV)</td>
-                        <td>Ahlan Sopiana[cite: 6]</td>
-                        <td class="text-muted small">Lugi Rama Diansyah, Rizal Kurniawan, dll[cite: 6]</td>
+                        <td>Ahlan Sopiana</td>
+                        <td class="text-muted small">Lugi Rama Diansyah, Rizal Kurniawan, dll</td>
                     </tr>
                     <tr>
                         <td class="text-center fw-bold">6</td>
                         <td class="fw-semibold">Supervisor Operasi Mini Hydro (Kel. II)</td>
-                        <td>Yadi Suwarma[cite: 7]</td>
-                        <td class="text-muted small">Achmad Hidayat, Angga Hermawan, dll[cite: 7]</td>
+                        <td>Yadi Suwarma</td>
+                        <td class="text-muted small">Achmad Hidayat, Angga Hermawan, dll</td>
                     </tr>
                     <tr>
                         <td class="text-center fw-bold">7</td>
                         <td class="fw-semibold">Supervisor Operasi Mini Hydro (Kel. III)</td>
-                        <td>Andriana, ST[cite: 8]</td>
-                        <td class="text-muted small">Ejan Suryadi, Yanuar Utomo Mandala Putra, dll[cite: 8]</td>
+                        <td>Andriana, ST</td>
+                        <td class="text-muted small">Ejan Suryadi, Yanuar Utomo Mandala Putra, dll</td>
                     </tr>
                     <tr>
                         <td class="text-center fw-bold">8</td>
                         <td class="fw-semibold">Supervisor Operasi Mini Hydro (Kel. I)</td>
-                        <td>Saepudin[cite: 9]</td>
-                        <td class="text-muted small">Ibnu Aulia, Willy Wiriawan Hasan Mulyadi, S.T., dll[cite: 9]</td>
+                        <td>Saepudin</td>
+                        <td class="text-muted small">Ibnu Aulia, Willy Wiriawan Hasan Mulyadi, S.T., dll</td>
                     </tr>
                     <tr>
                         <td class="text-center fw-bold">9</td>
                         <td class="fw-semibold">Supervisor Pemeliharaan SUTT & SUTM Curug</td>
-                        <td>Ahmad Hotib[cite: 10]</td>
-                        <td class="text-muted small">Staf terkait pemeliharaan SUTT & SUTM[cite: 10]</td>
+                        <td>Ahmad Hotib</td>
+                        <td class="text-muted small">Staf terkait pemeliharaan SUTT & SUTM</td>
                     </tr>
                     <tr>
                         <td class="text-center fw-bold">10</td>
                         <td class="fw-semibold">Supervisor Pemeliharaan Pompa Elektrik</td>
-                        <td>Yosep Yusnandar, S.T.[cite: 11]</td>
-                        <td class="text-muted small">Akbar Jejef Maulana, S.T., Ade Irfan Sopian, dll[cite: 11]</td>
+                        <td>Yosep Yusnandar, S.T.</td>
+                        <td class="text-muted small">Akbar Jejef Maulana, S.T., Ade Irfan Sopian, dll</td>
                     </tr>
                     <tr>
                         <td class="text-center fw-bold">11</td>
