@@ -26,27 +26,17 @@
         }
         .enterprise-wrapper { max-width: 1450px; margin: 0 auto; }
         .dashboard-header {
-            background: var(--card-bg);
-            border-radius: 20px;
-            backdrop-filter: blur(16px);
-            padding: 2rem 2.5rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            position: relative;
-            overflow: hidden;
+            background: var(--card-bg); border-radius: 20px; backdrop-filter: blur(16px);
+            padding: 2rem 2.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4); position: relative; overflow: hidden;
         }
         .dashboard-header::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 6px; height: 100%;
+            content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%;
             background: var(--primary-gradient);
         }
         .menu-sidebar {
-            background: var(--card-bg);
-            border-radius: 20px;
-            backdrop-filter: blur(16px);
-            padding: 1.75rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            background: var(--card-bg); border-radius: 20px; backdrop-filter: blur(16px);
+            padding: 1.75rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
         .menu-btn {
@@ -134,18 +124,13 @@
                             <span class="badge bg-primary px-3 py-2 rounded-pill fs-6 fw-normal shadow-sm">
                                 <i class="fa-solid fa-shield-halved me-1"></i> Enterprise v3.4
                             </span>
-                            <div class="mt-2">
-                                <span class="badge bg-dark bg-switcher-badge px-3 py-2 rounded-pill fs-7 shadow-sm" onclick="gantiBackgroundPJT()">
-                                    <i class="fa-solid fa-image me-1"></i> Background PJT II (<span id="bgName">Curug Tempo Dulu</span>)
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- LAYOUT UTAMA -->
+        <!-- LAYOUT UTAMA: SIDEBAR & KONTEN -->
         <div class="row g-4">
             <!-- SIDEBAR NAVIGASI -->
             <div class="col-lg-3">
@@ -165,6 +150,7 @@
                                 </button>
                             </div>
                         </div>
+
                         <button type="button" class="btn menu-btn" id="btnMenuForm" onclick="pilihMenu('form')">
                             <i class="fa-solid fa-clipboard-list fa-fw"></i> Form Normalisasi & Checklist
                         </button>
@@ -246,7 +232,7 @@
                     </div>
                 </div>
 
-                <!-- 3. SEJARAH -->
+                <!-- 3. SEJARAH BENDUNG CURUG -->
                 <div class="card content-card mb-4" id="container-sejarah" style="display: none;">
                     <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()"><i class="fa-solid fa-xmark"></i></button>
                     <div class="card-header-custom text-white text-center">
@@ -259,6 +245,94 @@
 
                 <!-- STRUKTURAL PEGAWAI WRAPPER -->
                 <div id="container-struktural-pegawai-wrapper"></div>
+
+                <!-- 4. FORM LAPORAN NORMALISASI & CHECKLIST UTAMA -->
+                <div class="card content-card" id="container-form-laporan" style="display: none;">
+                    <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="card-header-custom text-white text-center">
+                        <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-clipboard-list me-2"></i> FORM LAPORAN NORMALISASI & CHECKLIST</h3>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <form method="POST" action="/generate">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-secondary">Pilih Kategori / Lokasi:</label>
+                                <select class="form-select" id="kategori" name="kategori" required>
+                                    <option value="" disabled selected>-- Pilih Jenis Normalisasi --</option>
+                                    <option value="Gardu Induk Curug">1. Gardu Induk Curug</option>
+                                    <option value="Mini Hydro">2. Mini Hydro</option>
+                                    <option value="Pompa Elektrik Tarum Timur">3. Pompa Elektrik Tarum Timur</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4 p-3 bg-light border rounded-4">
+                                <label class="form-label fw-bold text-primary mb-2">Pilih Mode Pencatatan Penanganan:</label>
+                                <div class="btn-group w-100 shadow-sm rounded-3" role="group">
+                                    <input type="radio" class="btn-check" name="mode_pencatatan" id="modeManual" value="manual" autocomplete="off" checked onclick="switchMode('manual')">
+                                    <label class="btn btn-outline-primary btn-custom" for="modeManual">Mode Manual</label>
+
+                                    <input type="radio" class="btn-check" name="mode_pencatatan" id="modeOtomatis" value="otomatis" autocomplete="off" onclick="switchMode('otomatis')">
+                                    <label class="btn btn-outline-success btn-custom" for="modeOtomatis">Mode Otomatis</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-4" id="wrapper-jenis-manual">
+                                <label class="form-label fw-bold text-secondary">Jenis Gangguan</label>
+                                <input type="text" class="form-control" name="jenis_gangguan_manual" placeholder="Contoh: Gangguan Trafo / Trip PMT">
+                            </div>
+
+                            <div class="mb-4" id="wrapper-jenis-otomatis" style="display: none;">
+                                <label class="form-label fw-bold text-secondary">Jenis Gangguan/Pengoperasian</label>
+                                <select class="form-select" id="jenis_gangguan_otomatis" name="jenis_gangguan_otomatis" onchange="switchOtomatisSub(this.value)">
+                                    <option value="" disabled selected>-- Pilih Jenis Checklist Otomatis --</option>
+                                    <option value="CHECK LIST PENGAMANAN GANGGUAN / TRIP (GARDU INDUK 70 / 6,3 KV CURUG)">1. CHECK LIST PENGAMANAN GANGGUAN / TRIP (GARDU INDUK 70 / 6,3 KV CURUG)</option>
+                                    <option value="CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV JATILUHUR KE PENGHANTAR 70 KV KOSAMBI (PLN)">2. CHECK LIST PINDAH LINE (JATILUHUR -> KOSAMBI)</option>
+                                    <option value="CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV KOSAMBI KE PENGHANTAR 70 KV JATILUHUR (PLN)">3. CHECK LIST PINDAH LINE (KOSAMBI -> JATILUHUR)</option>
+                                    <option value="CHECK LIST OPERASI PLTA MINI HYDRO CURUG">4. CHECK LIST OPERASI PLTA MINI HYDRO CURUG</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-secondary">Tanggal & Jam Kejadian</label>
+                                <input type="datetime-local" class="form-control" id="waktu" name="waktu" required oninput="updatePreview(this.value)">
+                                <div id="preview-waktu" class="form-text text-success fw-bold mt-1"></div>
+                            </div>
+
+                            <!-- KONTAINER MODE MANUAL -->
+                            <div id="section-manual">
+                                <label class="form-label fw-bold mb-2 text-primary">Daftar Penanganan Gangguan, Jam & Status (Manual):</label>
+                                <div id="penanganan-container">
+                                    <div class="row g-2 mb-2 penanganan-row">
+                                        <div class="col-md-1"><input type="text" class="form-control text-center nomor-urut bg-white" value="1" readonly></div>
+                                        <div class="col-md-5"><input type="text" class="form-control" name="penanganan[]" placeholder="Jenis Penanganan"></div>
+                                        <div class="col-md-2"><input type="text" class="form-control text-center" name="jam_item[]" placeholder="Jam"></div>
+                                        <div class="col-md-3"><input type="text" class="form-control text-center" name="status_item[]" placeholder="Status"></div>
+                                        <div class="col-md-1"><button type="button" class="btn btn-danger w-100" onclick="hapusBaris(this)"><i class="fa-solid fa-trash"></i></button></div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary btn-sm mb-4 px-3" onclick="tambahBaris()"><i class="fa-solid fa-plus me-1"></i> Tambah Baris</button>
+                            </div>
+
+                            <!-- KONTAINER MODE OTOMATIS (SUB-SECTION) -->
+                            <div id="section-otomatis" style="display: none;" class="mb-4">
+                                <div id="sub-section-gi-curug" style="display: none;" class="alert alert-warning text-center"><b>CHECK LIST PENGAMANAN GANGGUAN / TRIP (GI CURUG)</b></div>
+                                <div id="sub-section-pindah-line-jtl-ksb" style="display: none;" class="alert alert-primary text-center"><b>CHECK LIST PINDAH LINE (JATILUHUR -> KOSAMBI)</b></div>
+                                <div id="sub-section-pindah-line-ksb-jtl" style="display: none;" class="alert alert-success text-center"><b>CHECK LIST PINDAH LINE (KOSAMBI -> JATILUHUR)</b></div>
+                                <div id="sub-section-mini-hydro" style="display: none;" class="alert alert-info text-center"><b>CHECK LIST OPERASI PLTA MINI HYDRO CURUG</b></div>
+                            </div>
+
+                            <div class="card p-4 mb-4 bg-light border-0 shadow-sm rounded-4">
+                                <h6 class="fw-bold text-primary mb-3">Informasi Pembuat Laporan</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-4"><input type="text" class="form-control bg-white" name="nama_group" placeholder="Group / Tim" required></div>
+                                    <div class="col-md-8"><input type="text" class="form-control bg-white" name="nama_petugas" placeholder="Nama Petugas" required></div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-3 btn-custom">Buat Laporan PDF Checklist Sekarang</button>
+                        </form>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -280,6 +354,46 @@
         }
         function kosongkanKanan() {
             document.querySelectorAll('.content-card').forEach(c => c.style.display = 'none');
+        }
+        function switchMode(mode) {
+            document.getElementById('section-manual').style.display = (mode === 'manual') ? 'block' : 'none';
+            document.getElementById('section-otomatis').style.display = (mode === 'manual') ? 'none' : 'block';
+            document.getElementById('wrapper-jenis-manual').style.display = (mode === 'manual') ? 'block' : 'none';
+            document.getElementById('wrapper-jenis-otomatis').style.display = (mode === 'manual') ? 'none' : 'block';
+        }
+        function switchOtomatisSub(val) {
+            document.getElementById('sub-section-gi-curug').style.display = val.includes('GARDU INDUK 70') ? 'block' : 'none';
+            document.getElementById('sub-section-pindah-line-jtl-ksb').style.display = val.includes('JATILUHUR KE KOSAMBI') ? 'block' : 'none';
+            document.getElementById('sub-section-pindah-line-ksb-jtl').style.display = val.includes('KOSAMBI KE JATILUHUR') ? 'block' : 'none';
+            document.getElementById('sub-section-mini-hydro').style.display = val.includes('MINI HYDRO') ? 'block' : 'none';
+        }
+        function updatePreview(val) {
+            if(val) {
+                document.getElementById('preview-waktu').innerText = 'Waktu terpilih: ' + val.replace('T', ' Pukul ') + ' WIB';
+            } else {
+                document.getElementById('preview-waktu').innerText = '';
+            }
+        }
+        function tambahBaris() {
+            const container = document.getElementById('penanganan-container');
+            const newIndex = container.getElementsByClassName('penanganan-row').length + 1;
+            const newRow = document.createElement('div');
+            newRow.className = 'row g-2 mb-2 penanganan-row';
+            newRow.innerHTML = `
+                <div class="col-md-1"><input type="text" class="form-control text-center nomor-urut bg-white" value="${newIndex}" readonly></div>
+                <div class="col-md-5"><input type="text" class="form-control" name="penanganan[]" placeholder="Jenis Penanganan"></div>
+                <div class="col-md-2"><input type="text" class="form-control text-center" name="jam_item[]" placeholder="Jam"></div>
+                <div class="col-md-3"><input type="text" class="form-control text-center" name="status_item[]" placeholder="Status"></div>
+                <div class="col-md-1"><button type="button" class="btn btn-danger w-100" onclick="hapusBaris(this)"><i class="fa-solid fa-trash"></i></button></div>
+            `;
+            container.appendChild(newRow);
+        }
+        function hapusBaris(btn) {
+            btn.closest('.penanganan-row').remove();
+            const rows = document.getElementsByClassName('penanganan-row');
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].getElementsByClassName('nomor-urut')[0].value = i + 1;
+            }
         }
     </script>
 </body>
