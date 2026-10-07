@@ -166,6 +166,42 @@ HTML_TEMPLATE = """
             overflow: hidden;
             border: 1px solid var(--border-color);
         }
+        
+        /* Tambahan Style untuk Gambar dengan Tombol Close & Transparan */
+        .closable-image-wrapper {
+            position: relative;
+            display: inline-block;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .closable-image-wrapper.transparent-state {
+            opacity: 0.35; /* Dibuat sedikit transparan */
+        }
+        .closable-image-wrapper img {
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 1rem;
+        }
+        .btn-close-img {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            z-index: 5;
+        }
+        .btn-close-img:hover {
+            background: rgba(220, 53, 69, 0.9);
+        }
     </style>
 </head>
 <body>
@@ -250,8 +286,14 @@ HTML_TEMPLATE = """
                                 </p>
                             </div>
                             <div class="col-md-5 text-center">
-                                <img src="/static/CURUGTEMPODULU.jpg" alt="Bendung Curug Tempo Dulu" class="img-fluid rounded-4 shadow-sm border" style="max-height: 250px; object-fit: cover;">
-                                <small class="d-block text-muted mt-2 fst-italic">Dokumentasi historis kawasan Bendung Curug.</small>
+                                <!-- Area Gambar dengan Tombol Close & Efek Transparan -->
+                                <div id="imageWrapper" class="closable-image-wrapper border shadow-sm rounded-4">
+                                    <button type="button" class="btn-close-img" onclick="toggleCloseImage()" title="Tutup / Kosongkan Gambar">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                    <img src="/static/CURUGTEMPODULU.jpg" alt="Bendung Curug Tempo Dulu" class="img-fluid rounded-4" id="targetImage">
+                                </div>
+                                <small class="d-block text-muted mt-2 fst-italic" id="imageCaption">Dokumentasi historis kawasan Bendung Curug.</small>
                             </div>
                         </div>
 
@@ -896,10 +938,32 @@ HTML_TEMPLATE = """
             }
         }
 
+        // Fungsi toggle untuk menutup/menyembunyikan gambar, membuat area kosong, dan menampilkan efek transparan
+        let isImageClosed = false;
+        function toggleCloseImage() {
+            const img = document.getElementById('targetImage');
+            const wrapper = document.getElementById('imageWrapper');
+            const caption = document.getElementById('imageCaption');
+            const closeBtn = wrapper.querySelector('.btn-close-img');
+
+            isImageClosed = !isImageClosed;
+            if (isImageClosed) {
+                img.style.display = 'none'; // Area gambar menjadi kosong
+                wrapper.classList.add('transparent-state'); // Efek transparan pada area wrapper
+                caption.style.display = 'none';
+                closeBtn.innerHTML = '<i class="fa-solid fa-arrow-rotate-left"></i>'; // Ubah ikon tombol jadi "Restore"
+                closeBtn.title = "Tampilkan Kembali Gambar";
+            } else {
+                img.style.display = 'block';
+                wrapper.classList.remove('transparent-state');
+                caption.style.display = 'block';
+                closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                closeBtn.title = "Tutup / Kosongkan Gambar";
+            }
+        }
+
         window.onload = function() {
             switchMode('manual');
-            // Saat pertama kali dimuat, pastikan menu navigasi belum membuka konten apa pun,
-            // melainkan menampilkan halaman sambutan (Welcome Screen) yang bersih dan modern.
             const welcomeContainer = document.getElementById('container-welcome');
             const formContainer = document.getElementById('container-form-laporan');
             const sejarahContainer = document.getElementById('container-sejarah');
