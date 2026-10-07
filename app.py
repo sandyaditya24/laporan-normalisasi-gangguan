@@ -1605,11 +1605,10 @@ def ask_ai():
             f"Pertanyaan: {user_question}"
         )
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=formatted_prompt,
-        )
-
+       response = client.models.generate_content(
+                model="gemini-3.8-flash",
+                contents=formatted_prompt,
+            )
         answer = getattr(response, "text", None)
         if not answer:
             return jsonify({"success": False, "error": "AI tidak mengembalikan jawaban."}), 502
