@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Laporan Normalisasi Gangguan - PJT II</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070f1e;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --primary-color: #2563eb;
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: rgba(226, 232, 240, 0.8);
+        }
+        body {
+            background: linear-gradient(135deg, rgba(7, 15, 30, 0.85), rgba(15, 23, 42, 0.9)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-main);
+            padding-bottom: 3rem;
+        }
+        .enterprise-wrapper { max-width: 1450px; margin: 0 auto; }
+        .dashboard-header {
+            background: var(--card-bg);
+            border-radius: 20px;
+            backdrop-filter: blur(16px);
+            padding: 2rem 2.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 6px; height: 100%;
+            background: var(--primary-gradient);
+        }
+        .menu-sidebar {
+            background: var(--card-bg);
+            border-radius: 20px;
+            backdrop-filter: blur(16px);
+            padding: 1.75rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .menu-btn {
+            width: 100%; text-align: left; font-weight: 600; border-radius: 12px;
+            padding: 0.9rem 1.25rem; transition: all 0.3s; border: 1px solid var(--border-color);
+            background-color: #f8fafc; color: var(--text-main); font-size: 0.95rem;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .menu-btn:hover {
+            background-color: #eff6ff; color: var(--primary-color); border-color: #bfdbfe;
+            transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+        .menu-btn.active {
+            background: var(--primary-gradient); color: white; border-color: transparent;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+        }
+        .submenu-container {
+            padding-left: 1.5rem; margin-top: 0.5rem; margin-bottom: 0.75rem;
+            border-left: 2px dashed #cbd5e1; display: none;
+        }
+        .submenu-btn {
+            width: 100%; text-align: left; font-weight: 500; border-radius: 10px;
+            padding: 0.6rem 1rem; transition: all 0.2s; border: 1px solid transparent;
+            background-color: transparent; color: var(--text-muted); font-size: 0.9rem;
+            display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
+        }
+        .submenu-btn:hover { background-color: #f1f5f9; color: var(--primary-color); }
+        .submenu-btn.active {
+            background-color: #eff6ff; color: var(--primary-color); font-weight: 600; border-color: #bfdbfe;
+        }
+        .content-card {
+            border-radius: 20px; backdrop-filter: blur(16px); background-color: var(--card-bg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: fadeIn 0.4s ease-in-out; position: relative;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-header-custom {
+            border-top-left-radius: 20px !important; border-top-right-radius: 20px !important;
+            background: linear-gradient(135deg, #0f172a, #1e293b) !important;
+            padding: 1.75rem; border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-close-red-container {
+            position: absolute; top: 1.25rem; right: 1.25rem; background-color: #dc3545;
+            color: white; border: none; border-radius: 50%; width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10;
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4); transition: all 0.2s;
+        }
+        .btn-close-red-container:hover { background-color: #b02a37; transform: scale(1.08); }
+        .form-control, .form-select {
+            border-radius: 12px; padding: 0.75rem 1rem; border: 1px solid var(--border-color);
+            background-color: #f8fafc; font-size: 0.95rem; transition: all 0.2s;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #ffffff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); border-color: var(--primary-color);
+        }
+        .btn-custom { border-radius: 12px; padding: 0.75rem 1.5rem; font-weight: 600; transition: all 0.2s; }
+        .table-responsive { border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); }
+        .closable-image-wrapper { position: relative; display: inline-block; }
+        .closable-image-wrapper img { max-height: 250px; object-fit: cover; border-radius: 1rem; }
+        .btn-close-img {
+            position: absolute; top: 10px; right: 10px; background: rgba(0, 0, 0, 0.6);
+            color: white; border: none; border-radius: 50%; width: 30px; height: 30px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5;
+        }
+        .bg-switcher-badge { cursor: pointer; transition: all 0.2s; }
+        .bg-switcher-badge:hover { background-color: #1d4ed8 !important; }
+    </style>
+</head>
+<body>
+    <div class="container mt-4 mb-5 enterprise-wrapper">
+        <!-- HEADER UTAMA -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-12">
+                <div class="dashboard-header">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h2 class="fw-bold text-dark mb-2 fs-3 tracking-tight">SISTEM MANAJEMEN PLTA CURUG</h2>
+                            <h5 class="fw-semibold text-primary mb-2">PERUM JASA TIRTA II</h5>
+                            <p class="text-muted mb-0">Platform pelaporan operasional, normalisasi gangguan, dan manajemen teknis gardu induk yang terintegrasi.</p>
+                        </div>
+                        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                            <span class="badge bg-primary px-3 py-2 rounded-pill fs-6 fw-normal shadow-sm">
+                                <i class="fa-solid fa-shield-halved me-1"></i> Enterprise v3.4
+                            </span>
+                            <div class="mt-2">
+                                <span class="badge bg-dark bg-switcher-badge px-3 py-2 rounded-pill fs-7 shadow-sm" onclick="gantiBackgroundPJT()">
+                                    <i class="fa-solid fa-image me-1"></i> Background PJT II (<span id="bgName">Curug Tempo Dulu</span>)
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LAYOUT UTAMA -->
+        <div class="row g-4">
+            <!-- SIDEBAR NAVIGASI -->
+            <div class="col-lg-3">
+                <div class="menu-sidebar sticky-top" style="top: 2rem;">
+                    <h6 class="text-uppercase text-muted fw-bold mb-3" style="font-size: 0.75rem; letter-spacing: 0.08em;">Menu Navigasi</h6>
+                    <div class="d-grid gap-2 mb-4">
+                        <div>
+                            <button type="button" class="btn menu-btn" id="btnMenuLaporanGangguan" onclick="toggleSubMenu('laporan-gangguan-submenu')">
+                                <i class="fa-solid fa-triangle-exclamation fa-fw text-warning"></i> Laporan Gangguan <i class="fa-solid fa-chevron-down ms-auto fs-7"></i>
+                            </button>
+                            <div class="submenu-container" id="laporan-gangguan-submenu">
+                                <button type="button" class="btn submenu-btn" id="btnSubBuatLaporanBaru" onclick="pilihMenu('buat-laporan-baru')">
+                                    <i class="fa-solid fa-file-circle-plus fa-fw"></i> Buat Laporan Baru
+                                </button>
+                                <button type="button" class="btn submenu-btn" id="btnSubHistoryGangguan" onclick="pilihMenu('history-gangguan')">
+                                    <i class="fa-solid fa-clock-rotate-left fa-fw"></i> Hystori Gangguan
+                                </button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn menu-btn" id="btnMenuForm" onclick="pilihMenu('form')">
+                            <i class="fa-solid fa-clipboard-list fa-fw"></i> Form Normalisasi & Checklist
+                        </button>
+                        <button type="button" class="btn menu-btn" id="btnMenuSejarah" onclick="pilihMenu('sejarah')">
+                            <i class="fa-solid fa-landmark fa-fw"></i> Sejarah Bendung Curug
+                        </button>
+                        <button type="button" class="btn menu-btn" id="btnMenuPegawai" onclick="pilihMenu('struktural-pegawai')">
+                            <i class="fa-solid fa-sitemap fa-fw"></i> Struktural Pegawai
+                        </button>
+                        <a href="/ai-chat" class="btn menu-btn text-decoration-none" id="btnMenuAI">
+                            <i class="fa-solid fa-robot fa-fw text-info"></i> Asisten AI Q&A
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AREA KONTEN -->
+            <div class="col-lg-9">
+                <!-- 1. BUAT LAPORAN BARU -->
+                <div class="card content-card mb-4" id="container-buat-laporan-baru" style="display: none;">
+                    <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="card-header-custom text-white text-center">
+                        <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-file-circle-plus me-2"></i> BUAT LAPORAN GANGGUAN BARU</h3>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <form method="POST" action="/generate-laporan-baru">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-secondary">Jenis Gangguan:</label>
+                                <input type="text" class="form-control" name="baru_jenis_gangguan" required>
+                            </div>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold text-secondary">Waktu Gangguan (Jam):</label>
+                                    <input type="time" class="form-control" name="baru_waktu" required>
+                                </div>
+                                <div class="col-md-8">
+                                    <label class="form-label fw-bold text-secondary">Tanggal Gangguan:</label>
+                                    <input type="date" class="form-control" name="baru_tanggal_lengkap" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-secondary">Kronologi Gangguan:</label>
+                                <textarea class="form-control" name="baru_kronologi" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-3 btn-custom">Simpan & Catat Laporan</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 2. HISTORY GANGGUAN -->
+                <div class="card content-card mb-4" id="container-history-gangguan" style="display: none;">
+                    <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="card-header-custom text-white text-center">
+                        <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-clock-rotate-left me-2"></i> HYSTORY GANGGUAN</h3>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <div class="table-responsive mb-5">
+                            <table class="table table-bordered table-hover align-middle bg-white shadow-sm">
+                                <thead class="table-dark text-center">
+                                    <tr><th>No</th><th>Jenis</th><th>Waktu</th><th>Kronologi</th><th>Aksi</th></tr>
+                                </thead>
+                                <tbody>
+                                    {% if history_laporan_baru %}
+                                        {% for item in history_laporan_baru %}
+                                        <tr>
+                                            <td class="text-center">{{ loop.index }}</td>
+                                            <td class="text-danger">{{ item.jenis }}</td>
+                                            <td>{{ item.tanggal }}<br>{{ item.waktu }}</td>
+                                            <td>{{ item.kronologi }}</td>
+                                            <td class="text-center"><a href="/download/{{ item.pdf_name }}" class="btn btn-sm btn-primary" target="_blank">PDF</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr><td colspan="5" class="text-center text-muted py-3">Belum ada riwayat.</td></tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. SEJARAH -->
+                <div class="card content-card mb-4" id="container-sejarah" style="display: none;">
+                    <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="card-header-custom text-white text-center">
+                        <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-landmark me-2"></i> SEJARAH BENDUNG CURUG</h3>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <p class="text-muted">Bendung Curug memiliki peranan vital dalam sejarah pengelolaan air dan kelistrikan di Jawa Barat...</p>
+                    </div>
+                </div>
+
+                <!-- STRUKTURAL PEGAWAI WRAPPER -->
+                <div id="container-struktural-pegawai-wrapper"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSubMenu(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('/get-struktural-pegawai')
+                .then(res => res.text())
+                .then(html => { document.getElementById('container-struktural-pegawai-wrapper').innerHTML = html; });
+        });
+        function pilihMenu(menu) {
+            document.querySelectorAll('.content-card').forEach(c => c.style.display = 'none');
+            const target = document.getElementById('container-' + menu);
+            if (target) target.style.display = 'block';
+        }
+        function kosongkanKanan() {
+            document.querySelectorAll('.content-card').forEach(c => c.style.display = 'none');
+        }
+    </script>
+</body>
+</html>
