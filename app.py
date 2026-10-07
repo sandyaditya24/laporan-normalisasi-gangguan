@@ -931,28 +931,70 @@ HTML_TEMPLATE = """
                                         <b>CHECK LIST OPERASI PLTA MINI HYDRO CURUG (F-20/DPL/IK.10-01)</b>
                                     </div>
 
-                                    <!-- Persiapan & Pelaksanaan Pengoperasian (Header Info) -->
-                                    <div class="row g-3 mb-3 p-3 bg-white border rounded-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold small text-secondary">UNIT No.:</label>
-                                            <input type="text" class="form-control form-control-sm" name="mh_unit_no" placeholder="Contoh: Unit 1">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold small text-secondary">Jam Kerja Unit (TM):</label>
-                                            <input type="text" class="form-control form-control-sm" name="mh_jam_kerja" placeholder="Contoh: 08:00">
-                                        </div>
+                                    <!-- I. PERSIAPAN -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">I. PERSIAPAN</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="50%">Uraian Kegiatan Persiapan</th><th width="25%">Status / Keterangan</th><th width="15%">Paraf</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_i1" value="on" checked></td>
+                                                    <td class="text-center">1</td>
+                                                    <td>Koordinasi debit air / Tinggi Muka air dengan Operator Bendung Curug Divisi II</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_i1" value="Sudah"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_i1"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_i2" value="on" checked></td>
+                                                    <td class="text-center">2</td>
+                                                    <td>Koordinasi dengan Operator Control Building di Jatiluhur</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_i2" value="Sudah"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_i2"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
 
-                                    <div class="p-3 bg-white border rounded-3 mb-3 small">
-                                        <p class="fw-bold mb-2">I. Persiapan</p>
-                                        <ul class="mb-2 ps-3">
-                                            <li>Koordinasi debit air / Tinggi Muka air dengan Operator Bendung Curug Divisi II</li>
-                                            <li>Koordinasi dengan Operator Control Building di Jatiluhur</li>
-                                        </ul>
-                                        <p class="fw-bold mb-1">II. Pelaksanaan Pengoperasian</p>
-                                        <p class="fw-bold mb-1">III. Pengecekan Air Baku I & II Tekanan 3 bar / lebih</p>
-                                        <p class="fw-bold mb-1">IV. Pengecekan Sudu - Sudu Tekanan 60 bar</p>
-                                        <p class="fw-bold mb-0">V. Pengecekan Down Strem 120 bar</p>
+                                    <!-- II & III & IV & V. PELAKSANAAN & PENGECEKAN AWAL -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">II, III, IV, V. PELAKSANAAN & PENGECEKAN TEKANAN</h6>
+                                    <div class="table-responsive mb-3">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="50%">Uraian Pengecekan</th><th width="25%">Nilai / Target</th><th width="15%">Paraf</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_p1" value="on" checked></td>
+                                                    <td class="text-center">1</td>
+                                                    <td>Pelaksanaan Pengoperasian Unit Mini Hydro</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_p1" value="Normal"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_p1"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_p2" value="on" checked></td>
+                                                    <td class="text-center">2</td>
+                                                    <td>Pengecekan Air Baku I & II (Tekanan 3 bar / lebih)</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_p2" value=">= 3 bar"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_p2"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_p3" value="on" checked></td>
+                                                    <td class="text-center">3</td>
+                                                    <td>Pengecekan Sudu - Sudu (Tekanan 60 bar)</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_p3" value="60 bar"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_p3"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_p4" value="on" checked></td>
+                                                    <td class="text-center">4</td>
+                                                    <td>Pengecekan Down Stream (Tekanan 120 bar)</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_p4" value="120 bar"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_p4"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
 
                                     <!-- A. RUANG PANEL CONTROL ROOM -->
@@ -960,18 +1002,86 @@ HTML_TEMPLATE = """
                                     <div class="table-responsive mb-3">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
-                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="35%">Uraian</th><th width="20%">Posisi</th><th width="15%">Paraf</th><th width="20%">Keterangan</th></tr>
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Posisi / Isian</th><th width="15%">Paraf</th><th width="10%">Jam</th></tr>
                                             </thead>
                                             <tbody>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a1" value="on" checked></td><td class="text-center">1</td><td>Pada jendela alarm tidak ada indikasi gangguan</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a1" value="........"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a1" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_a1" value="TMA Udik 26-36 mohon diperhatikan apabila Beban sudah turun dan air Udik kecil, maka Mini Hydro Stop (utamakan air Tr. TT & Tr Barat"></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a2" value="on" checked></td><td class="text-center">2</td><td>Tinggi Muka Air : Tinggi Air Udik<br>Tinggi Air Hilir<br>Posisi saring sampah unit .....</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a2" value="........"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a2" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_a2" value=""></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a3" value="on" checked></td><td class="text-center">3</td><td>Kriteria berhenti pada posisi stabil / indikator tombol stop</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a3" value="Menyala"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a3" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_a3" value=""></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a4" value="on" checked></td><td class="text-center">4</td><td>Posisi Pintu Pembuangan " Tutup "</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a4" value="Menyala"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a4" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_a4" value=""></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a5" value="on" checked></td><td class="text-center">5</td><td>Indikasi DS Phase Cubicle / ... GTA 030 JD</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a5" value="Masuk"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a5" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_a5" value=""></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a6" value="on" checked></td><td class="text-center">6</td><td>Indikasi Earthing Switch / .... GTA 031 JS</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a6" value="Keluar"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a6" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_a6" value=""></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a7" value="on" checked></td><td class="text-center">7</td><td>Indikasi CB 20 KV / ..... LGB 001 JD</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a7" value="Keluar"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a7" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_a7" value="TPL Menyala"></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a8" value="on" checked></td><td class="text-center">8</td><td>Indikasi Earthing Switch / .... LGB 031 JS</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a8" value="Keluar"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a8" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_a8" value=""></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a9" value="on" checked></td><td class="text-center">9</td><td>Indikasi Unit Siap Jalan</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a9" value="Menyala"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a9" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_a9" value=""></td></tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a1" value="on" checked></td>
+                                                    <td class="text-center">1</td>
+                                                    <td>Pada jendela alarm tidak ada indikasi gangguan</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a1" value="Clear / Aman"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a1"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_mh_a1"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a2" value="on" checked></td>
+                                                    <td class="text-center">2</td>
+                                                    <td>
+                                                        Tinggi Muka Air:<br>
+                                                        - Tinggi Air Udik: <input type="text" class="form-control form-control-sm d-inline-block mt-1" name="pos_mh_udik" placeholder="Isi Tinggi Air Udik"><br>
+                                                        - Tinggi Air Hilir: <input type="text" class="form-control form-control-sm d-inline-block mt-1" name="pos_mh_hilir" placeholder="Isi Tinggi Air Hilir"><br>
+                                                        - Posisi saring sampah unit: <input type="text" class="form-control form-control-sm d-inline-block mt-1" name="pos_mh_sampah" placeholder="Posisi saring sampah">
+                                                    </td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a2" value="Normal"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a2"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_mh_a2"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a3" value="on" checked></td>
+                                                    <td class="text-center">3</td>
+                                                    <td>Kriteria berhenti pada posisi stabil / indikator tombol stop</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a3" value="Stabil"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a3"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_mh_a3"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a4" value="on" checked></td>
+                                                    <td class="text-center">4</td>
+                                                    <td>Posisi Pintu Pembuangan</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a4" value="Tutup"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a4"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_mh_a4"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a5" value="on" checked></td>
+                                                    <td class="text-center">5</td>
+                                                    <td>Indikasi DS Phase Cubicle</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a5" value="GTA 030 JD"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a5"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_mh_a5"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a6" value="on" checked></td>
+                                                    <td class="text-center">6</td>
+                                                    <td>Indikasi Earthing Switch</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a6" value="GTA 031 JS"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a6"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_mh_a6"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a7" value="on" checked></td>
+                                                    <td class="text-center">7</td>
+                                                    <td>Indikasi CB 20 KV</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a7" value="LGB 001 JD"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a7"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_mh_a7"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a8" value="on" checked></td>
+                                                    <td class="text-center">8</td>
+                                                    <td>Indikasi Earthing Switch</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a8" value="LGB 031 JS"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a8"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_mh_a8"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_a9" value="on" checked></td>
+                                                    <td class="text-center">9</td>
+                                                    <td>Indikasi Unit Siap Jalan</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_a9" value="Ready / Siap"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_a9"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_mh_a9"></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -981,58 +1091,50 @@ HTML_TEMPLATE = """
                                     <div class="table-responsive mb-3">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
-                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="35%">Uraian</th><th width="20%">Posisi</th><th width="15%">Paraf</th><th width="20%">Keterangan</th></tr>
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="50%">Tahapan Pengoperasian / Sinkronisasi</th><th width="25%">Posisi / Status</th><th width="15%">Keterangan</th></tr>
                                             </thead>
                                             <tbody>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_b1" value="on" checked></td><td class="text-center">1</td><td>Sistim Pengatur Unit</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_b1" value="Lokal"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_b1" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_b1" value=""></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_b2" value="on" checked></td><td class="text-center">2</td><td>Sistim Komando Unit .....</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_b2" value="Manual"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_b2" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_b2" value=""></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_b3" value="on" checked></td><td class="text-center">3</td><td>Sinkronisasi (Jika dipilih cara manual, hubungkan alat sinkronisasi portible)</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_b3" value="Auto"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_b3" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_b3" value=""></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_b4" value="on" checked></td><td class="text-center">4</td><td>Duga Muka Air / Kontrol water level</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_b4" value="ON / OF"></td><td><input type="text" class="form-control form-control-sm text-center" name="paraf_mh_b4" value="........"></td><td><input type="text" class="form-control form-control-sm" name="ket_mh_b4" value=""></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_b1" value="on" checked></td><td class="text-center">1</td><td>Sistim Pengatur Unit</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_b1" value="Normal"></td><td><input type="text" class="form-control form-control-sm text-center" name="ket_mh_b1"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_b2" value="on" checked></td><td class="text-center">2</td><td>Sistim Komando Unit</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_b2" value="Manual / Auto"></td><td><input type="text" class="form-control form-control-sm text-center" name="ket_mh_b2"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_b3" value="on" checked></td><td class="text-center">3</td><td>Sinkronisasi (Jika manual, hubungkan alat sinkronisasi portable)</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_b3" value="Terkoneksi"></td><td><input type="text" class="form-control form-control-sm text-center" name="ket_mh_b3"></td></tr>
+                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_b4" value="on" checked></td><td class="text-center">4</td><td>Duga Muka Air / Kontrol water level</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_b4" value="Terkontrol"></td><td><input type="text" class="form-control form-control-sm text-center" name="ket_mh_b4"></td></tr>
                                                 <tr>
                                                     <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_b5" value="on" checked></td>
                                                     <td class="text-center">5</td>
-                                                    <td colspan="4">
-                                                        <b>Pengoperasian Unit:</b><br>
-                                                        1. Jika sistim komando Unit dipilih " Manual ":<br>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;a. Tekan tombol "Putaran Tanpa Beban" - Indikator Tombol (Berkedip) | Keterangan: Tunggu sampai tombol tdk berkedip<br>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;b. Tekan Tombol " Eksitasi " - Indikator Tombol (Berkedip) | Keterangan: Tunggu sampai tombol tdk berkedip<br>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;c. Tekan Tombol " Generator " - Indikator Tombol (Berkedip) | Keterangan: Tunggu sampai tombol tdk berkedip<br>
-                                                        2. Jika sistim komando Unit dipilih " AUTO ":<br>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;a. Tekan Tombol " Putaran Tanpa Beban " - Indikator Tombol (Berkedip)
+                                                    <td>
+                                                        Pengoperasian Unit (Manual / Auto):<br>
+                                                        - Tekan "Putaran Tanpa Beban"<br>
+                                                        - Tekan "Eksitasi"<br>
+                                                        - Tekan "Generator"
                                                     </td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_b5" value="Executed"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="ket_mh_b5" value="Tunggu s/d tdk berkedip"></td>
                                                 </tr>
                                                 <tr>
                                                     <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_b6" value="on" checked></td>
                                                     <td class="text-center">6</td>
-                                                    <td colspan="4">
-                                                        <b>Sinkronisasi:</b><br>
-                                                        1. Jika Sinkronisasi dipilih " AUTO ":<br>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;a. Periksa TPL ( Indikator CB 20 KV ) .....LGB001JD. CB masuk paralel dengan jaringan Pukul ...............wib (Keterangan: Putar ke posisi ON)<br>
-                                                        2. Jika Sinkronisasi dipilih " MANUAL ":<br>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;a. Pengaturan beban / frekuensi menggunakan Tombol ( naik / turun ) pada panel control<br>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;b. Pengaturan tegangan eksitasi dengan menggunakan tombol ( naik / turun ) pada panel control<br>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;c. Putar Switch CB / TPL CB ........ LGB001JD (Keterangan: Putar ke posisi ON)<br>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;d. Jika lampu pad alat sinkronisasi menyala ( ON ). tekan tombol TPL CB untuk menutup CB. CB Masuk paralel dengan jaringan Pukul ............wib
-                                                    </td>
+                                                    <td>Sinkronisasi (Auto / Manual & CB LGB001JD ke posisi ON)</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_b6" value="Paralel ON"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="ket_mh_b6" placeholder="Pukul ... wib"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
 
-                                    <!-- C. PENGATURAN BEBAN -->
-                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">C. PENGATURAN BEBAN</h6>
+                                    <!-- C. PENGATURAN BEBAN & D. CATATAN -->
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">C. PENGATURAN BEBAN & D. CATATAN RUTIN</h6>
                                     <div class="table-responsive mb-3">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
-                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="25%">Posisi / Target</th><th width="20%">Keterangan</th></tr>
+                                                <tr><th width="5%">Pilih</th><th width="5%">No</th><th width="50%">Uraian Pengaturan</th><th width="25%">Target / Posisi</th><th width="15%">Keterangan</th></tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_mh_c1" value="on" checked></td>
                                                     <td class="text-center">1</td>
-                                                    <td>Tekan Tombol Pengatur Beban / Frekwesi ( naik/turun ), hingga :</td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_c1" value="........MW"></td>
-                                                    <td><input type="text" class="form-control form-control-sm" name="ket_mh_c1" value="Secara Bertahap"></td>
+                                                    <td>Tekan Tombol Pengatur Beban / Frekuensi (naik/turun) hingga stabil</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_mh_c1" value="Stabil"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="ket_mh_c1"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
