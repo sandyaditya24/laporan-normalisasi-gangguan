@@ -1596,9 +1596,9 @@ def ask_ai():
 
     for attempt in range(max_retries):
         try:
-            # Menggunakan model standar resmi yang stabil: gemini-2.0-flash
+           # Menggunakan nama model standar resmi google-genai yang paling stabil dan universal
             response = client.models.generate_content(
-                model="gemini-2.0-flash",
+                model="gemini-1.5-flash",
                 contents=user_question,
                 config={
                     "system_instruction": system_instruction,
