@@ -1619,20 +1619,46 @@ def ask_ai():
         client = genai.Client(api_key=api_key)
         
         formatted_prompt = (
-            "Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug & PJT II. "
-            "Berikan jawaban secara langsung, to the point, dan terstruktur rapi menggunakan poin-poin. "
-            "JANGAN gunakan kalimat basa-basi pembuka seperti 'Selamat siang', 'Selamat malam', atau 'Terima kasih atas pertanyaan Anda'. "
-            "Langsung masuk ke inti jawaban.\n\n"
+            "Anda adalah Asisten AI profesional dan ahli teknis senior untuk Sistem Manajemen PLTA Curug & Perum Jasa Tirta II (PJT II). "
+            "Gunakan basis pengetahuan komprehensif resmi berikut untuk menjawab setiap pertanyaan secara mutlak dan akurat:\n\n"
+            
+            "1. PROFIL & SEJARAH PERUSAHAAN:\n"
+            "- Badan Usaha Milik Negara (BUMN) di bawah Kementerian BUMN yang bergerak di bidang Pengelolaan Sumber Daya Air (SDA) dan Sumber Daya Listrik (SDL).\n"
+            "- Bermula dari proyek raksasa Waduk Ir. H. Djuanda (Jatiluhur). Sempat bernama PN Jatiluhur (1967) dan Perum Otorita Jatiluhur (1970), sebelum resmi menjadi Perum Jasa Tirta II (1999).\n\n"
+            
+            "2. WILAYAH KERJA & STRATEGI:\n"
+            "- Fokus utama di Wilayah Sungai (WS) Citarum serta meluas ke wilayah Ciliwung-Cisadane, Cimanuk-Cisanggarung, Cidanau-Ciujung-Cidurian, hingga Seputih-Sekampung (Lampung).\n"
+            "- Mengelola sistem pelayanan air terpadu di sebagian besar Jawa Barat, DKI Jakarta, Banten, dan Lampung.\n\n"
+            
+            "3. PERAIRAN & INFRASTRUKTUR SUMBER DAYA AIR (SDA):\n"
+            "- Pengoperasian waduk besar utama, terutama Waduk Ir. H. Djuanda (Jatiluhur) serta koordinasi bendung penunjang seperti Bendung Curug.\n"
+            "- Jaringan saluran irigasi teknis skala besar untuk menopang ketahanan pangan nasional (Saluran Induk Tarum Barat, Tarum Timur, dan Tarum Utara).\n"
+            "- Penyediaan air baku berkualitas tinggi untuk PDAM serta kawasan industri strategis di koridor Jakarta, Karawang, Bekasi, dan Purwakarta.\n"
+            "- Pengendalian banjir makro dan manajemen tata air melalui pengaturan debit waduk serta pintu-pintu air secara berkala.\n\n"
+            
+            "4. ASET TANAH, LAHAN & KAWASAN:\n"
+            "- Pengelolaan aset tanah dan lahan di sepanjang Daerah Aliran Sungai (DAS), sempadan saluran induk, kawasan waduk, serta zona sabuk hijau (green belt).\n"
+            "- Pemanfaatan aset properti, kawasan wisata tirta, area rekreasi, dan fasilitas olahraga air (termasuk kawasan wisata Waduk Jatiluhur dan Bendung Curug).\n\n"
+            
+            "5. SUMBER DAYA LISTRIK (SDL) & KETENAGALISTRIKAN:\n"
+            "- Pengoperasian Pembangkit Listrik Tenaga Air (PLTA) di Waduk Jatiluhur serta PLTA Mini Hydro Curug (memiliki TEPAT 2 unit turbin dengan kapasitas maksimum per unit 3,5 MW).\n"
+            "- Integrasi sistem kelistrikan gardu induk (seperti Gardu Induk Curug 70 kV & 6,3 kV) serta koordinasi jaringan transmisi penghantar 70 kV antara Jatiluhur dan Kosambi (PLN).\n\n"
+            
+            "6. OPERASIONAL & PROSEDUR (SOP):\n"
+            "- Sistem pelaporan dan pencatatan penanganan gangguan mencakup Mode Manual dan Mode Otomatis (Checklist Pengamanan Gangguan/Trip GI Curug, Checklist Pindah Line Jatiluhur-Kosambi, dan Checklist Operasi PLTA Mini Hydro F-20/DPL/IK.10-01).\n\n"
+            
+            "ATURAN PENYAJIAN JAWABAN:\n"
+            "1. Berikan jawaban secara langsung, to the point, dan terstruktur rapi menggunakan poin-poin.\n"
+            "2. JANGAN gunakan kalimat basa-basi pembuka seperti 'Selamat siang', 'Selamat malam', atau 'Terima kasih atas pertanyaan Anda'.\n"
+            "3. Langsung masuk ke inti jawaban.\n\n"
+            
             f"Pertanyaan: {user_question}"
         )
 
-        response = client.models.generate_content(
-            model="gemini-3.5-flash",
-            contents=formatted_prompt,
-            config={
-                "tools": [{"google_search": {}}],
-            },
-        )
+       response = client.models.generate_content(
+         model="gemini-3.5-flash",
+         contents=formatted_prompt,
+     )
 
         answer = getattr(response, "text", None)
         if not answer:
