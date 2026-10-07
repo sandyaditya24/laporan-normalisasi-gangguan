@@ -37,6 +37,33 @@ HTML_TEMPLATE = """
             margin-bottom: 2rem;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             border-left: 6px solid #0d6efd;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .menu-sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-left: 6px solid #198754;
+            height: 100%;
+        }
+        .menu-btn {
+            width: 100%;
+            text-align: left;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .menu-btn.active {
+            background-color: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
         }
         .card {
             border: none;
@@ -57,7 +84,7 @@ HTML_TEMPLATE = """
         .form-control:focus, .form-select:focus {
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
         }
-        .btn {
+        .btn-custom {
             border-radius: 8px;
             padding: 0.6rem 1rem;
             font-weight: 600;
@@ -66,23 +93,36 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <div class="container mt-5 mb-5">
-        <!-- DASHBOARD UTAMA SESUAI PERMINTAAN -->
-        <div class="row justify-content-center">
-            <div class="col-md-11">
-                <div class="dashboard-header text-center">
-                    <h2 class="fw-bold text-primary mb-2">SELAMAT DATANG DI APLIKASI SISTEM MANAJEMEN PLTA CURUG</h2>
-                    <h4 class="fw-semibold text-secondary mb-3">PERUM JASA TIRTA 2</h4>
-                    <p class="text-muted mb-0">Silakan gunakan form di bawah ini untuk mengelola dan mencatat laporan normalisasi serta pengoperasian unit.</p>
+        <!-- HEADER DAN MENU PILIHAN DI SEBELAH KIRI -->
+        <div class="row justify-content-center mb-4">
+            <!-- Kotak Pilihan Menu di Sebelah Kiri -->
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="menu-sidebar">
+                    <h6 class="fw-bold text-secondary mb-3 text-uppercase fs-6">Pilah Menu</h6>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-primary menu-btn active" id="btnMenuForm" onclick="pilihMenu('form')">
+                            📋 Form Laporan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selamat Datang di Sebelah Kanan -->
+            <div class="col-md-9">
+                <div class="dashboard-header text-center text-md-start">
+                    <h2 class="fw-bold text-primary mb-2 fs-3">SELAMAT DATANG DI APLIKASI SISTEM MANAJEMEN PLTA CURUG</h2>
+                    <h4 class="fw-semibold text-secondary mb-2 fs-5">PERUM JASA TIRTA 2</h4>
+                    <p class="text-muted mb-0 small">Silakan pilih menu di sebelah kiri dan gunakan form di bawah ini untuk mengelola dan mencatat laporan normalisasi serta pengoperasian unit.</p>
                 </div>
             </div>
         </div>
 
-        <!-- FORM UTAMA -->
-        <div class="row justify-content-center">
-            <div class="col-md-11">
+        <!-- FORM UTAMA (DIBAWAH) -->
+        <div class="row justify-content-center" id="container-form-laporan">
+            <div class="col-md-12">
                 <div class="card shadow-lg">
                     <div class="card-header text-white text-center">
-                        <h3 class="mb-0 fw-bold">FORM LAPORAN NORMALISASI / PENGOPERASIAN</h3>
+                        <h3 class="mb-0 fw-bold fs-4">FORM LAPORAN NORMALISASI / PENGOPERASIAN</h3>
                         <p class="mb-0 text-white-50 small mt-1">Sistem Pencatatan & Pelaporan Operasional Gardu Induk / Unit Terkait</p>
                     </div>
                     <div class="card-body p-4">
@@ -102,10 +142,10 @@ HTML_TEMPLATE = """
                                 <label class="form-label fw-bold text-primary mb-2">Pilih Mode Pencatatan Penanganan:</label>
                                 <div class="btn-group w-100" role="group">
                                     <input type="radio" class="btn-check" name="mode_pencatatan" id="modeManual" value="manual" autocomplete="off" checked onclick="switchMode('manual')">
-                                    <label class="btn btn-outline-primary" for="modeManual">Mode Manual</label>
+                                    <label class="btn btn-outline-primary btn-custom" for="modeManual">Mode Manual</label>
 
                                     <input type="radio" class="btn-check" name="mode_pencatatan" id="modeOtomatis" value="otomatis" autocomplete="off" onclick="switchMode('otomatis')">
-                                    <label class="btn btn-outline-success" for="modeOtomatis">Mode Otomatis</label>
+                                    <label class="btn btn-outline-success btn-custom" for="modeOtomatis">Mode Otomatis</label>
                                 </div>
                             </div>
 
@@ -152,11 +192,11 @@ HTML_TEMPLATE = """
                                             <input type="text" class="form-control text-center" name="status_item[]" placeholder="Status Manual">
                                         </div>
                                         <div class="col-md-1">
-                                            <button type="button" class="btn btn-danger w-100" onclick="hapusBaris(this)">X</button>
+                                            <button type="button" class="btn btn-danger w-100 btn-custom" onclick="hapusBaris(this)">X</button>
                                         </div>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-outline-secondary btn-sm mb-4 px-3" onclick="tambahBaris()">+ Tambah Baris</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm mb-4 px-3 btn-custom" onclick="tambahBaris()">+ Tambah Baris</button>
                             </div>
 
                             <!-- KONTAINER MODE OTOMATIS -->
@@ -597,7 +637,7 @@ HTML_TEMPLATE = """
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 py-2 shadow-sm fs-5">Buat Laporan PDF</button>
+                            <button type="submit" class="btn btn-primary w-100 py-2 shadow-sm fs-5 btn-custom">Buat Laporan PDF</button>
                         </form>
                     </div>
                 </div>
@@ -606,6 +646,18 @@ HTML_TEMPLATE = """
     </div>
 
     <script>
+        function pilihMenu(menu) {
+            const formContainer = document.getElementById('container-form-laporan');
+            const btnForm = document.getElementById('btnMenuForm');
+
+            if (menu === 'form') {
+                formContainer.style.display = 'flex';
+                btnForm.classList.add('active');
+                // Gulir secara halus ke form
+                formContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
         function switchMode(mode) {
             const secManual = document.getElementById('section-manual');
             const secOtomatis = document.getElementById('section-otomatis');
@@ -698,7 +750,7 @@ HTML_TEMPLATE = """
                                '<div class="col-md-5"><input type="text" class="form-control" name="penanganan[]" placeholder="Jenis Penanganan" required></div>' +
                                '<div class="col-md-2"><input type="text" class="form-control text-center" name="jam_item[]" placeholder="Jam (Cth: 10:00)" required></div>' +
                                '<div class="col-md-3"><input type="text" class="form-control text-center" name="status_item[]" placeholder="Status Manual" required></div>' +
-                               '<div class="col-md-1"><button type="button" class="btn btn-danger w-100" onclick="hapusBaris(this)">X</button></div>';
+                               '<div class="col-md-1"><button type="button" class="btn btn-danger w-100 btn-custom" onclick="hapusBaris(this)">X</button></div>';
             container.appendChild(newRow);
         }
 
