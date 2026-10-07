@@ -307,10 +307,6 @@ HTML_TEMPLATE = """
                             <i class="fa-solid fa-sitemap fa-fw"></i> Struktural Pegawai
                         </button>
 
-                        <button type="button" class="btn menu-btn" id="btnMenuFaq" onclick="muatFaqPjt2()">
-                            <i class="fa-solid fa-circle-question fa-fw text-info"></i> Pusat Informasi & FAQ
-                        </button>
-
                         <!-- TOMBOL MENU BARU UNTUK ASISTEN AI Q&A -->
                         <a href="/ai-chat" class="btn menu-btn text-decoration-none" id="btnMenuAI">
                             <i class="fa-solid fa-robot fa-fw text-info"></i> Asisten AI Q&A
@@ -482,9 +478,6 @@ HTML_TEMPLATE = """
 
                 <!-- STRUKTURAL PEGAWAI (DIMUAT DARI pegawai.py VIA FETCH) -->
                 <div id="container-struktural-pegawai-wrapper"></div>
-
-                <!-- KONTEN FAQ PJT II (DIMUAT DARI faq.py VIA FETCH) -->
-                <div id="container-faq-wrapper"></div>
 
                 <!-- 4. FORM LAPORAN NORMALISASI & CHECKLIST UTAMA -->
                 <div class="card content-card" id="container-form-laporan" style="display: none;">
@@ -1225,18 +1218,12 @@ HTML_TEMPLATE = """
             submenu.style.display = (submenu.style.display === 'block') ? 'none' : 'block';
         }
 
-        // Ambil data struktural pegawai & FAQ secara asinkron saat pertama kali dimuat
+        // Ambil data struktural pegawai dari blueprint secara asinkron saat pertama kali dimuat
         window.addEventListener('DOMContentLoaded', () => {
             fetch('/get-struktural-pegawai')
                 .then(res => res.text())
                 .then(html => {
                     document.getElementById('container-struktural-pegawai-wrapper').innerHTML = html;
-                });
-
-            fetch('/get-faq-pjt2')
-                .then(res => res.text())
-                .then(html => {
-                    document.getElementById('container-faq-wrapper').innerHTML = html;
                 });
         });
 
@@ -1246,7 +1233,6 @@ HTML_TEMPLATE = """
             const historyGangguanContainer = document.getElementById('container-history-gangguan');
             const buatLaporanBaruContainer = document.getElementById('container-buat-laporan-baru');
             const pegawaiContainer = document.getElementById('container-struktural-pegawai');
-            const faqContainer = document.getElementById('container-faq-pjt2');
             
             const btnLaporanGroup = document.getElementById('btnMenuLaporanGangguan');
             const btnSubBuatBaru = document.getElementById('btnSubBuatLaporanBaru');
@@ -1254,14 +1240,12 @@ HTML_TEMPLATE = """
             const btnForm = document.getElementById('btnMenuForm');
             const btnSejarah = document.getElementById('btnMenuSejarah');
             const btnPegawai = document.getElementById('btnMenuPegawai');
-            const btnFaq = document.getElementById('btnMenuFaq');
 
             formContainer.style.display = 'none';
             sejarahContainer.style.display = 'none';
             historyGangguanContainer.style.display = 'none';
             buatLaporanBaruContainer.style.display = 'none';
             if (pegawaiContainer) pegawaiContainer.style.display = 'none';
-            if (faqContainer) faqContainer.style.display = 'none';
 
             // Reset active classes
             btnSubBuatBaru.classList.remove('active');
@@ -1269,7 +1253,6 @@ HTML_TEMPLATE = """
             btnForm.classList.remove('active');
             btnSejarah.classList.remove('active');
             btnPegawai.classList.remove('active');
-            btnFaq.classList.remove('active');
             btnLaporanGroup.classList.remove('active');
 
             if (menu === 'buat-laporan-baru') {
@@ -1289,14 +1272,7 @@ HTML_TEMPLATE = """
             } else if (menu === 'struktural-pegawai') {
                 if (pegawaiContainer) pegawaiContainer.style.display = 'block';
                 btnPegawai.classList.add('active');
-            } else if (menu === 'faq') {
-                if (faqContainer) faqContainer.style.display = 'block';
-                btnFaq.classList.add('active');
             }
-        }
-
-        function muatFaqPjt2() {
-            pilihMenu('faq');
         }
 
         function kosongkanKanan() {
@@ -1306,8 +1282,6 @@ HTML_TEMPLATE = """
             document.getElementById('container-buat-laporan-baru').style.display = 'none';
             const pegawaiContainer = document.getElementById('container-struktural-pegawai');
             if (pegawaiContainer) pegawaiContainer.style.display = 'none';
-            const faqContainer = document.getElementById('container-faq-pjt2');
-            if (faqContainer) faqContainer.style.display = 'none';
 
             // Remove active states
             document.querySelectorAll('.menu-btn, .submenu-btn').forEach(btn => btn.classList.remove('active'));
@@ -1558,6 +1532,11 @@ def ai_chat_page():
     """Rute halaman antarmuka asisten AI Q&A"""
     return render_template_string(AI_CHAT_TEMPLATE)
 
+@app.route("/ai-chat", methods=["GET"])
+def ai_chat_page():
+    """Rute halaman antarmuka asisten AI Q&A"""
+    return render_template_string(AI_CHAT_TEMPLATE)
+
 @app.route("/api/ask-ai", methods=["POST"])
 def ask_ai():
     """Endpoint API backend untuk memproses pertanyaan menggunakan Gemini AI"""
@@ -1568,10 +1547,9 @@ def ask_ai():
         return jsonify({"error": "Pertanyaan tidak boleh kosong"}), 400
     
     try:
-        # Menggunakan model flash terbaru yang kompatibel dan stabil
-        # Menggunakan model alternatif untuk menghindari lonjakan trafik 503
+        # Menggunakan model gemini-3.8-flash untuk respon teks yang cepat dan akurat
         response = ai_client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.8-flash",
             contents=(
                 "Anda adalah asisten virtual profesional untuk Sistem Manajemen PLTA Curug "
                 "dan Perum Jasa Tirta II (PJT II). Tugas Anda adalah membantu operator atau staf "
