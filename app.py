@@ -1612,10 +1612,10 @@ def ask_ai():
             f"Pertanyaan Pengguna: {user_question}"
         )
 
-       response = client.models.generate_content(
-         model="gemini-2.5-flash",
-         contents=formatted_prompt,
-     )
+      response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=formatted_prompt,
+        )
 
         answer = getattr(response, "text", None)
         if not answer:
