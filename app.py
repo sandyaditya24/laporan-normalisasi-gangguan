@@ -29,6 +29,15 @@ HTML_TEMPLATE = """
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-left: 6px solid #0d6efd;
+        }
         .card {
             border: none;
             border-radius: 12px;
@@ -57,11 +66,23 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <div class="container mt-5 mb-5">
+        <!-- DASHBOARD UTAMA SESUAI PERMINTAAN -->
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="dashboard-header text-center">
+                    <h2 class="fw-bold text-primary mb-2">SELAMAT DATANG DI APLIKASI SISTEM MANAJEMEN PLTA CURUG</h2>
+                    <h4 class="fw-semibold text-secondary mb-3">PERUM JASA TIRTA 2</h4>
+                    <p class="text-muted mb-0">Silakan gunakan form di bawah ini untuk mengelola dan mencatat laporan normalisasi serta pengoperasian unit.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORM UTAMA -->
         <div class="row justify-content-center">
             <div class="col-md-11">
                 <div class="card shadow-lg">
                     <div class="card-header text-white text-center">
-                        <h3 class="mb-0 fw-bold">FORM LAPORAN NORMALISASI GANGGUAN</h3>
+                        <h3 class="mb-0 fw-bold">FORM LAPORAN NORMALISASI / PENGOPERASIAN</h3>
                         <p class="mb-0 text-white-50 small mt-1">Sistem Pencatatan & Pelaporan Operasional Gardu Induk / Unit Terkait</p>
                     </div>
                     <div class="card-body p-4">
@@ -753,7 +774,7 @@ RESULT_TEMPLATE = """
                         <p class="text-muted mb-4">File PDF laporan gangguan Anda sudah siap diunduh atau dikirimkan langsung ke Grup WhatsApp.</p>
                         <a href="/download/{{ filename }}" class="btn btn-primary w-100 mb-3 py-2 shadow-sm" target="_blank">Unduh File PDF</a>
                         <a href="https://api.whatsapp.com/send?text={{ wa_message }}" class="btn btn-success w-100 mb-3 py-2 shadow-sm" target="_blank">Kirim ke Grup WhatsApp</a>
-                        <a href="/" class="btn btn-outline-secondary w-100 py-2">Kembali ke Form</a>
+                        <a href="/" class="btn btn-outline-secondary w-100 py-2">Kembali ke Dashboard</a>
                     </div>
                 </div>
             </div>
