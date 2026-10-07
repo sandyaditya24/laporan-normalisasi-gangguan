@@ -1605,9 +1605,9 @@ def ask_ai():
             f"Pertanyaan: {user_question}"
         )
 
-        # Menggunakan model standar paling stabil
+        # Menggunakan model produksi terbaru yang aktif di akun Google AI Studio Anda
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-3.5-flash",
             contents=formatted_prompt,
         )
 
