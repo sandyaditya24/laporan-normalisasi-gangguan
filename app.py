@@ -95,7 +95,7 @@ HTML_TEMPLATE = """
                             </div>
 
                             <div class="mb-3" id="wrapper-jenis-otomatis" style="display: none;">
-                                <label for="jenis_gangguan_otomatis" class="form-label fw-bold text-secondary">Jenis Gangguan (Mode Otomatis)</label>
+                                <label for="jenis_gangguan_otomatis" class="form-label fw-bold text-secondary">Jenis Gangguan/Pengoperasian</label>
                                 <select class="form-select" id="jenis_gangguan_otomatis" name="jenis_gangguan_otomatis" onchange="switchOtomatisSub(this.value)">
                                     <option value="" disabled selected>-- Pilih Jenis Checklist Otomatis --</option>
                                     <option value="CHECK LIST PENGAMANAN GANGGUAN / TRIP (GARDU INDUK 70 / 6,3 KV CURUG)">1. CHECK LIST PENGAMANAN GANGGUAN / TRIP (GARDU INDUK 70 / 6,3 KV CURUG)</option>
