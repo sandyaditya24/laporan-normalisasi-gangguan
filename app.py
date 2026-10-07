@@ -34,7 +34,6 @@ HTML_TEMPLATE = """
             --border-color: rgba(226, 232, 240, 0.8);
         }
         body {
-            /* Background dinamis yang diatur via JavaScript dengan transisi halus */
             background: linear-gradient(135deg, rgba(7, 15, 30, 0.85), rgba(15, 23, 42, 0.9)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
@@ -47,7 +46,6 @@ HTML_TEMPLATE = """
             max-width: 1450px;
             margin: 0 auto;
         }
-        /* Header Modern Styling */
         .dashboard-header {
             background: var(--card-bg);
             border-radius: 20px;
@@ -64,7 +62,6 @@ HTML_TEMPLATE = """
             top: 0; left: 0; width: 6px; height: 100%;
             background: var(--primary-gradient);
         }
-        /* Sidebar Styling */
         .menu-sidebar {
             background: var(--card-bg);
             border-radius: 20px;
@@ -101,7 +98,40 @@ HTML_TEMPLATE = """
             border-color: transparent;
             box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
         }
-        /* Card Containers */
+        /* Style untuk Sub-Menu Laporan Gangguan */
+        .submenu-container {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.75rem;
+            border-left: 2px dashed #cbd5e1;
+            display: none;
+        }
+        .submenu-btn {
+            width: 100%;
+            text-align: left;
+            font-weight: 500;
+            border-radius: 10px;
+            padding: 0.6rem 1rem;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            background-color: transparent;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .submenu-btn:hover {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+        }
+        .submenu-btn.active {
+            background-color: #eff6ff;
+            color: var(--primary-color);
+            font-weight: 600;
+            border-color: #bfdbfe;
+        }
         .content-card {
             border: none;
             border-radius: 20px;
@@ -123,7 +153,6 @@ HTML_TEMPLATE = """
             padding: 1.75rem;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        /* Tombol Close Merah untuk Mengosongkan Bagian Kanan */
         .btn-close-red-container {
             position: absolute;
             top: 1.25rem;
@@ -147,7 +176,6 @@ HTML_TEMPLATE = """
             background-color: #b02a37;
             transform: scale(1.08);
         }
-        /* Form elements */
         .form-control, .form-select {
             border-radius: 12px;
             padding: 0.75rem 1rem;
@@ -172,8 +200,6 @@ HTML_TEMPLATE = """
             overflow: hidden;
             border: 1px solid var(--border-color);
         }
-        
-        /* Tambahan Style untuk Gambar dengan Tombol Close & Transparan */
         .closable-image-wrapper {
             position: relative;
             display: inline-block;
@@ -208,7 +234,6 @@ HTML_TEMPLATE = """
         .btn-close-img:hover {
             background: rgba(220, 53, 69, 0.9);
         }
-        /* Widget Ganti Background PJT II */
         .bg-switcher-badge {
             cursor: pointer;
             transition: all 0.2s;
@@ -234,9 +259,8 @@ HTML_TEMPLATE = """
                         </div>
                         <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
                             <span class="badge bg-primary px-3 py-2 rounded-pill fs-6 fw-normal shadow-sm">
-                                <i class="fa-solid fa-shield-halved me-1"></i> Enterprise v3.1
+                                <i class="fa-solid fa-shield-halved me-1"></i> Enterprise v3.2
                             </span>
-                            <!-- Tombol Ganti Background PJT II -->
                             <div class="mt-2">
                                 <span class="badge bg-dark bg-switcher-badge px-3 py-2 rounded-pill fs-7 shadow-sm" onclick="gantiBackgroundPJT()" title="Klik untuk mengganti background PJT II">
                                     <i class="fa-solid fa-image me-1"></i> Background PJT II (<span id="bgName">Curug Tempo Dulu</span>)
@@ -255,9 +279,23 @@ HTML_TEMPLATE = """
                 <div class="menu-sidebar sticky-top" style="top: 2rem;">
                     <h6 class="text-uppercase text-muted fw-bold mb-3" style="font-size: 0.75rem; letter-spacing: 0.08em;">Menu Navigasi</h6>
                     <div class="d-grid gap-2 mb-4">
-                        <button type="button" class="btn menu-btn" id="btnMenuForm" onclick="pilihMenu('form')">
-                            <i class="fa-solid fa-file-lines fa-fw"></i> Form Laporan & Checklist
-                        </button>
+                        
+                        <!-- MENU UTAMA: LAPORAN GANGGUAN DENGAN SUB-MENU -->
+                        <div>
+                            <button type="button" class="btn menu-btn" id="btnMenuLaporanGangguan" onclick="toggleSubMenu('laporan-gangguan-submenu')">
+                                <i class="fa-solid fa-triangle-exclamation fa-fw text-warning"></i> Laporan Gangguan <i class="fa-solid fa-chevron-down ms-auto fs-7"></i>
+                            </button>
+                            <div class="submenu-container" id="laporan-gangguan-submenu">
+                                <button type="button" class="btn submenu-btn" id="btnSubBuatLaporan" onclick="pilihMenu('form')">
+                                    <i class="fa-solid fa-file-circle-plus fa-fw"></i> Buat Laporan Gangguan
+                                </button>
+                                <button type="button" class="btn submenu-btn" id="btnSubHistory" onclick="pilihMenu('history')">
+                                    <i class="fa-solid fa-clock-rotate-left fa-fw"></i> History Gangguan
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- MENU LAINNYA -->
                         <button type="button" class="btn menu-btn" id="btnMenuSejarah" onclick="pilihMenu('sejarah')">
                             <i class="fa-solid fa-landmark fa-fw"></i> Sejarah Bendung Curug
                         </button>
@@ -275,9 +313,8 @@ HTML_TEMPLATE = """
             <!-- AREA KONTEN (DEFAULT KOSONG TOTAL) -->
             <div class="col-lg-9">
                 
-                <!-- 2. ARTIKEL SEJARAH BENDUNG CURUG -->
+                <!-- 1. ARTIKEL SEJARAH BENDUNG CURUG -->
                 <div class="card content-card mb-4" id="container-sejarah" style="display: none;">
-                    <!-- Tombol Silang Merah untuk Mengosongkan Bagian Kanan -->
                     <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()" title="Tutup / Kosongkan Halaman">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
@@ -294,7 +331,6 @@ HTML_TEMPLATE = """
                                 </p>
                             </div>
                             <div class="col-md-5 text-center">
-                                <!-- Area Gambar dengan Tombol Close & Efek Transparan -->
                                 <div id="imageWrapper" class="closable-image-wrapper border shadow-sm rounded-4">
                                     <button type="button" class="btn-close-img" onclick="toggleCloseImage()" title="Tutup / Kosongkan Gambar">
                                         <i class="fa-solid fa-xmark"></i>
@@ -314,7 +350,57 @@ HTML_TEMPLATE = """
 
                         <div class="mt-4 text-center">
                             <button type="button" class="btn btn-outline-primary px-4 btn-custom" onclick="pilihMenu('form')">
-                                <i class="fa-solid fa-arrow-left me-2"></i> Kembali ke Form Laporan
+                                <i class="fa-solid fa-arrow-left me-2"></i> Kembali ke Buat Laporan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. HISTORY GANGGUAN / DAFTAR LAPORAN PDF TERSIMPAN -->
+                <div class="card content-card mb-4" id="container-history" style="display: none;">
+                    <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()" title="Tutup / Kosongkan Halaman">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div class="card-header-custom text-white text-center">
+                        <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-clock-rotate-left me-2"></i> HISTORY GANGGUAN & LAPORAN TERSIMPAN</h3>
+                        <p class="mb-0 text-white-50 small mt-1">Daftar arsip file laporan PDF normalisasi yang telah dibuat sebelumnya</p>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover align-middle bg-white shadow-sm">
+                                <thead class="table-dark text-center">
+                                    <tr>
+                                        <th width="8%">No</th>
+                                        <th width="52%">Nama File Laporan PDF</th>
+                                        <th width="20%">Waktu Pembuatan</th>
+                                        <th width="20%">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if pdf_files %}
+                                        {% for file in pdf_files %}
+                                        <tr>
+                                            <td class="text-center fw-bold">{{ loop.index }}</td>
+                                            <td><i class="fa-solid fa-file-pdf text-danger me-2"></i> {{ file.name }}</td>
+                                            <td class="text-center text-muted small">{{ file.date }}</td>
+                                            <td class="text-center">
+                                                <a href="/download/{{ file.name }}" class="btn btn-sm btn-primary px-3 shadow-sm" target="_blank">
+                                                    <i class="fa-solid fa-download me-1"></i> Unduh
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted py-4">Belum ada file laporan PDF yang dibuat. Silakan buat laporan terlebih dahulu.</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <button type="button" class="btn btn-outline-primary px-4 btn-custom" onclick="pilihMenu('form')">
+                                <i class="fa-solid fa-file-circle-plus me-2"></i> Buat Laporan Baru
                             </button>
                         </div>
                     </div>
@@ -322,7 +408,6 @@ HTML_TEMPLATE = """
 
                 <!-- 3. FORM UTAMA LAPORAN & CHECKLIST -->
                 <div class="card content-card" id="container-form-laporan" style="display: none;">
-                    <!-- Tombol Silang Merah untuk Mengosongkan Bagian Kanan -->
                     <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()" title="Tutup / Kosongkan Halaman">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
@@ -342,7 +427,6 @@ HTML_TEMPLATE = """
                                 </select>
                             </div>
 
-                            <!-- PILIHAN MODE PENCATATAN -->
                             <div class="mb-4 p-3 bg-light border rounded-4">
                                 <label class="form-label fw-bold text-primary mb-2">Pilih Mode Pencatatan Penanganan:</label>
                                 <div class="btn-group w-100 shadow-sm rounded-3" role="group">
@@ -354,7 +438,6 @@ HTML_TEMPLATE = """
                                 </div>
                             </div>
 
-                            <!-- INPUT / PILIHAN JENIS GANGGUAN -->
                             <div class="mb-4" id="wrapper-jenis-manual">
                                 <label for="jenis_gangguan_manual" class="form-label fw-bold text-secondary">Jenis Gangguan</label>
                                 <input type="text" class="form-control" id="jenis_gangguan_manual" name="jenis_gangguan_manual" placeholder="Contoh: Gangguan Trafo / Trip PMT">
@@ -407,7 +490,6 @@ HTML_TEMPLATE = """
                             <!-- KONTAINER MODE OTOMATIS -->
                             <div id="section-otomatis" style="display: none;" class="mb-4">
                                 
-                                <!-- SUB SECTION 1: PENGAMANAN GANGGUAN / TRIP -->
                                 <div id="sub-section-gi-curug" style="display: none;">
                                     <div class="alert alert-warning border-0 shadow-sm rounded-4">
                                         <b>CHECK LIST PENGAMANAN GANGGUAN / TRIP (GARDU INDUK 70 / 6,3 KV CURUG)</b><br>
@@ -552,7 +634,6 @@ HTML_TEMPLATE = """
                                     </div>
                                 </div>
 
-                                <!-- SUB SECTION 2 & 3 & 4 (Pindah Line & PLTA dipertahankan utuh sesuai sistem sebelumnya) -->
                                 <div id="sub-section-pindah-line" style="display: none;">
                                     <div class="alert alert-info border-0 shadow-sm rounded-4">
                                         <b>CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV JATILUHUR KE KOSAMBI</b>
@@ -812,7 +893,6 @@ HTML_TEMPLATE = """
     </div>
 
     <script>
-        // Array Gambar Background PJT II secara otomatis/berganti-ganti
         const backgroundListPJT = [
             {
                 url: '/static/CURUGTEMPODULU.jpg',
@@ -836,47 +916,75 @@ HTML_TEMPLATE = """
         function gantiBackgroundPJT() {
             currentBgIndex = (currentBgIndex + 1) % backgroundListPJT.length;
             const selectedBg = backgroundListPJT[currentBgIndex];
-            
-            // Terapkan ke background body dengan gradient overlay khas
             document.body.style.backgroundImage = `linear-gradient(135deg, rgba(7, 15, 30, 0.85), rgba(15, 23, 42, 0.9)), url('${selectedBg.url}')`;
             document.getElementById('bgName').innerText = selectedBg.name;
         }
 
-        // Timer untuk mengganti background secara otomatis setiap 8 detik (bisa disesuaikan durasinya)
         setInterval(gantiBackgroundPJT, 8000);
+
+        function toggleSubMenu(submenuId) {
+            const submenu = document.getElementById(submenuId);
+            if (submenu.style.display === 'block') {
+                submenu.style.display = 'none';
+            } else {
+                submenu.style.display = 'block';
+            }
+        }
 
         function pilihMenu(menu) {
             const formContainer = document.getElementById('container-form-laporan');
             const sejarahContainer = document.getElementById('container-sejarah');
-            const btnForm = document.getElementById('btnMenuForm');
+            const historyContainer = document.getElementById('container-history');
+            
+            const btnLaporanGroup = document.getElementById('btnMenuLaporanGangguan');
+            const btnSubBuat = document.getElementById('btnSubBuatLaporan');
+            const btnSubHist = document.getElementById('btnSubHistory');
             const btnSejarah = document.getElementById('btnMenuSejarah');
 
-            // Sembunyikan semuanya terlebih dahulu
+            // Sembunyikan semua kontainer
             formContainer.style.display = 'none';
             sejarahContainer.style.display = 'none';
-            btnForm.classList.remove('active');
+            historyContainer.style.display = 'none';
+
+            // Reset active state tombol
+            btnLaporanGroup.classList.remove('active');
+            btnSubBuat.classList.remove('active');
+            btnSubHist.classList.remove('active');
             btnSejarah.classList.remove('active');
 
-            // Tampilkan berdasarkan menu yang dipilih
             if (menu === 'form') {
                 formContainer.style.display = 'block';
-                btnForm.classList.add('active');
+                btnLaporanGroup.classList.add('active');
+                btnSubBuat.classList.add('active');
+                document.getElementById('laporan-gangguan-submenu').style.display = 'block';
+            } else if (menu === 'history') {
+                historyContainer.style.display = 'block';
+                btnLaporanGroup.classList.add('active');
+                btnSubHist.classList.add('active');
+                document.getElementById('laporan-gangguan-submenu').style.display = 'block';
             } else if (menu === 'sejarah') {
                 sejarahContainer.style.display = 'block';
                 btnSejarah.classList.add('active');
             }
         }
 
-        // Fungsi untuk mengosongkan bagian kanan saat tombol silang merah diklik
         function kosongkanKanan() {
             const formContainer = document.getElementById('container-form-laporan');
             const sejarahContainer = document.getElementById('container-sejarah');
-            const btnForm = document.getElementById('btnMenuForm');
+            const historyContainer = document.getElementById('container-history');
+            
+            const btnLaporanGroup = document.getElementById('btnMenuLaporanGangguan');
+            const btnSubBuat = document.getElementById('btnSubBuatLaporan');
+            const btnSubHist = document.getElementById('btnSubHistory');
             const btnSejarah = document.getElementById('btnMenuSejarah');
 
             formContainer.style.display = 'none';
             sejarahContainer.style.display = 'none';
-            btnForm.classList.remove('active');
+            historyContainer.style.display = 'none';
+
+            btnLaporanGroup.classList.remove('active');
+            btnSubBuat.classList.remove('active');
+            btnSubHist.classList.remove('active');
             btnSejarah.classList.remove('active');
         }
 
@@ -1019,11 +1127,7 @@ HTML_TEMPLATE = """
 
         window.onload = function() {
             switchMode('manual');
-            const formContainer = document.getElementById('container-form-laporan');
-            const sejarahContainer = document.getElementById('container-sejarah');
-            
-            formContainer.style.display = 'none';
-            sejarahContainer.style.display = 'none';
+            kosongkanKanan();
         }
     </script>
 </body>
@@ -1097,9 +1201,22 @@ RESULT_TEMPLATE = """
 </html>
 """
 
+def get_pdf_files_list():
+    files = []
+    if os.path.exists(PDF_FOLDER):
+        for f in os.listdir(PDF_FOLDER):
+            if f.endswith(".pdf"):
+                full_path = os.path.join(PDF_FOLDER, f)
+                mod_time = os.path.getmtime(full_path)
+                date_str = datetime.fromtimestamp(mod_time).strftime('%d-%m-%Y %H:%M')
+                files.append({"name": f, "timestamp": mod_time, "date": date_str})
+        files.sort(key=lambda x: x["timestamp"], reverse=True)
+    return files
+
 @app.route("/")
 def index():
-    return render_template_string(HTML_TEMPLATE)
+    pdf_files = get_pdf_files_list()
+    return render_template_string(HTML_TEMPLATE, pdf_files=pdf_files)
 
 @app.route("/generate", methods=["POST"])
 def generate():
@@ -1125,16 +1242,16 @@ def generate():
         waktu = f"{nama_hari}, {dt.day} {nama_bulan} {dt.year} Pukul {dt.strftime('%H:%M')} WIB"
         default_jam = dt.strftime('%H:%M')
         
-        file_date_str = dt.strftime('%d-%m-%Y')
+        file_date_str = dt.strftime('%d-%m-%Y_%H%M')
     except:
         waktu = waktu_raw
         default_jam = "00:00"
-        file_date_str = datetime.now().strftime('%d-%m-%Y')
+        file_date_str = datetime.now().strftime('%d-%m-%Y_%H%M')
 
     clean_jenis = re.sub(r'[^a-zA-Z0-9]', '_', jenis_gangguan)
     clean_jenis = re.sub(r'_+', '_', clean_jenis).strip('_')
-    if len(clean_jenis) > 40:
-        clean_jenis = clean_jenis[:40]
+    if len(clean_jenis) > 30:
+        clean_jenis = clean_jenis[:30]
     
     filename = f"laporan_{clean_jenis}_{file_date_str}.pdf"
 
