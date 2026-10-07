@@ -34,14 +34,14 @@ HTML_TEMPLATE = """
             --border-color: rgba(226, 232, 240, 0.8);
         }
         body {
-            /* Background dinamis yang diatur via JavaScript */
+            /* Background dinamis yang diatur via JavaScript dengan transisi halus */
             background: linear-gradient(135deg, rgba(7, 15, 30, 0.85), rgba(15, 23, 42, 0.9)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             color: var(--text-main);
             padding-bottom: 3rem;
-            transition: background 0.8s ease-in-out;
+            transition: background 1s ease-in-out;
         }
         .enterprise-wrapper {
             max-width: 1450px;
@@ -239,7 +239,7 @@ HTML_TEMPLATE = """
                             <!-- Tombol Ganti Background PJT II -->
                             <div class="mt-2">
                                 <span class="badge bg-dark bg-switcher-badge px-3 py-2 rounded-pill fs-7 shadow-sm" onclick="gantiBackgroundPJT()" title="Klik untuk mengganti background PJT II">
-                                    <i class="fa-solid fa-image me-1"></i> Ganti Background PJT II (<span id="bgName">Curug Tempo Dulu</span>)
+                                    <i class="fa-solid fa-image me-1"></i> Background PJT II (<span id="bgName">Curug Tempo Dulu</span>)
                                 </span>
                             </div>
                         </div>
@@ -842,6 +842,9 @@ HTML_TEMPLATE = """
             document.getElementById('bgName').innerText = selectedBg.name;
         }
 
+        // Timer untuk mengganti background secara otomatis setiap 8 detik (bisa disesuaikan durasinya)
+        setInterval(gantiBackgroundPJT, 8000);
+
         function pilihMenu(menu) {
             const formContainer = document.getElementById('container-form-laporan');
             const sejarahContainer = document.getElementById('container-sejarah');
@@ -991,7 +994,6 @@ HTML_TEMPLATE = """
             }
         }
 
-        // Fungsi toggle untuk menutup/menyembunyikan gambar, membuat area kosong, dan menampilkan efek transparan
         let isImageClosed = false;
         function toggleCloseImage() {
             const img = document.getElementById('targetImage');
@@ -1020,7 +1022,6 @@ HTML_TEMPLATE = """
             const formContainer = document.getElementById('container-form-laporan');
             const sejarahContainer = document.getElementById('container-sejarah');
             
-            // Bagian kanan dikosongkan total saat pertama kali dimuat
             formContainer.style.display = 'none';
             sejarahContainer.style.display = 'none';
         }
