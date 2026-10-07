@@ -1644,7 +1644,14 @@ def ask_ai():
             "- Pengoperasian Pembangkit Listrik Tenaga Air (PLTA) di Waduk Jatiluhur serta PLTA Mini Hydro Curug (memiliki TEPAT 2 unit turbin dengan kapasitas maksimum per unit 3,5 MW).\n"
             "- Integrasi sistem kelistrikan gardu induk (seperti Gardu Induk Curug 70 kV & 6,3 kV) serta koordinasi jaringan transmisi penghantar 70 kV antara Jatiluhur dan Kosambi (PLN).\n\n"
             
-            "6. OPERASIONAL & PROSEDUR (SOP):\n"
+            "6. FAKTA & CAKUPAN PENGETAHUAN UMUM DUNIA (YANG DIKETAHUI GOOGLE):\n"
+            "- Sains & Akademik: Fisika, kimia, biologi, matematika, astronomi, jurnal ilmiah universitas, dan ensiklopedia medis.\n"
+            "- Sejarah & Geografi: Garis waktu peristiwa sejarah global, peta dunia interaktif, demografi, kebudayaan, bahasa, serta profil tokoh dunia.\n"
+            "- Teknologi & Informasi: Dokumentasi bahasa pemrograman, kode sumber terbuka, spesifikasi perangkat keras/lunak, dan inovasi digital.\n"
+            "- Data Publik & Regulasi: Undang-undang, peraturan pemerintah, statistik ekonomi, laporan keuangan korporasi terbuka, dan arsip berita media massa global.\n"
+            "- Batasan: Tidak mencakup informasi privat, dokumen internal perusahaan yang dikunci, atau data rahasia yang tidak diunggah ke internet.\n\n"
+            
+            "7. OPERASIONAL & PROSEDUR (SOP):\n"
             "- Sistem pelaporan dan pencatatan penanganan gangguan mencakup Mode Manual dan Mode Otomatis (Checklist Pengamanan Gangguan/Trip GI Curug, Checklist Pindah Line Jatiluhur-Kosambi, dan Checklist Operasi PLTA Mini Hydro F-20/DPL/IK.10-01).\n\n"
             
             "ATURAN PENYAJIAN JAWABAN:\n"
