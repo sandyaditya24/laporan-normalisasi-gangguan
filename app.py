@@ -768,13 +768,11 @@ HTML_TEMPLATE = """
                 sejarahContainer.style.display = 'none';
                 btnForm.classList.add('active');
                 btnSejarah.classList.remove('active');
-                formContainer.scrollIntoView({ behavior: 'smooth' });
             } else if (menu === 'sejarah') {
                 formContainer.style.display = 'none';
                 sejarahContainer.style.display = 'block';
                 btnSejarah.classList.add('active');
                 btnForm.classList.remove('active');
-                sejarahContainer.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
@@ -894,6 +892,7 @@ HTML_TEMPLATE = """
 
         window.onload = function() {
             switchMode('manual');
+            pilihMenu('form'); // Memastikan inisialisasi awal bersih dan langsung menampilkan form utama saja
         }
     </script>
 </body>
