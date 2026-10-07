@@ -11,6 +11,7 @@ from pegawai import pegawai_bp
 
 app = Flask(__name__)
 app.register_blueprint(pegawai_bp)
+
 PDF_FOLDER = "static"
 if not os.path.exists(PDF_FOLDER):
     os.makedirs(PDF_FOLDER)
@@ -295,6 +296,10 @@ HTML_TEMPLATE = """
                         <button type="button" class="btn menu-btn" id="btnMenuSejarah" onclick="pilihMenu('sejarah')">
                             <i class="fa-solid fa-landmark fa-fw"></i> Sejarah Bendung Curug
                         </button>
+
+                        <button type="button" class="btn menu-btn" id="btnMenuPegawai" onclick="pilihMenu('struktural-pegawai')">
+                            <i class="fa-solid fa-sitemap fa-fw"></i> Struktural Pegawai
+                        </button>
                     </div>
                     
                     <div class="p-3 bg-light rounded-4 border border-light">
@@ -459,6 +464,9 @@ HTML_TEMPLATE = """
                         </div>
                     </div>
                 </div>
+
+                <!-- STRUKTURAL PEGAWAI (DIMUAT DARI pegawai.py VIA FETCH) -->
+                <div id="container-struktural-pegawai-wrapper"></div>
 
                 <!-- 4. FORM LAPORAN NORMALISASI & CHECKLIST UTAMA -->
                 <div class="card content-card" id="container-form-laporan" style="display: none;">
@@ -1199,28 +1207,41 @@ HTML_TEMPLATE = """
             submenu.style.display = (submenu.style.display === 'block') ? 'none' : 'block';
         }
 
+        // Ambil data struktural pegawai dari blueprint secara asinkron saat pertama kali dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('/get-struktural-pegawai')
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('container-struktural-pegawai-wrapper').innerHTML = html;
+                });
+        });
+
         function pilihMenu(menu) {
             const formContainer = document.getElementById('container-form-laporan');
             const sejarahContainer = document.getElementById('container-sejarah');
             const historyGangguanContainer = document.getElementById('container-history-gangguan');
             const buatLaporanBaruContainer = document.getElementById('container-buat-laporan-baru');
+            const pegawaiContainer = document.getElementById('container-struktural-pegawai');
             
             const btnLaporanGroup = document.getElementById('btnMenuLaporanGangguan');
             const btnSubBuatBaru = document.getElementById('btnSubBuatLaporanBaru');
             const btnSubHistory = document.getElementById('btnSubHistoryGangguan');
             const btnForm = document.getElementById('btnMenuForm');
             const btnSejarah = document.getElementById('btnMenuSejarah');
+            const btnPegawai = document.getElementById('btnMenuPegawai');
 
             formContainer.style.display = 'none';
             sejarahContainer.style.display = 'none';
             historyGangguanContainer.style.display = 'none';
             buatLaporanBaruContainer.style.display = 'none';
+            if(pegawaiContainer) pegawaiContainer.style.display = 'none';
 
             btnLaporanGroup.classList.remove('active');
             btnSubBuatBaru.classList.remove('active');
             btnSubHistory.classList.remove('active');
             btnForm.classList.remove('active');
             btnSejarah.classList.remove('active');
+            if(btnPegawai) btnPegawai.classList.remove('active');
 
             if (menu === 'buat-laporan-baru') {
                 buatLaporanBaruContainer.style.display = 'block';
@@ -1238,6 +1259,9 @@ HTML_TEMPLATE = """
             } else if (menu === 'sejarah') {
                 sejarahContainer.style.display = 'block';
                 btnSejarah.classList.add('active');
+            } else if (menu === 'struktural-pegawai') {
+                if(pegawaiContainer) pegawaiContainer.style.display = 'block';
+                if(btnPegawai) btnPegawai.classList.add('active');
             }
         }
 
@@ -1246,12 +1270,16 @@ HTML_TEMPLATE = """
             document.getElementById('container-sejarah').style.display = 'none';
             document.getElementById('container-history-gangguan').style.display = 'none';
             document.getElementById('container-buat-laporan-baru').style.display = 'none';
+            const pegawaiContainer = document.getElementById('container-struktural-pegawai');
+            if(pegawaiContainer) pegawaiContainer.style.display = 'none';
 
             document.getElementById('btnMenuLaporanGangguan').classList.remove('active');
             document.getElementById('btnSubBuatLaporanBaru').classList.remove('active');
             document.getElementById('btnSubHistoryGangguan').classList.remove('active');
             document.getElementById('btnMenuForm').classList.remove('active');
             document.getElementById('btnMenuSejarah').classList.remove('active');
+            const btnPegawai = document.getElementById('btnMenuPegawai');
+            if(btnPegawai) btnPegawai.classList.remove('active');
         }
 
         function switchMode(mode) {
