@@ -8,6 +8,7 @@ import re
 import urllib.parse
 from datetime import datetime
 from pegawai import pegawai_bp
+from flask import Flask, render_template
 from faq import faq_bp
 
 app = Flask(__name__)
