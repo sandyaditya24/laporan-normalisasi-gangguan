@@ -579,8 +579,34 @@ HTML_TEMPLATE = """
                                                 <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b7" value="on" checked></td><td class="text-center">7</td><td>PMT / CB Jatiluhur / Kosambi</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b7" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b7"></td></tr>
                                                 <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b8" value="on" checked></td><td class="text-center">8</td><td>PMT / CB Trafo I 20 / 70 KV 10 MVA</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b8" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b8"></td></tr>
                                                 <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b9" value="on" checked></td><td class="text-center">9</td><td>PMT / CB Masukan dari Trafo I</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b9" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b9"></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b10" value="on" checked></td><td class="text-center">10</td><td>PMT / CB Trafo II 70 / 6,3 KV 5 MVA Posisi TC. ..........</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b10" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b10"></td></tr>
-                                                <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b11" value="on" checked></td><td class="text-center">11</td><td>PMT / CB Trafo III 70 / 6,3 KV 5 MVA Posisi TC. ..........</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b11" value="Dimasukan"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b11"></td></tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b10" value="on" checked></td>
+                                                    <td class="text-center">10</td>
+                                                    <td>
+                                                        PMT / CB Trafo II 70 / 6,3 KV 5 MVA Posisi TC. 
+                                                        <select class="form-select form-select-sm d-inline-block w-auto" name="tc_b10" style="display:inline-block; width:80px;">
+                                                            {% for i in range(1, 21) %}
+                                                            <option value="{{ i }}">{{ i }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_b10" value="Dimasukan"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_b10"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b11" value="on" checked></td>
+                                                    <td class="text-center">11</td>
+                                                    <td>
+                                                        PMT / CB Trafo III 70 / 6,3 KV 5 MVA Posisi TC. 
+                                                        <select class="form-select form-select-sm d-inline-block w-auto" name="tc_b11" style="display:inline-block; width:80px;">
+                                                            {% for i in range(1, 21) %}
+                                                            <option value="{{ i }}">{{ i }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_b11" value="Dimasukan"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="jam_b11"></td>
+                                                </tr>
                                                 <tr><td class="text-center"><input class="form-check-input" type="checkbox" name="chk_b12" value="on" checked></td><td class="text-center">12</td><td>Riset Semua Gangguan</td><td><input type="text" class="form-control form-control-sm text-center" name="pos_b12" value="Clear"></td><td><input type="text" class="form-control form-control-sm text-center" name="jam_b12"></td></tr>
                                             </tbody>
                                         </table>
