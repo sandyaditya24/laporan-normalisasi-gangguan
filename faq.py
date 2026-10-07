@@ -182,13 +182,13 @@ function filterKategori(kategori, event) {
     event.currentTarget.classList.add('active');
 
     let items = document.querySelectorAll('.faq-item');
-    items.forEach(item => {
+    items.items?.forEach ? items.forEach(item => {
         if(kategori === 'all' || item.getAttribute('data-kategori') === kategori) {
             item.style.display = "";
         } else {
             item.style.display = "none";
         }
-    });
+    }) : null;
 }
 </script>
 """
