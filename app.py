@@ -1569,8 +1569,9 @@ def ask_ai():
     
     try:
         # Menggunakan model flash terbaru yang kompatibel dan stabil
+        # Menggunakan model alternatif untuk menghindari lonjakan trafik 503
         response = ai_client.models.generate_content(
-            model="gemini-flash-latest",
+            model="gemini-2.5-flash",
             contents=(
                 "Anda adalah asisten virtual profesional untuk Sistem Manajemen PLTA Curug "
                 "dan Perum Jasa Tirta II (PJT II). Tugas Anda adalah membantu operator atau staf "
