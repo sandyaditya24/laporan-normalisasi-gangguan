@@ -7,9 +7,10 @@ import os
 import re
 import urllib.parse
 from datetime import datetime
+from pegawai import pegawai_bp
 
 app = Flask(__name__)
-
+app.register_blueprint(pegawai_bp)
 PDF_FOLDER = "static"
 if not os.path.exists(PDF_FOLDER):
     os.makedirs(PDF_FOLDER)
