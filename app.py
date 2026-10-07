@@ -1411,25 +1411,38 @@ AI_CHAT_TEMPLATE = """
             color: #1e293b;
             padding: 2rem 0;
         }
-        .chat-wrapper { max-width: 900px; margin: 0 auto; }
-        .chat-card { border-radius: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255, 255, 255, 0.4); overflow: hidden; }
+        .chat-wrapper { max-width: 950px; margin: 0 auto; }
+        .chat-card { border-radius: 20px; background: rgba(255, 255, 255, 0.97); backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.25); border: 1px solid rgba(255, 255, 255, 0.5); overflow: hidden; }
         .chat-header { background: linear-gradient(135deg, #0f172a, #1e293b); padding: 1.5rem 2rem; color: white; }
-        .chat-box { height: 450px; overflow-y: auto; padding: 1.5rem; background: #f8fafc; }
-        .message { margin-bottom: 1rem; }
-        .message.user { text-align: right; }
-        .message.ai { text-align: left; }
-        .bubble { display: inline-block; padding: 0.75rem 1.25rem; border-radius: 15px; max-width: 75%; text-align: left; font-size: 0.95rem; line-height: 1.5; }
-        .user .bubble { background-color: #2563eb; color: white; border-bottom-right-radius: 2px; }
-        .ai .bubble { background-color: #e2e8f0; color: #1e293b; border-bottom-left-radius: 2px; }
+        .chat-box { height: 500px; overflow-y: auto; padding: 1.75rem; background: #f8fafc; display: flex; flex-direction: column; gap: 1rem; }
+        .message { display: flex; gap: 12px; max-width: 85%; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .message.user { margin-left: auto; flex-direction: row-reverse; }
+        .message.ai { margin-right: auto; }
+        .avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .user .avatar { background: #2563eb; color: white; }
+        .ai .avatar { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; }
+        .bubble { padding: 0.9rem 1.25rem; border-radius: 16px; font-size: 0.95rem; line-height: 1.6; word-break: break-word; white-space: pre-wrap; }
+        .user .bubble { background-color: #2563eb; color: white; border-bottom-right-radius: 4px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+        .ai .bubble { background-color: #ffffff; color: #1e293b; border-bottom-left-radius: 4px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .typing-dots span { height: 8px; width: 8px; float: left; margin: 0 2px; background-color: #94a3b8; border-radius: 50%; display: inline-block; animation: bounce 1.3s infinite ease-in-out; }
+        .typing-dots span:nth-child(2) { animation-delay: -1.1s; }
+        .typing-dots span:nth-child(3) { animation-delay: -0.9s; }
+        @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
     </style>
 </head>
 <body>
     <div class="container chat-wrapper">
         <div class="chat-card">
             <div class="chat-header d-flex justify-content-between align-items-center">
-                <div>
-                    <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-robot me-2 text-info"></i> Asisten AI Q&A Operasional</h3>
-                    <p class="mb-0 text-white-50 small mt-1">Konsultasi prosedur SOP, normalisasi, dan informasi teknis Bendung Curug</p>
+                <div class="d-flex align-items-center gap-3">
+                    <div style="background: rgba(255,255,255,0.15); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-robot text-info fs-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold fs-5">Asisten AI Q&A Operasional</h3>
+                        <p class="mb-0 text-white-50 small">Didukung oleh Google AI (Gemini)</p>
+                    </div>
                 </div>
                 <a href="/" class="btn btn-outline-light btn-sm px-3 rounded-pill fw-semibold">
                     <i class="fa-solid fa-arrow-left me-1"></i> Kembali
@@ -1438,14 +1451,15 @@ AI_CHAT_TEMPLATE = """
             
             <div class="chat-box" id="chatBox">
                 <div class="message ai">
-                    <div class="bubble">Halo! Saya adalah Asisten AI untuk Sistem Manajemen PLTA Curug & PJT II. Silakan tanyakan hal seputar prosedur penanganan gangguan, operasional gardu induk, atau informasi terkait lainnya.</div>
+                    <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div class="bubble">Halo! Saya Asisten AI untuk Sistem Manajemen PLTA Curug & PJT II. Silakan tanyakan hal seputar prosedur penanganan gangguan, operasional gardu induk, atau informasi SOP terkait.</div>
                 </div>
             </div>
             
             <div class="p-3 p-md-4 bg-white border-top">
                 <form id="chatForm" class="d-flex gap-2">
-                    <input type="text" id="userInput" class="form-control form-control-lg fs-6" placeholder="Ketik pertanyaan Anda di sini..." autocomplete="off" required>
-                    <button type="submit" class="btn btn-primary px-4 btn-custom" id="sendBtn">
+                    <input type="text" id="userInput" class="form-control form-control-lg fs-6" placeholder="Ketik pertanyaan atau konsultasi SOP di sini..." autocomplete="off" required>
+                    <button type="submit" class="btn btn-primary px-4 fw-semibold" id="sendBtn" style="border-radius: 12px;">
                         <i class="fa-solid fa-paper-plane me-1"></i> Kirim
                     </button>
                 </form>
@@ -1469,39 +1483,26 @@ AI_CHAT_TEMPLATE = """
             userInput.disabled = true;
             sendBtn.disabled = true;
 
-            const loadingId = appendMessage('Sedang memproses jawaban...', 'ai loading');
+            const loadingId = appendTypingIndicator();
 
             try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 50000);
-
                 const response = await fetch('/api/ask-ai', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question: question }),
-                    signal: controller.signal
+                    body: JSON.stringify({ question: question })
                 });
 
-                clearTimeout(timeoutId);
-
                 const data = await response.json();
-                const loadingElement = document.getElementById(loadingId);
-                if (loadingElement) loadingElement.remove();
+                removeElement(loadingId);
 
                 if (response.ok && data.success !== false && data.answer) {
                     appendMessage(data.answer, 'ai');
                 } else {
-                    appendMessage('Maaf, terjadi kesalahan: ' + (data.error || 'Gagal merespons'), 'ai');
+                    appendMessage('Maaf: ' + (data.error || 'Gagal merespons'), 'ai');
                 }
             } catch (error) {
-                const loadingElement = document.getElementById(loadingId);
-                if (loadingElement) loadingElement.remove();
-
-                if (error && error.name === 'AbortError') {
-                    appendMessage('Permintaan AI terlalu lama. Periksa internet/API key Gemini lalu coba lagi.', 'ai');
-                } else {
-                    appendMessage('Terjadi kesalahan koneksi ke server. Cek terminal Flask untuk detail.', 'ai');
-                }
+                removeElement(loadingId);
+                appendMessage('Terjadi kesalahan koneksi ke server.', 'ai');
             } finally {
                 userInput.disabled = false;
                 sendBtn.disabled = false;
@@ -1512,18 +1513,46 @@ AI_CHAT_TEMPLATE = """
         function appendMessage(text, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
-            const uniqueId = 'msg-' + Date.now();
-            messageDiv.id = uniqueId;
+            
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'avatar';
+            avatarDiv.innerHTML = sender === 'user' ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
             
             const bubbleDiv = document.createElement('div');
             bubbleDiv.className = 'bubble';
-            bubbleDiv.innerText = text;
+            bubbleDiv.textContent = text;
             
+            messageDiv.appendChild(avatarDiv);
+            messageDiv.appendChild(bubbleDiv);
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function appendTypingIndicator() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ai';
+            const uniqueId = 'typing-' + Date.now();
+            messageDiv.id = uniqueId;
+            
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'avatar';
+            avatarDiv.innerHTML = '<i class="fa-solid fa-robot"></i>';
+            
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'bubble';
+            bubbleDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+            
+            messageDiv.appendChild(avatarDiv);
             messageDiv.appendChild(bubbleDiv);
             chatBox.appendChild(messageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
             
             return uniqueId;
+        }
+
+        function removeElement(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
         }
     </script>
 </body>
