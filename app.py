@@ -23,128 +23,181 @@ HTML_TEMPLATE = """
     <title>Aplikasi Laporan Normalisasi Gangguan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        :root {
+            --enterprise-bg: #0f172a;
+            --enterprise-card: rgba(255, 255, 255, 0.98);
+            --enterprise-primary: #2563eb;
+            --enterprise-primary-hover: #1d4ed8;
+            --enterprise-text-dark: #1e293b;
+            --enterprise-text-muted: #64748b;
+            --enterprise-border: #e2e8f0;
+        }
         body {
-            background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--enterprise-text-dark);
+        }
+        .enterprise-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
         }
         .dashboard-header {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border-left: 6px solid #0d6efd;
+            background: var(--enterprise-card);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            padding: 2.25rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-top: 4px solid var(--enterprise-primary);
             height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
         .menu-sidebar {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
+            background: var(--enterprise-card);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
             padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border-left: 6px solid #198754;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid var(--enterprise-border);
             height: 100%;
         }
         .menu-btn {
             width: 100%;
             text-align: left;
             font-weight: 600;
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-            transition: all 0.2s ease-in-out;
+            border-radius: 10px;
+            padding: 0.85rem 1.15rem;
+            transition: all 0.25s ease-in-out;
+            border: 1px solid var(--enterprise-border);
+            background-color: #f8fafc;
+            color: var(--enterprise-text-dark);
+            font-size: 0.95rem;
+        }
+        .menu-btn:hover {
+            background-color: #f1f5f9;
+            color: var(--enterprise-primary);
+            border-color: #cbd5e1;
         }
         .menu-btn.active {
-            background-color: #0d6efd;
+            background-color: var(--enterprise-primary);
             color: white;
-            border-color: #0d6efd;
+            border-color: var(--enterprise-primary);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
         .card {
             border: none;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            background-color: var(--enterprise-card);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
         .card-header {
-            border-top-left-radius: 12px !important;
-            border-top-right-radius: 12px !important;
-            background: linear-gradient(135deg, #0d6efd, #0b5ed7) !important;
-            padding: 1.25rem;
+            border-top-left-radius: 16px !important;
+            border-top-right-radius: 16px !important;
+            background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .form-control, .form-select {
-            border-radius: 8px;
-            padding: 0.6rem 0.75rem;
+            border-radius: 10px;
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--enterprise-border);
+            background-color: #f8fafc;
         }
         .form-control:focus, .form-select:focus {
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+            border-color: var(--enterprise-primary);
         }
         .btn-custom {
-            border-radius: 8px;
-            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            padding: 0.7rem 1.25rem;
             font-weight: 600;
+            transition: all 0.2s;
+        }
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--enterprise-border);
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5 mb-5">
-        <!-- HEADER DAN MENU PILIHAN DI SEBELAH KIRI -->
+    <div class="container mt-5 mb-5 enterprise-wrapper">
+        
+        <!-- BAGIAN ATAS: SELAMAT DATANG & DESKRIPSI -->
         <div class="row justify-content-center mb-4">
-            <!-- Kotak Pilihan Menu di Sebelah Kiri -->
-            <div class="col-md-3 mb-3 mb-md-0">
-                <div class="menu-sidebar">
-                    <h6 class="fw-bold text-secondary mb-3 text-uppercase fs-6">Pilah Menu</h6>
-                    <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-outline-primary menu-btn active" id="btnMenuForm" onclick="pilihMenu('form')">
-                            📋 Form Laporan
-                        </button>
-                        <button type="button" class="btn btn-outline-success menu-btn" id="btnMenuSejarah" onclick="pilihMenu('sejarah')">
-                            📜 Sejarah Bendung Curug
-                        </button>
+            <div class="col-md-12">
+                <div class="dashboard-header">
+                    <div class="row align-items-center">
+                        <div class="col-lg-9">
+                            <h2 class="fw-bold text-dark mb-2 fs-3 tracking-tight">SELAMAT DATANG DI APLIKASI SISTEM MANAJEMEN PLTA CURUG</h2>
+                            <h4 class="fw-semibold text-primary mb-2 fs-5">PERUM JASA TIRTA 2</h4>
+                            <p class="text-muted mb-0">Kelola operasional dan pelaporan normalisasi gangguan dengan standar tata kelola enterprise yang andal, akurat, dan transparan.</p>
+                        </div>
+                        <div class="col-lg-3 text-lg-end mt-3 mt-lg-0">
+                            <span class="badge bg-primary px-3 py-2 rounded-pill fs-6 fw-normal shadow-sm">Enterprise Edition v3.0</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Selamat Datang di Sebelah Kanan -->
-            <div class="col-md-9">
-                <div class="dashboard-header text-center text-md-start">
-                    <h2 class="fw-bold text-primary mb-2 fs-3">SELAMAT DATANG DI APLIKASI SISTEM MANAJEMEN PLTA CURUG</h2>
-                    <h4 class="fw-semibold text-secondary mb-2 fs-5">PERUM JASA TIRTA 2</h4>
-                    <p class="text-muted mb-0 small">Silakan pilih menu di sebelah kiri dan gunakan form di bawah ini untuk mengelola dan mencatat laporan normalisasi serta pengoperasian unit.</p>
                 </div>
             </div>
         </div>
 
-        <!-- ARTIKEL SEJARAH BENDUNG CURUG (TERSEMBUNYI SECARA DEFAULT) -->
-        <div class="row justify-content-center mb-4" id="container-sejarah" style="display: none;">
-            <div class="col-md-12">
-                <div class="card shadow-lg">
-                    <div class="card-header bg-success text-white text-center">
+        <!-- LAYOUT UTAMA: NAVIGASI DI BAWAH KIRI, KONTEN UTAMA DI SEBELAH KANAN -->
+        <div class="row g-4">
+            <!-- Sidebar Navigasi di Sebelah Kiri Bawah -->
+            <div class="col-lg-3">
+                <div class="menu-sidebar sticky-top" style="top: 2rem;">
+                    <h6 class="fw-bold text-uppercase fs-6 mb-3 text-muted tracking-wider" style="font-size: 0.75rem !important; letter-spacing: 0.05em;">Menu Navigasi</h6>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn menu-btn active" id="btnMenuForm" onclick="pilihMenu('form')">
+                            📋 Form Laporan & Checklist
+                        </button>
+                        <button type="button" class="btn menu-btn" id="btnMenuSejarah" onclick="pilihMenu('sejarah')">
+                            📜 Sejarah Bendung Curug
+                        </button>
+                    </div>
+                    
+                    <hr class="my-4 text-muted">
+                    
+                    <div class="p-3 bg-light rounded-3 border border-light">
+                        <small class="text-muted d-block fw-semibold mb-1">Status Sistem:</small>
+                        <span class="d-flex align-items-center text-success fw-bold small">
+                            <span class="spinner-grow spinner-grow-sm me-2 text-success" role="status"></span> Live & Terhubung
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Area Konten Utama di Sebelah Kanan -->
+            <div class="col-lg-9">
+                
+                <!-- ARTIKEL SEJARAH BENDUNG CURUG (TERSEMBUNYI SECARA DEFAULT) -->
+                <div class="card shadow-lg mb-4" id="container-sejarah" style="display: none;">
+                    <div class="card-header text-white text-center">
                         <h3 class="mb-0 fw-bold fs-4">SEJARAH BENDUNG CURUG & PENGEMBANGAN WILAYAH SUNGAI</h3>
                         <p class="mb-0 text-white-50 small mt-1">Perum Jasa Tirta II - Perjalanan Infrastruktur Pengairan & Kelistrikan di Jawa Barat</p>
                     </div>
                     <div class="card-body p-4 p-md-5">
                         <div class="row align-items-center mb-4">
                             <div class="col-md-7">
-                                <h4 class="fw-bold text-primary">Awal Mula Pembangunan Bendung Curug</h4>
+                                <h4 class="fw-bold text-dark">Awal Mula Pembangunan Bendung Curug</h4>
                                 <p class="text-muted" style="text-align: justify; line-height: 1.7;">
                                     Bendung Curug memiliki peranan yang sangat vital dalam sejarah pengelolaan sumber daya air dan kelistrikan di Indonesia, khususnya di Jawa Barat. Pembangunan kompleks pengairan di kawasan Curug (Kecamatan Klari / Ciampel, Karawang) tidak dapat dilepaskan dari sejarah besar proyek irigasi Jatiluhur (Waduk Jatiluhur / Waduk Ir. H. Djuanda). Bendung Curug berfungsi sebagai pengatur pembagian air (intake utama) yang mengalirkan air dari Sungai Citarum ke Saluran Induk Tarum Barat (Malaka) dan Salrum Tarum Timur, yang menjadi urat nadi pertanian di wilayah Karawang, Bekasi, hingga DKI Jakarta serta penunjang pasokan air industri.
                                 </p>
                             </div>
                             <div class="col-md-5 text-center">
-                                <img src="/static/CURUGTEMPODULU.jpg" alt="Bendung Curug Tempo Dulu" class="img-fluid rounded shadow-sm border" style="max-height: 280px; object-fit: cover;">
+                                <img src="/static/CURUGTEMPODULU.jpg" alt="Bendung Curug Tempo Dulu" class="img-fluid rounded-3 shadow-sm border" style="max-height: 280px; object-fit: cover;">
                                 <small class="d-block text-muted mt-2 fst-italic">Dokumentasi historis kawasan Bendung Curug tempo dulu.</small>
                             </div>
                         </div>
 
                         <hr class="my-4">
 
-                        <h4 class="fw-bold text-primary mb-3">Transformasi dan Peran Strategis PLTA Mini Hydro Curug</h4>
+                        <h4 class="fw-bold text-dark mb-3">Transformasi dan Peran Strategis PLTA Mini Hydro Curug</h4>
                         <p class="text-muted" style="text-align: justify; line-height: 1.7;">
                             Selain berfungsi sebagai pengendali dan pembagi debit air irigasi primer, kawasan Bendung Curug juga dimanfaatkan untuk potensi energi terbarukan melalui Pembangkit Listrik Tenaga Air (PLTA) Mini Hydro Curug serta fasilitas Gardu Induk (GI) Curug 70/6,3 kV. Integrasi antara sistem kelistrikan dan pengairan ini dikelola secara profesional untuk memastikan stabilitas suplai energi lokal serta keandalan distribusi air baku.
                         </p>
@@ -175,20 +228,16 @@ HTML_TEMPLATE = """
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- FORM UTAMA (DIBAWAH) -->
-        <div class="row justify-content-center" id="container-form-laporan">
-            <div class="col-md-12">
-                <div class="card shadow-lg">
+                <!-- FORM UTAMA -->
+                <div class="card shadow-lg" id="container-form-laporan">
                     <div class="card-header text-white text-center">
                         <h3 class="mb-0 fw-bold fs-4">FORM LAPORAN NORMALISASI / PENGOPERASIAN</h3>
                         <p class="mb-0 text-white-50 small mt-1">Sistem Pencatatan & Pelaporan Operasional Gardu Induk / Unit Terkait</p>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 p-md-5">
                         <form method="POST" action="/generate">
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label for="kategori" class="form-label fw-bold text-secondary">Pilih Kategori / Lokasi:</label>
                                 <select class="form-select" id="kategori" name="kategori" required>
                                     <option value="" disabled selected>-- Pilih Jenis Normalisasi --</option>
@@ -199,7 +248,7 @@ HTML_TEMPLATE = """
                             </div>
 
                             <!-- PILIHAN MODE PENCATATAN -->
-                            <div class="mb-3 p-3 bg-light border rounded-3">
+                            <div class="mb-4 p-3 bg-light border rounded-3">
                                 <label class="form-label fw-bold text-primary mb-2">Pilih Mode Pencatatan Penanganan:</label>
                                 <div class="btn-group w-100" role="group">
                                     <input type="radio" class="btn-check" name="mode_pencatatan" id="modeManual" value="manual" autocomplete="off" checked onclick="switchMode('manual')">
@@ -211,12 +260,12 @@ HTML_TEMPLATE = """
                             </div>
 
                             <!-- INPUT / PILIHAN JENIS GANGGUAN BERDASARKAN MODE -->
-                            <div class="mb-3" id="wrapper-jenis-manual">
+                            <div class="mb-4" id="wrapper-jenis-manual">
                                 <label for="jenis_gangguan_manual" class="form-label fw-bold text-secondary">Jenis Gangguan</label>
                                 <input type="text" class="form-control" id="jenis_gangguan_manual" name="jenis_gangguan_manual" placeholder="Contoh: Gangguan Trafo / Trip PMT">
                             </div>
 
-                            <div class="mb-3" id="wrapper-jenis-otomatis" style="display: none;">
+                            <div class="mb-4" id="wrapper-jenis-otomatis" style="display: none;">
                                 <label for="jenis_gangguan_otomatis" class="form-label fw-bold text-secondary">Jenis Gangguan/Pengoperasian</label>
                                 <select class="form-select" id="jenis_gangguan_otomatis" name="jenis_gangguan_otomatis" onchange="switchOtomatisSub(this.value)">
                                     <option value="" disabled selected>-- Pilih Jenis Checklist Otomatis --</option>
@@ -684,7 +733,7 @@ HTML_TEMPLATE = """
 
                             <hr class="my-4">
                             <!-- FITUR PEMBUAT LAPORAN -->
-                            <div class="card p-3 mb-4 bg-light border-0 shadow-sm">
+                            <div class="card p-4 mb-4 bg-light border-0 shadow-sm">
                                 <h6 class="fw-bold text-primary mb-3">Informasi Pembuat Laporan</h6>
                                 <div class="row g-3">
                                     <div class="col-md-4">
@@ -698,10 +747,11 @@ HTML_TEMPLATE = """
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 py-2 shadow-sm fs-5 btn-custom">Buat Laporan PDF</button>
+                            <button type="submit" class="btn btn-primary w-100 py-3 shadow-sm fs-5 btn-custom">Buat Laporan PDF</button>
                         </form>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -714,14 +764,14 @@ HTML_TEMPLATE = """
             const btnSejarah = document.getElementById('btnMenuSejarah');
 
             if (menu === 'form') {
-                formContainer.style.display = 'flex';
+                formContainer.style.display = 'block';
                 sejarahContainer.style.display = 'none';
                 btnForm.classList.add('active');
                 btnSejarah.classList.remove('active');
                 formContainer.scrollIntoView({ behavior: 'smooth' });
             } else if (menu === 'sejarah') {
                 formContainer.style.display = 'none';
-                sejarahContainer.style.display = 'flex';
+                sejarahContainer.style.display = 'block';
                 btnSejarah.classList.add('active');
                 btnForm.classList.remove('active');
                 sejarahContainer.scrollIntoView({ behavior: 'smooth' });
@@ -860,26 +910,27 @@ RESULT_TEMPLATE = """
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .card {
             border: none;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            background-color: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         .card-header {
-            border-top-left-radius: 12px !important;
-            border-top-right-radius: 12px !important;
+            border-top-left-radius: 16px !important;
+            border-top-right-radius: 16px !important;
             background: linear-gradient(135deg, #198754, #157347) !important;
-            padding: 1.25rem;
+            padding: 1.5rem;
         }
         .btn {
-            border-radius: 8px;
-            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
             font-weight: 600;
         }
     </style>
@@ -892,7 +943,7 @@ RESULT_TEMPLATE = """
                     <div class="card-header text-white">
                         <h4 class="mb-0 fw-bold">Laporan Berhasil Dibuat!</h4>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 p-md-5">
                         <p class="text-muted mb-4">File PDF laporan gangguan Anda sudah siap diunduh atau dikirimkan langsung ke Grup WhatsApp.</p>
                         <a href="/download/{{ filename }}" class="btn btn-primary w-100 mb-3 py-2 shadow-sm" target="_blank">Unduh File PDF</a>
                         <a href="https://api.whatsapp.com/send?text={{ wa_message }}" class="btn btn-success w-100 mb-3 py-2 shadow-sm" target="_blank">Kirim ke Grup WhatsApp</a>
