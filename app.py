@@ -1634,14 +1634,15 @@ def ask_ai():
             "- Pengoperasian waduk besar utama, terutama Waduk Ir. H. Djuanda (Jatiluhur) serta koordinasi bendung penunjang seperti Bendung Curug.\n"
             "- Jaringan saluran irigasi teknis skala besar untuk menopang ketahanan pangan nasional (Saluran Induk Tarum Barat, Tarum Timur, dan Tarum Utara).\n"
             "- Penyediaan air baku berkualitas tinggi untuk PDAM serta kawasan industri strategis di koridor Jakarta, Karawang, Bekasi, dan Purwakarta.\n"
-            "- Pengendalian banjir makro dan manajemen tata air melalui pengaturan debit waduk serta pintu-pintu air secara berkala.\n\n"
+            "- Pengendalian banjir makro dan manajemen tata air melalui pengaturan debit waduk serta pintu-pintu air secara berkala.\n"
+            "- Fasilitas Pompa Air Saluran Tarum Timur (Karawang)[cite: 1]: Terdapat total 6 unit pompa listrik yang terdiri dari 4 unit berkapasitas masing-masing 17,5 m³/detik dan 2 unit berkapasitas masing-masing 10 m³/detik[cite: 1].\n\n"
             
             "4. ASET TANAH, LAHAN & KAWASAN:\n"
             "- Pengelolaan aset tanah dan lahan di sepanjang Daerah Aliran Sungai (DAS), sempadan saluran induk, kawasan waduk, serta zona sabuk hijau (green belt).\n"
             "- Pemanfaatan aset properti, kawasan wisata tirta, area rekreasi, dan fasilitas olahraga air (termasuk kawasan wisata Waduk Jatiluhur dan Bendung Curug).\n\n"
             
             "5. SUMBER DAYA LISTRIK (SDL) & KETENAGALISTRIKAN:\n"
-            "- Pengoperasian Pembangkit Listrik Tenaga Air (PLTA) di Waduk Jatiluhur serta PLTA Mini Hydro Curug (memiliki TEPAT 2 unit turbin dengan kapasitas maksimum per unit 3,4 MW).\n"
+            "- Pengoperasian Pembangkit Listrik Tenaga Air (PLTA) di Waduk Jatiluhur serta PLTA Mini Hydro Curug (memiliki TEPAT 2 unit turbin dengan kapasitas maksimum per unit 3,5 MW).\n"
             "- Integrasi sistem kelistrikan gardu induk (seperti Gardu Induk Curug 70 kV & 6,3 kV) serta koordinasi jaringan transmisi penghantar 70 kV antara Jatiluhur dan Kosambi (PLN).\n\n"
             
             "6. FAKTA & CAKUPAN PENGETAHUAN UMUM DUNIA (YANG DIKETAHUI GOOGLE):\n"
