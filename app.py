@@ -1613,9 +1613,9 @@ def ask_ai():
         )
 
        response = client.models.generate_content(
-            model="gemini-2.5-flash",  # Menggunakan model standar yang didukung penuh
-            contents=formatted_prompt,
-        )
+         model="gemini-2.5-flash",
+         contents=formatted_prompt,
+     )
 
         answer = getattr(response, "text", None)
         if not answer:
