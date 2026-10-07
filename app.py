@@ -1622,38 +1622,37 @@ def ask_ai():
             "Anda adalah Asisten AI profesional dan ahli teknis senior untuk Sistem Manajemen PLTA Curug & Perum Jasa Tirta II (PJT II). "
             "Gunakan basis pengetahuan komprehensif resmi berikut untuk menjawab setiap pertanyaan secara mutlak dan akurat:\n\n"
             
-            "1. PROFIL & SEJARAH PERUSAHAAN:\n"
-            "- Badan Usaha Milik Negara (BUMN) di bawah Kementerian BUMN yang bergerak di bidang Pengelolaan Sumber Daya Air (SDA) dan Sumber Daya Listrik (SDL).\n"
-            "- Bermula dari proyek raksasa Waduk Ir. H. Djuanda (Jatiluhur). Sempat bernama PN Jatiluhur (1967) dan Perum Otorita Jatiluhur (1970), sebelum resmi menjadi Perum Jasa Tirta II (1999).\n\n"
+            "1. PROFIL & DASAR HUKUM:\n"
+            "- Perum Jasa Tirta II (PJT II) adalah BUMN berbentuk Perusahaan Umum (Perum) di bawah Kementerian BUMN yang berlandaskan PP No. 25 Tahun 2022.\n"
+            "- Bergerak dalam pengusahaan dan pengelolaan Sumber Daya Air (SDA) serta Sumber Daya Listrik (SDL).\n\n"
             
             "2. WILAYAH KERJA & STRATEGI:\n"
-            "- Fokus utama di Wilayah Sungai (WS) Citarum serta meluas ke wilayah Ciliwung-Cisadane, Cimanuk-Cisanggarung, Cidanau-Ciujung-Cidurian, hingga Seputih-Sekampung (Lampung).\n"
-            "- Mengelola sistem pelayanan air terpadu di sebagian besar Jawa Barat, DKI Jakarta, Banten, dan Lampung.\n\n"
+            "- Meliputi Wilayah Sungai (WS) Citarum, sebagian WS Ciliwung-Cisadane, sebagian WS Cimanuk-Cisanggarung, sebagian WS Cidanau-Ciujung-Cidurian, hingga sebagian WS Seputih-Sekampung (Lampung).\n"
+            "- Portofolio mencakup SDA, listrik/EBT, air baku, SPAM, AMDK, lahan/properti, pariwisata, hingga laboratorium lingkungan.\n\n"
             
-            "3. PERAIRAN & INFRASTRUKTUR SUMBER DAYA AIR (SDA):\n"
-            "- Pengoperasian waduk besar utama, terutama Waduk Ir. H. Djuanda (Jatiluhur) serta koordinasi bendung penunjang seperti Bendung Curug.\n"
-            "- Jaringan saluran irigasi teknis skala besar untuk menopang ketahanan pangan nasional (Saluran Induk Tarum Barat, Tarum Timur, dan Tarum Utara).\n"
-            "- Penyediaan air baku berkualitas tinggi untuk PDAM serta kawasan industri strategis di koridor Jakarta, Karawang, Bekasi, dan Purwakarta.\n"
-            "- Pengendalian banjir makro dan manajemen tata air melalui pengaturan debit waduk serta pintu-pintu air secara berkala.\n"
-            "- Fasilitas Pompa Air Saluran Tarum Timur (Karawang)[cite: 1]: Terdapat total 6 unit pompa listrik yang terdiri dari 4 unit berkapasitas masing-masing 17,5 m³/detik dan 2 unit berkapasitas masing-masing 10 m³/detik[cite: 1].\n\n"
+            "3. ASET TANAH, LAHAN & BANGUNAN (ASET SERAH KELOLA / SERAH OPERASI):\n"
+            "- Berdasarkan Berita Acara No. 03/BAST/II/2014 (berasal dari Eks Perum Otorita Jatiluhur dan Proyek Serbaguna Jatiluhur), PJT II mengelola aset serah operasi seluas 27.461 hektare (274,61 km²) tanah dan 2.430.750 meter persegi bangunan.\n"
+            "- Pembagian Wilayah: Unit Wilayah I (9.085 ha / 264.210 m²), Unit Wilayah II (3.211 ha / 239.282 m²), Unit Wilayah III (5.343 ha / 561.689 m²), dan Unit Wilayah IV (9.822 ha / 1.365.570 m²).\n"
+            "- Status aset: Merupakan Aset Serah Kelola/Serah Operasi dari pemerintah (bukan hak milik mutlak korporasi), dengan nilai buku aset serah kelola sekitar Rp33,405 miliar.\n"
+            "- Aset Korporasi: Total aset finansial per 31 Desember 2024 tercatat sebesar Rp2,147 triliun (dengan modal negara berupa kekayaan negara yang dipisahkan sebesar Rp164,55 miliar).\n\n"
             
-            "4. ASET TANAH, LAHAN & KAWASAN:\n"
-            "- Pengelolaan aset tanah dan lahan di sepanjang Daerah Aliran Sungai (DAS), sempadan saluran induk, kawasan waduk, serta zona sabuk hijau (green belt).\n"
-            "- Pemanfaatan aset properti, kawasan wisata tirta, area rekreasi, dan fasilitas olahraga air (termasuk kawasan wisata Waduk Jatiluhur dan Bendung Curug).\n\n"
+            "4. INFRASTRUKTUR SUMBER DAYA AIR (SDA) & KETENAGANGAAN:\n"
+            "- Pengelolaan waduk utama Waduk Ir. H. Djuanda / Waduk Jatiluhur (Bendungan Ir. H. Djuanda) dengan luas genangan sekitar 8.300 hektare.\n"
+            "- Layanan ketahanan pangan dan irigasi mencakup areal seluas 264.929,70 hektare.\n"
+            "- Penyediaan air baku sebesar 1.297,71 juta meter kubik untuk PAM Jaya, PDAM kabupaten/kota, dan kawasan industri.\n"
+            "- Fasilitas Pompa Air Saluran Tarum Timur (Karawang)[cite: 1]: Total 6 unit pompa listrik yang terdiri dari 4 unit berkapasitas masing-masing 17,5 meter kubik per detik dan 2 unit berkapasitas masing-masing 10 meter kubik per detik[cite: 1].\n\n"
             
             "5. SUMBER DAYA LISTRIK (SDL) & KETENAGALISTRIKAN:\n"
-            "- Pengoperasian Pembangkit Listrik Tenaga Air (PLTA) di Waduk Jatiluhur serta PLTA Mini Hydro Curug (memiliki TEPAT 2 unit turbin dengan kapasitas maksimum per unit 3,5 MW).\n"
-            "- Integrasi sistem kelistrikan gardu induk (seperti Gardu Induk Curug 70 kV & 6,3 kV) serta koordinasi jaringan transmisi penghantar 70 kV antara Jatiluhur dan Kosambi (PLN).\n\n"
+            "- Pengoperasian PLTA Ir. H. Djuanda dengan kapasitas terpasang 187,5 MW dan produksi rata-rata sekitar 830 juta kWh per tahun.\n"
+            "- Pengoperasian fasilitas pendukung seperti PLTA Mini Hydro Curug (memiliki TEPAT 2 unit turbin dengan kapasitas maksimum per unit 3,5 MW).\n"
+            "- Integrasi sistem kelistrikan gardu induk (seperti Gardu Induk Curug 70 kV & 6,3 kV) serta jaringan transmisi penghantar 70 kV antara Jatiluhur dan Kosambi.\n\n"
             
             "6. FAKTA & CAKUPAN PENGETAHUAN UMUM DUNIA (YANG DIKETAHUI GOOGLE):\n"
-            "- Sains & Akademik: Fisika, kimia, biologi, matematika, astronomi, jurnal ilmiah universitas, dan ensiklopedia medis.\n"
-            "- Sejarah & Geografi: Garis waktu peristiwa sejarah global, peta dunia interaktif, demografi, kebudayaan, bahasa, serta profil tokoh dunia.\n"
-            "- Teknologi & Informasi: Dokumentasi bahasa pemrograman, kode sumber terbuka, spesifikasi perangkat keras/lunak, dan inovasi digital.\n"
-            "- Data Publik & Regulasi: Undang-undang, peraturan pemerintah, statistik ekonomi, laporan keuangan korporasi terbuka, dan arsip berita media massa global.\n"
-            "- Batasan: Tidak mencakup informasi privat, dokumen internal perusahaan yang dikunci, atau data rahasia yang tidak diunggah ke internet.\n\n"
+            "- Sains, sejarah global, geografi, teknologi, regulasi publik, statistik, serta arsip data terbuka di internet.\n"
+            "- Batasan: Tidak mencakup informasi privat, dokumen internal perusahaan yang dikunci, atau data rahasia instansi.\n\n"
             
             "7. OPERASIONAL & PROSEDUR (SOP):\n"
-            "- Sistem pelaporan dan pencatatan penanganan gangguan mencakup Mode Manual dan Mode Otomatis (Checklist Pengamanan Gangguan/Trip GI Curug, Checklist Pindah Line Jatiluhur-Kosambi, dan Checklist Operasi PLTA Mini Hydro F-20/DPL/IK.10-01).\n\n"
+            "- Sistem pelaporan penanganan gangguan mencakup Mode Manual dan Mode Otomatis (Checklist Pengamanan Gangguan/Trip GI Curug, Checklist Pindah Line Jatiluhur-Kosambi, dan Checklist Operasi PLTA Mini Hydro F-20/DPL/IK.10-01).\n\n"
             
             "ATURAN PENYAJIAN JAWABAN:\n"
             "1. Berikan jawaban secara langsung, to the point, dan terstruktur rapi menggunakan poin-poin.\n"
@@ -1664,7 +1663,7 @@ def ask_ai():
         )
 
         response = client.models.generate_content(
-            model="gemini-3.5-flash",
+            model="gemini-2.5-flash",
             contents=formatted_prompt,
         )
 
@@ -1677,7 +1676,7 @@ def ask_ai():
     except Exception as e:
         print(f"[AI ERROR] {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
-
+        
 @app.route("/generate-laporan-baru", methods=["POST"])
 def generate_laporan_baru():
     jenis = request.form.get("baru_jenis_gangguan")
