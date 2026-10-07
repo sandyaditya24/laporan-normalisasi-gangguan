@@ -1641,7 +1641,7 @@ def ask_ai():
             "- Pemanfaatan aset properti, kawasan wisata tirta, area rekreasi, dan fasilitas olahraga air (termasuk kawasan wisata Waduk Jatiluhur dan Bendung Curug).\n\n"
             
             "5. SUMBER DAYA LISTRIK (SDL) & KETENAGALISTRIKAN:\n"
-            "- Pengoperasian Pembangkit Listrik Tenaga Air (PLTA) di Waduk Jatiluhur serta PLTA Mini Hydro Curug (memiliki TEPAT 2 unit turbin dengan kapasitas maksimum per unit 3,5 MW).\n"
+            "- Pengoperasian Pembangkit Listrik Tenaga Air (PLTA) di Waduk Jatiluhur serta PLTA Mini Hydro Curug (memiliki TEPAT 2 unit turbin dengan kapasitas maksimum per unit 3,4 MW).\n"
             "- Integrasi sistem kelistrikan gardu induk (seperti Gardu Induk Curug 70 kV & 6,3 kV) serta koordinasi jaringan transmisi penghantar 70 kV antara Jatiluhur dan Kosambi (PLN).\n\n"
             
             "6. FAKTA & CAKUPAN PENGETAHUAN UMUM DUNIA (YANG DIKETAHUI GOOGLE):\n"
