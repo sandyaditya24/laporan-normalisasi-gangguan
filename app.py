@@ -482,36 +482,36 @@ HTML_TEMPLATE = """
 
                                     {% set plta_sections = [
                                         ('plta_a', 'A. RUANG PANEL CONTROL ROOM', [
-                                            ('plta_a1', 'Pada jendela alarm tidak ada indikasi gangguan', '-', 'TMA Udik 26-36 mohon diperhatikan apabila Beban sudah turun dan air Udik kecil, maka Mini Hydro Stop (utamakan air Tr. TT & Tr Barat'),
-                                            ('plta_a2', 'Tinggi Muka Air : Tinggi Air Udik, Tinggi Air Hilir, Posisi saringan sampah unit .....', '-', '-'),
-                                            ('plta_a3', 'Kriteria berhenti pada posisi stabil / indikator tombol stop', 'Menyala', '-'),
-                                            ('plta_a4', 'Posisi Pintu Pembuangan " Tutup "', 'Menyala', '-'),
-                                            ('plta_a5', 'Indikasi DS Phase Cubicle / .... GTA 030 JD', 'Masuk', '-'),
-                                            ('plta_a6', 'Indikasi Earthing Switch / .... GTA 031 JS', 'Keluar', '-'),
-                                            ('plta_a7', 'Indikasi CB 20 KV / ..... LGB 001 JD', 'Keluar', 'TPL Menyala'),
-                                            ('plta_a8', 'Indikasi Earthing Switch / .... LGB 031 JS', 'Keluar', '-'),
-                                            ('plta_a9', 'Indikasi Unit Siap Jalan', 'Menyala', '-')
+                                            ('plta_a1', 'Pada jendela alarm tidak ada indikasi gangguan', '-', 'TMA Udik 26-36 mohon diperhatikan apabila Beban sudah turun dan air Udik kecil, maka Mini Hydro Stop (utamakan air Tr. TT & Tr Barat', False),
+                                            ('plta_a2', 'Tinggi Muka Air', 'Tinggi Air Udik: ..., Tinggi Air Hilir: ..., Posisi saringan sampah unit: ...', '-', True),
+                                            ('plta_a3', 'Kriteria berhenti pada posisi stabil / indikator tombol stop', 'Menyala', '-', False),
+                                            ('plta_a4', 'Posisi Pintu Pembuangan " Tutup "', 'Menyala', '-', False),
+                                            ('plta_a5', 'Indikasi DS Phase Cubicle', 'Masuk (GTA 030 JD: ...)', '-', True),
+                                            ('plta_a6', 'Indikasi Earthing Switch', 'Keluar (GTA 031 JS: ...)', '-', True),
+                                            ('plta_a7', 'Indikasi CB 20 KV', 'Keluar (LGB 001 JD: ...)', 'TPL Menyala', True),
+                                            ('plta_a8', 'Indikasi Earthing Switch', 'Keluar (LGB 031 JS: ...)', '-', True),
+                                            ('plta_a9', 'Indikasi Unit Siap Jalan', 'Menyala', '-', False)
                                         ]),
                                         ('plta_b', 'B. CARA PENGOPERASIAAN', [
-                                            ('plta_b1', 'Sistim Pengatur Unit', 'Lokal', '-'),
-                                            ('plta_b2', 'Sistim Komando Unit .....', 'Manual / Auto', '-'),
-                                            ('plta_b3', 'Sinkronisasi (Jika dipilih cara manual, hubungkan alat sinkronisasi portible)', '-', '-'),
-                                            ('plta_b4', 'Duga Muka Air / Kontrol water level', 'ON / OFF', '-'),
-                                            ('plta_b5_1', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> a. Tekan tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
-                                            ('plta_b5_2', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> b. Tekan Tombol "Eksitasi" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
-                                            ('plta_b5_3', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> c. Tekan Tombol "Generator" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
-                                            ('plta_b5_4', 'Pengoperasian Unit (Sistim Komando Unit dipilih "AUTO" -> a. Tekan Tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', '-'),
-                                            ('plta_b6_1', 'Sinkronisasi (Sistim Sinkronisasi dipilih "AUTO" -> a. Periksa TPL (Indikator CB 20 KV) ..... LGB001JD - CB masuk paralel dengan jaringan Pukul ........ wib)', 'TPL Berkedip', 'Putar ke posisi ON'),
-                                            ('plta_b6_2', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> a. Pengaturan beban / frekwensi menggunakan Tombol ( naik / turun ) pada panel control)', '-', '-'),
-                                            ('plta_b6_3', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> b. Pengaturan tegangan eksitasi dengan menggunakan tombol ( naik / turun ) pada panel control)', '-', '-'),
-                                            ('plta_b6_4', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> c. Putar Switch CB / TPL CB ........ LGB001JD)', '-', 'Putar ke posisi ON'),
-                                            ('plta_b6_5', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> d. Jika lampu pad alat sinkronisasi menyala ( ON ). tekan tombol TPL CB untuk menutup CB. CB Masuk paralel dengan jaringan Pukul ........ wib)', '-', '-')
+                                            ('plta_b1', 'Sistim Pengatur Unit', 'Lokal', '-', False),
+                                            ('plta_b2', 'Sistim Komando Unit', 'Unit: ...', '-', True),
+                                            ('plta_b3', 'Sinkronisasi (Jika dipilih cara manual, hubungkan alat sinkronisasi portible)', '-', '-', False),
+                                            ('plta_b4', 'Duga Muka Air / Kontrol water level', 'ON / OFF', '-', False),
+                                            ('plta_b5_1', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> a. Tekan tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
+                                            ('plta_b5_2', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> b. Tekan Tombol "Eksitasi" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
+                                            ('plta_b5_3', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> c. Tekan Tombol "Generator" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
+                                            ('plta_b5_4', 'Pengoperasian Unit (Sistim Komando Unit dipilih "AUTO" -> a. Tekan Tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', '-', False),
+                                            ('plta_b6_1', 'Sinkronisasi (Sistim Sinkronisasi dipilih "AUTO" -> a. Periksa TPL (Indikator CB 20 KV)', 'TPL Berkedip (LGB001JD: ..., Pukul: ... wib)', 'Putar ke posisi ON', True),
+                                            ('plta_b6_2', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> a. Pengaturan beban / frekwensi menggunakan Tombol ( naik / turun ) pada panel control', '-', '-', False),
+                                            ('plta_b6_3', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> b. Pengaturan tegangan eksitasi dengan menggunakan tombol ( naik / turun ) pada panel control', '-', '-', False),
+                                            ('plta_b6_4', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> c. Putar Switch CB / TPL CB', 'LGB001JD: ...', 'Putar ke posisi ON', True),
+                                            ('plta_b6_5', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> d. Jika lampu pad alat sinkronisasi menyala ( ON ). tekan tombol TPL CB untuk menutup CB. CB Masuk paralel dengan jaringan', 'Pukul: ... wib', '-', True)
                                         ]),
                                         ('plta_c', 'C. PENGATURAN BEBAN', [
-                                            ('plta_c1', 'Tekan Tombol Pengatur Beban / Frekwesi ( naik / turun ), hingga : ...... MW', '........ MW', 'Secara Bertahap')
+                                            ('plta_c1', 'Tekan Tombol Pengatur Beban / Frekwesi ( naik / turun ), hingga', '... MW', 'Secara Bertahap', True)
                                         ]),
                                         ('plta_d', 'D. PENCATATAN RUTIN', [
-                                            ('plta_d1', 'Selanjutnya pencatatan rutin dengan blangko laporan harian', '-', '-')
+                                            ('plta_d1', 'Selanjutnya pencatatan rutin dengan blangko laporan harian', '-', '-', False)
                                         ])
                                     ] %}
 
@@ -523,20 +523,32 @@ HTML_TEMPLATE = """
                                                 <tr>
                                                     <th width="5%">Pilih</th>
                                                     <th width="5%">No</th>
-                                                    <th width="40%">Uraian</th>
-                                                    <th width="20%">Posisi</th>
-                                                    <th width="15%">Paraf</th>
-                                                    <th width="15%">Keterangan</th>
+                                                    <th width="45%">Uraian</th>
+                                                    <th width="20%">Posisi / Isian</th>
+                                                    <th width="12%">Status</th>
+                                                    <th width="13%">Keterangan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for item_id, item_desc, item_default, item_ket in p_items %}
+                                                {% for item_id, item_desc, item_default, item_ket, is_custom in p_items %}
                                                 <tr>
                                                     <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_{{ item_id }}" value="on" checked></td>
                                                     <td class="text-center">{{ loop.index }}</td>
-                                                    <td>{{ item_desc }}</td>
+                                                    <td>
+                                                        {{ item_desc }}
+                                                        {% if is_custom %}
+                                                        <div class="mt-1">
+                                                            <input type="text" class="form-control form-control-sm" name="custom_input_{{ item_id }}" placeholder="Isi detail data...">
+                                                        </div>
+                                                        {% endif %}
+                                                    </td>
                                                     <td><input type="text" class="form-control form-control-sm text-center" name="pos_{{ item_id }}" value="{{ item_default }}"></td>
-                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_{{ item_id }}" placeholder="Paraf"></td>
+                                                    <td>
+                                                        <select class="form-select form-select-sm text-center fw-bold" name="paraf_{{ item_id }}">
+                                                            <option value="✔" selected class="text-success">✔ (Ya/OK)</option>
+                                                            <option value="✖" class="text-danger">✖ (Tidak)</option>
+                                                        </select>
+                                                    </td>
                                                     <td><input type="text" class="form-control form-control-sm text-center" name="ket_{{ item_id }}" value="{{ item_ket }}"></td>
                                                 </tr>
                                                 {% endfor %}
@@ -818,8 +830,8 @@ def generate():
         table_data = [[
             Paragraph("<b>No</b>", cell_center),
             Paragraph("<b>URAIAN</b>", cell_style),
-            Paragraph("<b>POSISI</b>", cell_center),
-            Paragraph("<b>PARAF</b>", cell_center),
+            Paragraph("<b>POSISI / ISIAN</b>", cell_center),
+            Paragraph("<b>STATUS</b>", cell_center),
             Paragraph("<b>KETERANGAN</b>", cell_center)
         ]]
     else:
@@ -851,47 +863,52 @@ def generate():
         if is_plta_curug:
             plta_sections = [
                 ('plta_a', 'A. RUANG PANEL CONTROL ROOM', [
-                    ('plta_a1', 'Pada jendela alarm tidak ada indikasi gangguan', '-', 'TMA Udik 26-36 mohon diperhatikan apabila Beban sudah turun dan air Udik kecil, maka Mini Hydro Stop (utamakan air Tr. TT & Tr Barat'),
-                    ('plta_a2', 'Tinggi Muka Air : Tinggi Air Udik, Tinggi Air Hilir, Posisi saringan sampah unit .....', '-', '-'),
-                    ('plta_a3', 'Kriteria berhenti pada posisi stabil / indikator tombol stop', 'Menyala', '-'),
-                    ('plta_a4', 'Posisi Pintu Pembuangan " Tutup "', 'Menyala', '-'),
-                    ('plta_a5', 'Indikasi DS Phase Cubicle / .... GTA 030 JD', 'Masuk', '-'),
-                    ('plta_a6', 'Indikasi Earthing Switch / .... GTA 031 JS', 'Keluar', '-'),
-                    ('plta_a7', 'Indikasi CB 20 KV / ..... LGB 001 JD', 'Keluar', 'TPL Menyala'),
-                    ('plta_a8', 'Indikasi Earthing Switch / .... LGB 031 JS', 'Keluar', '-'),
-                    ('plta_a9', 'Indikasi Unit Siap Jalan', 'Menyala', '-')
+                    ('plta_a1', 'Pada jendela alarm tidak ada indikasi gangguan', '-', 'TMA Udik 26-36 mohon diperhatikan apabila Beban sudah turun dan air Udik kecil, maka Mini Hydro Stop (utamakan air Tr. TT & Tr Barat', False),
+                    ('plta_a2', 'Tinggi Muka Air', 'Tinggi Air Udik: ..., Tinggi Air Hilir: ..., Posisi saringan sampah unit: ...', '-', True),
+                    ('plta_a3', 'Kriteria berhenti pada posisi stabil / indikator tombol stop', 'Menyala', '-', False),
+                    ('plta_a4', 'Posisi Pintu Pembuangan " Tutup "', 'Menyala', '-', False),
+                    ('plta_a5', 'Indikasi DS Phase Cubicle', 'Masuk (GTA 030 JD: ...)', '-', True),
+                    ('plta_a6', 'Indikasi Earthing Switch', 'Keluar (GTA 031 JS: ...)', '-', True),
+                    ('plta_a7', 'Indikasi CB 20 KV', 'Keluar (LGB 001 JD: ...)', 'TPL Menyala', True),
+                    ('plta_a8', 'Indikasi Earthing Switch', 'Keluar (LGB 031 JS: ...)', '-', True),
+                    ('plta_a9', 'Indikasi Unit Siap Jalan', 'Menyala', '-', False)
                 ]),
                 ('plta_b', 'B. CARA PENGOPERASIAAN', [
-                    ('plta_b1', 'Sistim Pengatur Unit', 'Lokal', '-'),
-                    ('plta_b2', 'Sistim Komando Unit .....', 'Manual / Auto', '-'),
-                    ('plta_b3', 'Sinkronisasi (Jika dipilih cara manual, hubungkan alat sinkronisasi portible)', '-', '-'),
-                    ('plta_b4', 'Duga Muka Air / Kontrol water level', 'ON / OFF', '-'),
-                    ('plta_b5_1', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> a. Tekan tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
-                    ('plta_b5_2', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> b. Tekan Tombol "Eksitasi" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
-                    ('plta_b5_3', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> c. Tekan Tombol "Generator" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
-                    ('plta_b5_4', 'Pengoperasian Unit (Sistim Komando Unit dipilih "AUTO" -> a. Tekan Tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', '-'),
-                    ('plta_b6_1', 'Sinkronisasi (Sistim Sinkronisasi dipilih "AUTO" -> a. Periksa TPL (Indikator CB 20 KV) ..... LGB001JD - CB masuk paralel dengan jaringan Pukul ........ wib)', 'TPL Berkedip', 'Putar ke posisi ON'),
-                    ('plta_b6_2', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> a. Pengaturan beban / frekwensi menggunakan Tombol ( naik / turun ) pada panel control)', '-', '-'),
-                    ('plta_b6_3', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> b. Pengaturan tegangan eksitasi dengan menggunakan tombol ( naik / turun ) pada panel control)', '-', '-'),
-                    ('plta_b6_4', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> c. Putar Switch CB / TPL CB ........ LGB001JD)', '-', 'Putar ke posisi ON'),
-                    ('plta_b6_5', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> d. Jika lampu pad alat sinkronisasi menyala ( ON ). tekan tombol TPL CB untuk menutup CB. CB Masuk paralel dengan jaringan Pukul ........ wib)', '-', '-')
+                    ('plta_b1', 'Sistim Pengatur Unit', 'Lokal', '-', False),
+                    ('plta_b2', 'Sistim Komando Unit', 'Unit: ...', '-', True),
+                    ('plta_b3', 'Sinkronisasi (Jika dipilih cara manual, hubungkan alat sinkronisasi portible)', '-', '-', False),
+                    ('plta_b4', 'Duga Muka Air / Kontrol water level', 'ON / OFF', '-', False),
+                    ('plta_b5_1', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> a. Tekan tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
+                    ('plta_b5_2', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> b. Tekan Tombol "Eksitasi" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
+                    ('plta_b5_3', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> c. Tekan Tombol "Generator" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
+                    ('plta_b5_4', 'Pengoperasian Unit (Sistim Komando Unit dipilih "AUTO" -> a. Tekan Tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', '-', False),
+                    ('plta_b6_1', 'Sinkronisasi (Sistim Sinkronisasi dipilih "AUTO" -> a. Periksa TPL (Indikator CB 20 KV)', 'TPL Berkedip (LGB001JD: ..., Pukul: ... wib)', 'Putar ke posisi ON', True),
+                    ('plta_b6_2', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> a. Pengaturan beban / frekwensi menggunakan Tombol ( naik / turun ) pada panel control', '-', '-', False),
+                    ('plta_b6_3', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> b. Pengaturan tegangan eksitasi dengan menggunakan tombol ( naik / turun ) pada panel control', '-', '-', False),
+                    ('plta_b6_4', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> c. Putar Switch CB / TPL CB', 'LGB001JD: ...', 'Putar ke posisi ON', True),
+                    ('plta_b6_5', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> d. Jika lampu pad alat sinkronisasi menyala ( ON ). tekan tombol TPL CB untuk menutup CB. CB Masuk paralel dengan jaringan', 'Pukul: ... wib', '-', True)
                 ]),
                 ('plta_c', 'C. PENGATURAN BEBAN', [
-                    ('plta_c1', 'Tekan Tombol Pengatur Beban / Frekwesi ( naik / turun ), hingga : ...... MW', '........ MW', 'Secara Bertahap')
+                    ('plta_c1', 'Tekan Tombol Pengatur Beban / Frekwesi ( naik / turun ), hingga', '... MW', 'Secara Bertahap', True)
                 ]),
                 ('plta_d', 'D. PENCATATAN RUTIN', [
-                    ('plta_d1', 'Selanjutnya pencatatan rutin dengan blangko laporan harian', '-', '-')
+                    ('plta_d1', 'Selanjutnya pencatatan rutin dengan blangko laporan harian', '-', '-', False)
                 ])
             ]
 
             global_idx = 1
             for p_key, p_title, p_items in plta_sections:
                 table_data.append([Paragraph(p_title, sec_style), "", "", "", ""])
-                for item_id, desc, item_default, item_ket in p_items:
+                for item_id, desc, item_default, item_ket, is_custom in p_items:
                     chk_val = request.form.get(f"chk_{item_id}")
                     if chk_val == "on":
                         pos = request.form.get(f"pos_{item_id}", item_default)
-                        paraf = request.form.get(f"paraf_{item_id}", "-")
+                        if is_custom:
+                            custom_val = request.form.get(f"custom_input_{item_id}", "").strip()
+                            if custom_val:
+                                desc = f"{desc} [{custom_val}]"
+                        
+                        paraf = request.form.get(f"paraf_{item_id}", "✔")
                         ket = request.form.get(f"ket_{item_id}", item_ket)
 
                         table_data.append([
@@ -901,7 +918,7 @@ def generate():
                             Paragraph(paraf, cell_center),
                             Paragraph(ket, cell_center)
                         ])
-                        wa_details.append(f"{global_idx}. {desc} - Posisi: {pos} (Ket: {ket})")
+                        wa_details.append(f"{global_idx}. {desc} - Pos: {pos} - Status: {paraf} (Ket: {ket})")
                         global_idx += 1
         elif "KOSAMBI KE PENGHANTAR 70 KV JATILUHUR" in jenis_gangguan:
             sections = [
@@ -1091,9 +1108,8 @@ def generate():
     story.append(Paragraph(f"<b>Waktu Kejadian:</b> {waktu}", styles["Normal"]))
     story.append(Spacer(1, 8))
 
-    # Lebar kolom PDF disesuaikan jika PLTA (5 kolom: No, Uraian, Posisi, Paraf, Keterangan)
     if is_plta_curug:
-        t = Table(table_data, colWidths=[25, 237, 85, 85, 122])
+        t = Table(table_data, colWidths=[25, 227, 95, 60, 147])
     else:
         t = Table(table_data, colWidths=[25, 237, 85, 125, 80])
 
