@@ -108,6 +108,7 @@ HTML_TEMPLATE = """
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             border: 1px solid rgba(255, 255, 255, 0.4);
             animation: fadeIn 0.4s ease-in-out;
+            position: relative;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -119,6 +120,30 @@ HTML_TEMPLATE = """
             background: linear-gradient(135deg, #0f172a, #1e293b) !important;
             padding: 1.75rem;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        /* Tombol Close Merah untuk Mengosongkan Bagian Kanan */
+        .btn-close-red-container {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
+            transition: all 0.2s ease;
+        }
+        .btn-close-red-container:hover {
+            background-color: #b02a37;
+            transform: scale(1.08);
         }
         /* Form elements */
         .form-control, .form-select {
@@ -140,27 +165,6 @@ HTML_TEMPLATE = """
             font-weight: 600;
             transition: all 0.2s;
         }
-        /* Welcome / Placeholder screen style */
-        .welcome-placeholder {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 4rem 2rem;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            min-height: 500px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .welcome-icon {
-            font-size: 4rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
-        }
         .table-responsive {
             border-radius: 14px;
             overflow: hidden;
@@ -174,7 +178,7 @@ HTML_TEMPLATE = """
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
         .closable-image-wrapper.transparent-state {
-            opacity: 0.35; /* Dibuat sedikit transparan */
+            opacity: 0.35;
         }
         .closable-image-wrapper img {
             max-height: 250px;
@@ -251,28 +255,15 @@ HTML_TEMPLATE = """
                 </div>
             </div>
 
-            <!-- AREA KONTEN (DEFAULT KOSONG / WELCOME SCREEN) -->
+            <!-- AREA KONTEN (DEFAULT KOSONG TOTAL) -->
             <div class="col-lg-9">
                 
-                <!-- 1. WELCOME SCREEN (TAMPILAN AWAL SEBELUM MENU DIPILIH) -->
-                <div class="welcome-placeholder" id="container-welcome">
-                    <div class="welcome-icon">
-                        <i class="fa-solid fa-compass-drafting"></i>
-                    </div>
-                    <h3 class="fw-bold text-dark mb-2">Selamat Datang di Pusat Kontrol Operasional</h3>
-                    <p class="text-muted col-lg-8 mx-auto mb-4">Silakan pilih salah satu menu navigasi di sebelah kiri untuk mulai membuat laporan operasional atau menjelajahi informasi sejarah bendung.</p>
-                    <div class="d-flex gap-3 justify-content-center">
-                        <button class="btn btn-primary btn-custom px-4 shadow-sm" onclick="pilihMenu('form')">
-                            <i class="fa-solid fa-arrow-right-to-bracket me-2"></i> Buka Form Laporan
-                        </button>
-                        <button class="btn btn-outline-secondary btn-custom px-4" onclick="pilihMenu('sejarah')">
-                            <i class="fa-solid fa-book-open me-2"></i> Baca Sejarah
-                        </button>
-                    </div>
-                </div>
-
                 <!-- 2. ARTIKEL SEJARAH BENDUNG CURUG -->
                 <div class="card content-card mb-4" id="container-sejarah" style="display: none;">
+                    <!-- Tombol Silang Merah untuk Mengosongkan Bagian Kanan -->
+                    <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()" title="Tutup / Kosongkan Halaman">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                     <div class="card-header-custom text-white text-center">
                         <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-landmark me-2"></i> SEJARAH BENDUNG CURUG & PENGEMBANGANNYA</h3>
                         <p class="mb-0 text-white-50 small mt-1">Perum Jasa Tirta II - Perjalanan Infrastruktur Pengairan & Kelistrikan di Jawa Barat</p>
@@ -314,6 +305,10 @@ HTML_TEMPLATE = """
 
                 <!-- 3. FORM UTAMA LAPORAN & CHECKLIST -->
                 <div class="card content-card" id="container-form-laporan" style="display: none;">
+                    <!-- Tombol Silang Merah untuk Mengosongkan Bagian Kanan -->
+                    <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()" title="Tutup / Kosongkan Halaman">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                     <div class="card-header-custom text-white text-center">
                         <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-clipboard-list me-2"></i> FORM LAPORAN NORMALISASI & CHECKLIST</h3>
                         <p class="mb-0 text-white-50 small mt-1">Sistem Pencatatan & Pelaporan Operasional Gardu Induk / Unit Terkait</p>
@@ -801,14 +796,12 @@ HTML_TEMPLATE = """
 
     <script>
         function pilihMenu(menu) {
-            const welcomeContainer = document.getElementById('container-welcome');
             const formContainer = document.getElementById('container-form-laporan');
             const sejarahContainer = document.getElementById('container-sejarah');
             const btnForm = document.getElementById('btnMenuForm');
             const btnSejarah = document.getElementById('btnMenuSejarah');
 
             // Sembunyikan semuanya terlebih dahulu
-            welcomeContainer.style.display = 'none';
             formContainer.style.display = 'none';
             sejarahContainer.style.display = 'none';
             btnForm.classList.remove('active');
@@ -822,6 +815,19 @@ HTML_TEMPLATE = """
                 sejarahContainer.style.display = 'block';
                 btnSejarah.classList.add('active');
             }
+        }
+
+        // Fungsi untuk mengosongkan bagian kanan saat tombol silang merah diklik
+        function kosongkanKanan() {
+            const formContainer = document.getElementById('container-form-laporan');
+            const sejarahContainer = document.getElementById('container-sejarah');
+            const btnForm = document.getElementById('btnMenuForm');
+            const btnSejarah = document.getElementById('btnMenuSejarah');
+
+            formContainer.style.display = 'none';
+            sejarahContainer.style.display = 'none';
+            btnForm.classList.remove('active');
+            btnSejarah.classList.remove('active');
         }
 
         function switchMode(mode) {
@@ -948,10 +954,10 @@ HTML_TEMPLATE = """
 
             isImageClosed = !isImageClosed;
             if (isImageClosed) {
-                img.style.display = 'none'; // Area gambar menjadi kosong
-                wrapper.classList.add('transparent-state'); // Efek transparan pada area wrapper
+                img.style.display = 'none';
+                wrapper.classList.add('transparent-state');
                 caption.style.display = 'none';
-                closeBtn.innerHTML = '<i class="fa-solid fa-arrow-rotate-left"></i>'; // Ubah ikon tombol jadi "Restore"
+                closeBtn.innerHTML = '<i class="fa-solid fa-arrow-rotate-left"></i>';
                 closeBtn.title = "Tampilkan Kembali Gambar";
             } else {
                 img.style.display = 'block';
@@ -964,11 +970,10 @@ HTML_TEMPLATE = """
 
         window.onload = function() {
             switchMode('manual');
-            const welcomeContainer = document.getElementById('container-welcome');
             const formContainer = document.getElementById('container-form-laporan');
             const sejarahContainer = document.getElementById('container-sejarah');
             
-            welcomeContainer.style.display = 'flex';
+            // Bagian kanan dikosongkan total saat pertama kali dimuat
             formContainer.style.display = 'none';
             sejarahContainer.style.display = 'none';
         }
