@@ -8,9 +8,12 @@ import re
 import urllib.parse
 from datetime import datetime
 from pegawai import pegawai_bp
+from faq import faq_bp
+from faq import faq_bp
 
 app = Flask(__name__)
 app.register_blueprint(pegawai_bp)
+app.register_blueprint(faq_bp)
 
 PDF_FOLDER = "static"
 if not os.path.exists(PDF_FOLDER):
