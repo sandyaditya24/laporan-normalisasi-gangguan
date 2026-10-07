@@ -1716,4 +1716,8 @@ def download_pdf(filename):
     return send_file(os.path.join(PDF_FOLDER, filename), as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # Mengambil port dari Railway, atau default ke 5000 jika dijalankan lokal
+    port = int(os.environ.get("PORT", 5000))
+    
+    # Wajib menggunakan host='0.0.0.0' agar bisa diakses dari luar container
+    app.run(host='0.0.0.0', port=port, debug=False)
