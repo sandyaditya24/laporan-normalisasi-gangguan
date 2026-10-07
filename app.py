@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request, send_file, redirect, url_for
+from flask import Flask, render_template_string, request, send_file, redirect, url_for, jsonify
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -8,8 +8,8 @@ import re
 import urllib.parse
 from datetime import datetime
 from pegawai import pegawai_bp
-from flask import Flask, render_template
 from faq import faq_bp
+from google import genai  # Pustaka untuk Google Gemini AI
 
 app = Flask(__name__)
 app.register_blueprint(pegawai_bp)
@@ -18,6 +18,9 @@ app.register_blueprint(faq_bp)
 PDF_FOLDER = "static"
 if not os.path.exists(PDF_FOLDER):
     os.makedirs(PDF_FOLDER)
+
+# Inisialisasi Google GenAI Client (mengambil API key dari environment variable sistem)
+ai_client = genai.Client()
 
 # In-memory database sederhana untuk menyimpan riwayat laporan baru & checklist
 HISTORY_LAPORAN_DB = []
@@ -303,6 +306,11 @@ HTML_TEMPLATE = """
                         <button type="button" class="btn menu-btn" id="btnMenuPegawai" onclick="pilihMenu('struktural-pegawai')">
                             <i class="fa-solid fa-sitemap fa-fw"></i> Struktural Pegawai
                         </button>
+
+                        <!-- TOMBOL MENU BARU UNTUK ASISTEN AI Q&A -->
+                        <a href="/ai-chat" class="btn menu-btn text-decoration-none" id="btnMenuAI">
+                            <i class="fa-solid fa-robot fa-fw text-info"></i> Asisten AI Q&A
+                        </a>
                     </div>
                     
                     <div class="p-3 bg-light rounded-4 border border-light">
@@ -1378,6 +1386,131 @@ HTML_TEMPLATE = """
 </html>
 """
 
+# HTML template terpisah khusus untuk halaman antarmuka Asisten AI Q&A
+AI_CHAT_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asisten AI Q&A - Sistem Manajemen PLTA Curug</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, rgba(7, 15, 30, 0.85), rgba(15, 23, 42, 0.9)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: #1e293b;
+            padding: 2rem 0;
+        }
+        .chat-wrapper { max-width: 900px; margin: 0 auto; }
+        .chat-card { border-radius: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255, 255, 255, 0.4); overflow: hidden; }
+        .chat-header { background: linear-gradient(135deg, #0f172a, #1e293b); padding: 1.5rem 2rem; color: white; }
+        .chat-box { height: 450px; overflow-y: auto; padding: 1.5rem; background: #f8fafc; }
+        .message { margin-bottom: 1rem; }
+        .message.user { text-align: right; }
+        .message.ai { text-align: left; }
+        .bubble { display: inline-block; padding: 0.75rem 1.25rem; border-radius: 15px; max-width: 75%; text-align: left; font-size: 0.95rem; line-height: 1.5; }
+        .user .bubble { background-color: #2563eb; color: white; border-bottom-right-radius: 2px; }
+        .ai .bubble { background-color: #e2e8f0; color: #1e293b; border-bottom-left-radius: 2px; }
+    </style>
+</head>
+<body>
+    <div class="container chat-wrapper">
+        <div class="chat-card">
+            <div class="chat-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-robot me-2 text-info"></i> Asisten AI Q&A Operasional</h3>
+                    <p class="mb-0 text-white-50 small mt-1">Konsultasi prosedur SOP, normalisasi, dan informasi teknis Bendung Curug</p>
+                </div>
+                <a href="/" class="btn btn-outline-light btn-sm px-3 rounded-pill fw-semibold">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Kembali
+                </a>
+            </div>
+            
+            <div class="chat-box" id="chatBox">
+                <div class="message ai">
+                    <div class="bubble">Halo! Saya adalah Asisten AI untuk Sistem Manajemen PLTA Curug & PJT II. Silakan tanyakan hal seputar prosedur penanganan gangguan, operasional gardu induk, atau informasi terkait lainnya.</div>
+                </div>
+            </div>
+            
+            <div class="p-3 p-md-4 bg-white border-top">
+                <form id="chatForm" class="d-flex gap-2">
+                    <input type="text" id="userInput" class="form-control form-control-lg fs-6" placeholder="Ketik pertanyaan Anda di sini..." autocomplete="off" required>
+                    <button type="submit" class="btn btn-primary px-4 btn-custom" id="sendBtn">
+                        <i class="fa-solid fa-paper-plane me-1"></i> Kirim
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chatBox');
+        const chatForm = document.getElementById('chatForm');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        chatForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const question = userInput.value.trim();
+            if (!question) return;
+
+            appendMessage(question, 'user');
+            userInput.value = '';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+
+            const loadingId = appendMessage('Sedang memproses jawaban...', 'ai loading');
+
+            try {
+                const response = await fetch('/api/ask-ai', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question: question })
+                });
+                
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+
+                if (response.ok) {
+                    appendMessage(data.answer, 'ai');
+                } else {
+                    appendMessage('Maaf, terjadi kesalahan: ' + (data.error || 'Gagal merespons'), 'ai');
+                }
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                appendMessage('Terjadi kesalahan koneksi ke server.', 'ai');
+            } finally {
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                userInput.focus();
+            }
+        });
+
+        function appendMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            const uniqueId = 'msg-' + Date.now();
+            messageDiv.id = uniqueId;
+            
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'bubble';
+            bubbleDiv.innerText = text;
+            
+            messageDiv.appendChild(bubbleDiv);
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            return uniqueId;
+        }
+    </script>
+</body>
+</html>
+"""
+
 @app.route("/")
 def index():
     # Mengambil daftar file PDF tersimpan di folder static untuk riwayat
@@ -1393,6 +1526,36 @@ def index():
     # Urutkan berdasarkan waktu terbaru
     pdf_files = sorted(pdf_files, key=lambda x: x['date'], reverse=True)
     return render_template_string(HTML_TEMPLATE, pdf_files=pdf_files, history_laporan_baru=HISTORY_LAPORAN_DB)
+
+@app.route("/ai-chat", methods=["GET"])
+def ai_chat_page():
+    """Rute halaman antarmuka asisten AI Q&A"""
+    return render_template_string(AI_CHAT_TEMPLATE)
+
+@app.route("/api/ask-ai", methods=["POST"])
+def ask_ai():
+    """Endpoint API backend untuk memproses pertanyaan menggunakan Gemini AI"""
+    data = request.get_json()
+    user_question = data.get("question", "")
+    
+    if not user_question:
+        return jsonify({"error": "Pertanyaan tidak boleh kosong"}), 400
+    
+    try:
+        # Menggunakan model gemini-2.5-flash untuk respon teks yang cepat dan akurat
+        response = ai_client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=(
+                "Anda adalah asisten virtual profesional untuk Sistem Manajemen PLTA Curug "
+                "dan Perum Jasa Tirta II (PJT II). Tugas Anda adalah membantu operator atau staf "
+                "menjawab pertanyaan teknis, SOP penanganan gangguan, normalisasi gardu induk, "
+                "maupun informasi umum secara ramah, akurat, dan profesional dalam bahasa Indonesia.\n\n"
+                f"Pertanyaan Pengguna: {user_question}"
+            )
+        )
+        return jsonify({"answer": response.text})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/generate-laporan-baru", methods=["POST"])
 def generate_laporan_baru():
@@ -1457,6 +1620,7 @@ def generate_laporan_baru():
 @app.route("/download/<filename>")
 def download_file(filename):
     return send_file(os.path.join(PDF_FOLDER, filename), as_attachment=True)
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
