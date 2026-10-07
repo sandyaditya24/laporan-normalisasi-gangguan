@@ -64,9 +64,6 @@
             display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
         }
         .submenu-btn:hover { background-color: #f1f5f9; color: var(--primary-color); }
-        .submenu-btn.active {
-            background-color: #eff6ff; color: var(--primary-color); font-weight: 600; border-color: #bfdbfe;
-        }
         .content-card {
             border-radius: 20px; backdrop-filter: blur(16px); background-color: var(--card-bg);
             box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255, 255, 255, 0.4);
@@ -97,15 +94,6 @@
         }
         .btn-custom { border-radius: 12px; padding: 0.75rem 1.5rem; font-weight: 600; transition: all 0.2s; }
         .table-responsive { border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); }
-        .closable-image-wrapper { position: relative; display: inline-block; }
-        .closable-image-wrapper img { max-height: 250px; object-fit: cover; border-radius: 1rem; }
-        .btn-close-img {
-            position: absolute; top: 10px; right: 10px; background: rgba(0, 0, 0, 0.6);
-            color: white; border: none; border-radius: 50%; width: 30px; height: 30px;
-            display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5;
-        }
-        .bg-switcher-badge { cursor: pointer; transition: all 0.2s; }
-        .bg-switcher-badge:hover { background-color: #1d4ed8 !important; }
     </style>
 </head>
 <body>
@@ -243,11 +231,19 @@
                     </div>
                 </div>
 
-                <!-- STRUKTURAL PEGAWAI WRAPPER -->
-                <div id="container-struktural-pegawai-wrapper"></div>
+                <!-- 4. STRUKTURAL PEGAWAI WRAPPER -->
+                <div class="card content-card mb-4" id="container-struktural-pegawai" style="display: none;">
+                    <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="card-header-custom text-white text-center">
+                        <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-sitemap me-2"></i> STRUKTURAL PEGAWAI</h3>
+                    </div>
+                    <div class="card-body p-4 p-md-5" id="container-struktural-pegawai-wrapper">
+                        <!-- Konten dimuat via AJAX -->
+                    </div>
+                </div>
 
-                <!-- 4. FORM LAPORAN NORMALISASI & CHECKLIST UTAMA -->
-                <div class="card content-card" id="container-form-laporan" style="display: none;">
+                <!-- 5. FORM LAPORAN NORMALISASI & CHECKLIST UTAMA -->
+                <div class="card content-card mb-4" id="container-form-laporan" style="display: none;">
                     <button type="button" class="btn-close-red-container" onclick="kosongkanKanan()"><i class="fa-solid fa-xmark"></i></button>
                     <div class="card-header-custom text-white text-center">
                         <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-clipboard-list me-2"></i> FORM LAPORAN NORMALISASI & CHECKLIST</h3>
@@ -342,31 +338,47 @@
             const el = document.getElementById(id);
             el.style.display = (el.style.display === 'block') ? 'none' : 'block';
         }
+        
         window.addEventListener('DOMContentLoaded', () => {
             fetch('/get-struktural-pegawai')
                 .then(res => res.text())
-                .then(html => { document.getElementById('container-struktural-pegawai-wrapper').innerHTML = html; });
+                .then(html => { 
+                    const wrapper = document.getElementById('container-struktural-pegawai-wrapper');
+                    if(wrapper) wrapper.innerHTML = html; 
+                });
         });
+
         function pilihMenu(menu) {
             document.querySelectorAll('.content-card').forEach(c => c.style.display = 'none');
-            const target = document.getElementById('container-' + menu);
+            
+            // Pemetaan ID kontainer yang benar
+            let targetId = 'container-' + menu;
+            if (menu === 'form') {
+                targetId = 'container-form-laporan';
+            }
+            
+            const target = document.getElementById(targetId);
             if (target) target.style.display = 'block';
         }
+
         function kosongkanKanan() {
             document.querySelectorAll('.content-card').forEach(c => c.style.display = 'none');
         }
+
         function switchMode(mode) {
             document.getElementById('section-manual').style.display = (mode === 'manual') ? 'block' : 'none';
             document.getElementById('section-otomatis').style.display = (mode === 'manual') ? 'none' : 'block';
             document.getElementById('wrapper-jenis-manual').style.display = (mode === 'manual') ? 'block' : 'none';
             document.getElementById('wrapper-jenis-otomatis').style.display = (mode === 'manual') ? 'none' : 'block';
         }
+
         function switchOtomatisSub(val) {
             document.getElementById('sub-section-gi-curug').style.display = val.includes('GARDU INDUK 70') ? 'block' : 'none';
             document.getElementById('sub-section-pindah-line-jtl-ksb').style.display = val.includes('JATILUHUR KE KOSAMBI') ? 'block' : 'none';
             document.getElementById('sub-section-pindah-line-ksb-jtl').style.display = val.includes('KOSAMBI KE JATILUHUR') ? 'block' : 'none';
             document.getElementById('sub-section-mini-hydro').style.display = val.includes('MINI HYDRO') ? 'block' : 'none';
         }
+
         function updatePreview(val) {
             if(val) {
                 document.getElementById('preview-waktu').innerText = 'Waktu terpilih: ' + val.replace('T', ' Pukul ') + ' WIB';
@@ -374,6 +386,7 @@
                 document.getElementById('preview-waktu').innerText = '';
             }
         }
+
         function tambahBaris() {
             const container = document.getElementById('penanganan-container');
             const newIndex = container.getElementsByClassName('penanganan-row').length + 1;
@@ -388,6 +401,7 @@
             `;
             container.appendChild(newRow);
         }
+
         function hapusBaris(btn) {
             btn.closest('.penanganan-row').remove();
             const rows = document.getElementsByClassName('penanganan-row');
