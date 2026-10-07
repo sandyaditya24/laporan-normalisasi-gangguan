@@ -20,219 +20,260 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Laporan Normalisasi Gangguan</title>
+    <title>Aplikasi Laporan Normalisasi Gangguan - PJT II</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --enterprise-bg: #0f172a;
-            --enterprise-card: rgba(255, 255, 255, 0.98);
-            --enterprise-primary: #2563eb;
-            --enterprise-primary-hover: #1d4ed8;
-            --enterprise-text-dark: #1e293b;
-            --enterprise-text-muted: #64748b;
-            --enterprise-border: #e2e8f0;
+            --bg-dark: #070f1e;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --primary-color: #2563eb;
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: rgba(226, 232, 240, 0.8);
         }
         body {
-            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
+            background: linear-gradient(135deg, rgba(7, 15, 30, 0.85), rgba(15, 23, 42, 0.9)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--enterprise-text-dark);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-main);
+            padding-bottom: 3rem;
         }
         .enterprise-wrapper {
-            max-width: 1400px;
+            max-width: 1450px;
             margin: 0 auto;
         }
+        /* Header Modern Styling */
         .dashboard-header {
-            background: var(--enterprise-card);
-            border-radius: 16px;
-            backdrop-filter: blur(12px);
-            padding: 2.25rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border-top: 4px solid var(--enterprise-primary);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            background: var(--card-bg);
+            border-radius: 20px;
+            backdrop-filter: blur(16px);
+            padding: 2rem 2.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            position: relative;
+            overflow: hidden;
         }
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 6px; height: 100%;
+            background: var(--primary-gradient);
+        }
+        /* Sidebar Styling */
         .menu-sidebar {
-            background: var(--enterprise-card);
-            border-radius: 16px;
-            backdrop-filter: blur(12px);
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: 1px solid var(--enterprise-border);
-            height: 100%;
+            background: var(--card-bg);
+            border-radius: 20px;
+            backdrop-filter: blur(16px);
+            padding: 1.75rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
         .menu-btn {
             width: 100%;
             text-align: left;
             font-weight: 600;
-            border-radius: 10px;
-            padding: 0.85rem 1.15rem;
-            transition: all 0.25s ease-in-out;
-            border: 1px solid var(--enterprise-border);
+            border-radius: 12px;
+            padding: 0.9rem 1.25rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-color);
             background-color: #f8fafc;
-            color: var(--enterprise-text-dark);
+            color: var(--text-main);
             font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .menu-btn:hover {
-            background-color: #f1f5f9;
-            color: var(--enterprise-primary);
-            border-color: #cbd5e1;
+            background-color: #eff6ff;
+            color: var(--primary-color);
+            border-color: #bfdbfe;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
         }
         .menu-btn.active {
-            background-color: var(--enterprise-primary);
+            background: var(--primary-gradient);
             color: white;
-            border-color: var(--enterprise-primary);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
         }
-        .card {
+        /* Card Containers */
+        .content-card {
             border: none;
-            border-radius: 16px;
-            backdrop-filter: blur(12px);
-            background-color: var(--enterprise-card);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-radius: 20px;
+            backdrop-filter: blur(16px);
+            background-color: var(--card-bg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: fadeIn 0.4s ease-in-out;
         }
-        .card-header {
-            border-top-left-radius: 16px !important;
-            border-top-right-radius: 16px !important;
-            background: linear-gradient(135deg, #1e293b, #0f172a) !important;
-            padding: 1.5rem;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-header-custom {
+            border-top-left-radius: 20px !important;
+            border-top-right-radius: 20px !important;
+            background: linear-gradient(135deg, #0f172a, #1e293b) !important;
+            padding: 1.75rem;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+        /* Form elements */
         .form-control, .form-select {
-            border-radius: 10px;
-            padding: 0.7rem 1rem;
-            border: 1px solid var(--enterprise-border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
             background-color: #f8fafc;
+            font-size: 0.95rem;
+            transition: all 0.2s;
         }
         .form-control:focus, .form-select:focus {
             background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-            border-color: var(--enterprise-primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+            border-color: var(--primary-color);
         }
         .btn-custom {
-            border-radius: 10px;
-            padding: 0.7rem 1.25rem;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
             font-weight: 600;
             transition: all 0.2s;
         }
+        /* Welcome / Placeholder screen style */
+        .welcome-placeholder {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .welcome-icon {
+            font-size: 4rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+        }
         .table-responsive {
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
-            border: 1px solid var(--enterprise-border);
+            border: 1px solid var(--border-color);
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5 mb-5 enterprise-wrapper">
+    <div class="container mt-4 mb-5 enterprise-wrapper">
         
-        <!-- BAGIAN ATAS: SELAMAT DATANG & DESKRIPSI -->
+        <!-- HEADER UTAMA -->
         <div class="row justify-content-center mb-4">
             <div class="col-md-12">
                 <div class="dashboard-header">
                     <div class="row align-items-center">
                         <div class="col-lg-9">
-                            <h2 class="fw-bold text-dark mb-2 fs-3 tracking-tight">SELAMAT DATANG DI APLIKASI SISTEM MANAJEMEN PLTA CURUG</h2>
-                            <h4 class="fw-semibold text-primary mb-2 fs-5">PERUM JASA TIRTA 2</h4>
-                            <p class="text-muted mb-0">Kelola operasional dan pelaporan normalisasi gangguan dengan standar tata kelola enterprise yang andal, akurat, dan transparan.</p>
+                            <h2 class="fw-bold text-dark mb-2 fs-3 tracking-tight">SISTEM MANAJEMEN PLTA CURUG</h2>
+                            <h5 class="fw-semibold text-primary mb-2">PERUM JASA TIRTA II</h5>
+                            <p class="text-muted mb-0">Platform pelaporan operasional, normalisasi gangguan, dan manajemen teknis gardu induk yang terintegrasi.</p>
                         </div>
                         <div class="col-lg-3 text-lg-end mt-3 mt-lg-0">
-                            <span class="badge bg-primary px-3 py-2 rounded-pill fs-6 fw-normal shadow-sm">Enterprise Edition v3.0</span>
+                            <span class="badge bg-primary px-3 py-2 rounded-pill fs-6 fw-normal shadow-sm">
+                                <i class="fa-solid fa-shield-halved me-1"></i> Enterprise v3.1
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- LAYOUT UTAMA: NAVIGASI DI BAWAH KIRI, KONTEN UTAMA DI SEBELAH KANAN -->
+        <!-- LAYOUT UTAMA: SIDEBAR & KONTEN -->
         <div class="row g-4">
-            <!-- Sidebar Navigasi di Sebelah Kiri Bawah -->
+            <!-- SIDEBAR NAVIGASI -->
             <div class="col-lg-3">
                 <div class="menu-sidebar sticky-top" style="top: 2rem;">
-                    <h6 class="fw-bold text-uppercase fs-6 mb-3 text-muted tracking-wider" style="font-size: 0.75rem !important; letter-spacing: 0.05em;">Menu Navigasi</h6>
-                    <div class="d-grid gap-2">
-                        <button type="button" class="btn menu-btn active" id="btnMenuForm" onclick="pilihMenu('form')">
-                            📋 Form Laporan & Checklist
+                    <h6 class="text-uppercase text-muted fw-bold mb-3" style="font-size: 0.75rem; letter-spacing: 0.08em;">Menu Navigasi</h6>
+                    <div class="d-grid gap-2 mb-4">
+                        <button type="button" class="btn menu-btn" id="btnMenuForm" onclick="pilihMenu('form')">
+                            <i class="fa-solid fa-file-lines fa-fw"></i> Form Laporan & Checklist
                         </button>
                         <button type="button" class="btn menu-btn" id="btnMenuSejarah" onclick="pilihMenu('sejarah')">
-                            📜 Sejarah Bendung Curug
+                            <i class="fa-solid fa-landmark fa-fw"></i> Sejarah Bendung Curug
                         </button>
                     </div>
                     
-                    <hr class="my-4 text-muted">
-                    
-                    <div class="p-3 bg-light rounded-3 border border-light">
+                    <div class="p-3 bg-light rounded-4 border border-light">
                         <small class="text-muted d-block fw-semibold mb-1">Status Sistem:</small>
                         <span class="d-flex align-items-center text-success fw-bold small">
-                            <span class="spinner-grow spinner-grow-sm me-2 text-success" role="status"></span> Live & Terhubung
+                            <span class="spinner-grow spinner-grow-sm me-2 text-success" role="status"></span> Server Aktif & Aman
                         </span>
                     </div>
                 </div>
             </div>
 
-            <!-- Area Konten Utama di Sebelah Kanan -->
+            <!-- AREA KONTEN (DEFAULT KOSONG / WELCOME SCREEN) -->
             <div class="col-lg-9">
                 
-                <!-- ARTIKEL SEJARAH BENDUNG CURUG (TERSEMBUNYI SECARA DEFAULT) -->
-                <div class="card shadow-lg mb-4" id="container-sejarah" style="display: none;">
-                    <div class="card-header text-white text-center">
-                        <h3 class="mb-0 fw-bold fs-4">SEJARAH BENDUNG CURUG & PENGEMBANGAN WILAYAH SUNGAI</h3>
+                <!-- 1. WELCOME SCREEN (TAMPILAN AWAL SEBELUM MENU DIPILIH) -->
+                <div class="welcome-placeholder" id="container-welcome">
+                    <div class="welcome-icon">
+                        <i class="fa-solid fa-compass-drafting"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark mb-2">Selamat Datang di Pusat Kontrol Operasional</h3>
+                    <p class="text-muted col-lg-8 mx-auto mb-4">Silakan pilih salah satu menu navigasi di sebelah kiri untuk mulai membuat laporan operasional atau menjelajahi informasi sejarah bendung.</p>
+                    <div class="d-flex gap-3 justify-content-center">
+                        <button class="btn btn-primary btn-custom px-4 shadow-sm" onclick="pilihMenu('form')">
+                            <i class="fa-solid fa-arrow-right-to-bracket me-2"></i> Buka Form Laporan
+                        </button>
+                        <button class="btn btn-outline-secondary btn-custom px-4" onclick="pilihMenu('sejarah')">
+                            <i class="fa-solid fa-book-open me-2"></i> Baca Sejarah
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. ARTIKEL SEJARAH BENDUNG CURUG -->
+                <div class="card content-card mb-4" id="container-sejarah" style="display: none;">
+                    <div class="card-header-custom text-white text-center">
+                        <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-landmark me-2"></i> SEJARAH BENDUNG CURUG & PENGEMBANGANNYA</h3>
                         <p class="mb-0 text-white-50 small mt-1">Perum Jasa Tirta II - Perjalanan Infrastruktur Pengairan & Kelistrikan di Jawa Barat</p>
                     </div>
                     <div class="card-body p-4 p-md-5">
                         <div class="row align-items-center mb-4">
                             <div class="col-md-7">
-                                <h4 class="fw-bold text-dark">Awal Mula Pembangunan Bendung Curug</h4>
+                                <h4 class="fw-bold text-dark">Awal Mula Pembangunan</h4>
                                 <p class="text-muted" style="text-align: justify; line-height: 1.7;">
-                                    Bendung Curug memiliki peranan yang sangat vital dalam sejarah pengelolaan sumber daya air dan kelistrikan di Indonesia, khususnya di Jawa Barat. Pembangunan kompleks pengairan di kawasan Curug (Kecamatan Klari / Ciampel, Karawang) tidak dapat dilepaskan dari sejarah besar proyek irigasi Jatiluhur (Waduk Jatiluhur / Waduk Ir. H. Djuanda). Bendung Curug berfungsi sebagai pengatur pembagian air (intake utama) yang mengalirkan air dari Sungai Citarum ke Saluran Induk Tarum Barat (Malaka) dan Salrum Tarum Timur, yang menjadi urat nadi pertanian di wilayah Karawang, Bekasi, hingga DKI Jakarta serta penunjang pasokan air industri.
+                                    Bendung Curug memiliki peranan yang sangat vital dalam sejarah pengelolaan sumber daya air dan kelistrikan di Indonesia, khususnya di Jawa Barat. Pembangunan kompleks pengairan di kawasan Curug (Kecamatan Klari / Ciampel, Karawang) tidak dapat dilepaskan dari sejarah besar proyek irigasi Jatiluhur (Waduk Ir. H. Djuanda). Bendung Curug berfungsi sebagai pengatur pembagian air utama yang mengalirkan air dari Sungai Citarum ke Saluran Induk Tarum Barat dan Tarum Timur.
                                 </p>
                             </div>
                             <div class="col-md-5 text-center">
-                                <img src="/static/CURUGTEMPODULU.jpg" alt="Bendung Curug Tempo Dulu" class="img-fluid rounded-3 shadow-sm border" style="max-height: 280px; object-fit: cover;">
-                                <small class="d-block text-muted mt-2 fst-italic">Dokumentasi historis kawasan Bendung Curug tempo dulu.</small>
+                                <img src="/static/CURUGTEMPODULU.jpg" alt="Bendung Curug Tempo Dulu" class="img-fluid rounded-4 shadow-sm border" style="max-height: 250px; object-fit: cover;">
+                                <small class="d-block text-muted mt-2 fst-italic">Dokumentasi historis kawasan Bendung Curug.</small>
                             </div>
                         </div>
 
                         <hr class="my-4">
 
-                        <h4 class="fw-bold text-dark mb-3">Transformasi dan Peran Strategis PLTA Mini Hydro Curug</h4>
+                        <h4 class="fw-bold text-dark mb-3">Transformasi dan Peran Strategis</h4>
                         <p class="text-muted" style="text-align: justify; line-height: 1.7;">
-                            Selain berfungsi sebagai pengendali dan pembagi debit air irigasi primer, kawasan Bendung Curug juga dimanfaatkan untuk potensi energi terbarukan melalui Pembangkit Listrik Tenaga Air (PLTA) Mini Hydro Curug serta fasilitas Gardu Induk (GI) Curug 70/6,3 kV. Integrasi antara sistem kelistrikan dan pengairan ini dikelola secara profesional untuk memastikan stabilitas suplai energi lokal serta keandalan distribusi air baku.
+                            Selain berfungsi sebagai pengendali debit air irigasi primer, kawasan ini juga dimanfaatkan untuk potensi energi terbarukan melalui Pembangkit Listrik Tenaga Air (PLTA) Mini Hydro Curug serta fasilitas Gardu Induk (GI) Curug 70/6,3 kV guna menopang suplai energi lokal.
                         </p>
 
-                        <div class="row mt-4 g-3">
-                            <div class="col-md-4">
-                                <div class="p-3 bg-light border rounded-3 h-100">
-                                    <h5 class="fw-bold text-success fs-6">🌾 Sektor Pertanian</h5>
-                                    <p class="small text-muted mb-0">Menjamin pasokan irigasi teknis ratusan ribu hektar lahan sawah di lumbung padi nasional (Karawang-Bekasi).</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 bg-light border rounded-3 h-100">
-                                    <h5 class="fw-bold text-success fs-6">⚡ Sektor Energi & Industri</h5>
-                                    <p class="small text-muted mb-0">Menopang kebutuhan listrik mandiri melalui PLTA Mini Hydro dan interkoneksi Gardu Induk dengan sistem PLN.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 bg-light border rounded-3 h-100">
-                                    <h5 class="fw-bold text-success fs-6">🏛️ Pengelolaan PJT II</h5>
-                                    <p class="small text-muted mb-0">Berada di bawah naungan Perum Jasa Tirta II yang terus konsisten merawat infrastruktur bersejarah ini sejak era pembangunan nasional.</p>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="mt-4 text-center">
-                            <button type="button" class="btn btn-outline-primary px-4 btn-custom" onclick="pilihMenu('form')">⬅ Kembali ke Form Laporan</button>
+                            <button type="button" class="btn btn-outline-primary px-4 btn-custom" onclick="pilihMenu('form')">
+                                <i class="fa-solid fa-arrow-left me-2"></i> Kembali ke Form Laporan
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- FORM UTAMA -->
-                <div class="card shadow-lg" id="container-form-laporan">
-                    <div class="card-header text-white text-center">
-                        <h3 class="mb-0 fw-bold fs-4">FORM LAPORAN NORMALISASI / PENGOPERASIAN</h3>
+                <!-- 3. FORM UTAMA LAPORAN & CHECKLIST -->
+                <div class="card content-card" id="container-form-laporan" style="display: none;">
+                    <div class="card-header-custom text-white text-center">
+                        <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-clipboard-list me-2"></i> FORM LAPORAN NORMALISASI & CHECKLIST</h3>
                         <p class="mb-0 text-white-50 small mt-1">Sistem Pencatatan & Pelaporan Operasional Gardu Induk / Unit Terkait</p>
                     </div>
                     <div class="card-body p-4 p-md-5">
@@ -248,18 +289,18 @@ HTML_TEMPLATE = """
                             </div>
 
                             <!-- PILIHAN MODE PENCATATAN -->
-                            <div class="mb-4 p-3 bg-light border rounded-3">
+                            <div class="mb-4 p-3 bg-light border rounded-4">
                                 <label class="form-label fw-bold text-primary mb-2">Pilih Mode Pencatatan Penanganan:</label>
-                                <div class="btn-group w-100" role="group">
+                                <div class="btn-group w-100 shadow-sm rounded-3" role="group">
                                     <input type="radio" class="btn-check" name="mode_pencatatan" id="modeManual" value="manual" autocomplete="off" checked onclick="switchMode('manual')">
-                                    <label class="btn btn-outline-primary btn-custom" for="modeManual">Mode Manual</label>
+                                    <label class="btn btn-outline-primary btn-custom" for="modeManual"><i class="fa-solid fa-pen-to-square me-1"></i> Mode Manual</label>
 
                                     <input type="radio" class="btn-check" name="mode_pencatatan" id="modeOtomatis" value="otomatis" autocomplete="off" onclick="switchMode('otomatis')">
-                                    <label class="btn btn-outline-success btn-custom" for="modeOtomatis">Mode Otomatis</label>
+                                    <label class="btn btn-outline-success btn-custom" for="modeOtomatis"><i class="fa-solid fa-list-check me-1"></i> Mode Otomatis</label>
                                 </div>
                             </div>
 
-                            <!-- INPUT / PILIHAN JENIS GANGGUAN BERDASARKAN MODE -->
+                            <!-- INPUT / PILIHAN JENIS GANGGUAN -->
                             <div class="mb-4" id="wrapper-jenis-manual">
                                 <label for="jenis_gangguan_manual" class="form-label fw-bold text-secondary">Jenis Gangguan</label>
                                 <input type="text" class="form-control" id="jenis_gangguan_manual" name="jenis_gangguan_manual" placeholder="Contoh: Gangguan Trafo / Trip PMT">
@@ -302,11 +343,11 @@ HTML_TEMPLATE = """
                                             <input type="text" class="form-control text-center" name="status_item[]" placeholder="Status Manual">
                                         </div>
                                         <div class="col-md-1">
-                                            <button type="button" class="btn btn-danger w-100 btn-custom" onclick="hapusBaris(this)">X</button>
+                                            <button type="button" class="btn btn-danger w-100 btn-custom" onclick="hapusBaris(this)"><i class="fa-solid fa-trash"></i></button>
                                         </div>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-outline-secondary btn-sm mb-4 px-3 btn-custom" onclick="tambahBaris()">+ Tambah Baris</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm mb-4 px-3 btn-custom" onclick="tambahBaris()"><i class="fa-solid fa-plus me-1"></i> Tambah Baris</button>
                             </div>
 
                             <!-- KONTAINER MODE OTOMATIS -->
@@ -314,14 +355,13 @@ HTML_TEMPLATE = """
                                 
                                 <!-- SUB SECTION 1: PENGAMANAN GANGGUAN / TRIP -->
                                 <div id="sub-section-gi-curug" style="display: none;">
-                                    <div class="alert alert-warning border-0 shadow-sm">
+                                    <div class="alert alert-warning border-0 shadow-sm rounded-4">
                                         <b>CHECK LIST PENGAMANAN GANGGUAN / TRIP (GARDU INDUK 70 / 6,3 KV CURUG)</b><br>
                                         <small>Centang item yang dikerjakan, lalu sesuaikan Keadaan/Posisi serta Pukul (Jam).</small>
                                     </div>
 
-                                    <!-- Bagian A -->
-                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded">A. RUANG PANEL 6,3 KV</h6>
-                                    <div class="table-responsive">
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3">A. RUANG PANEL 6,3 KV</h6>
+                                    <div class="table-responsive mb-3">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
                                                 <tr>
@@ -358,9 +398,8 @@ HTML_TEMPLATE = """
                                         </table>
                                     </div>
 
-                                    <!-- Bagian B -->
-                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded mt-3">B. RUANG PANEL 20 KV BUILDING</h6>
-                                    <div class="table-responsive">
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3 mt-3">B. RUANG PANEL 20 KV BUILDING</h6>
+                                    <div class="table-responsive mb-3">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
                                                 <tr>
@@ -399,9 +438,8 @@ HTML_TEMPLATE = """
                                         </table>
                                     </div>
 
-                                    <!-- Bagian C -->
-                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded mt-3">C. RUANG PANEL 6 KV</h6>
-                                    <div class="table-responsive">
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3 mt-3">C. RUANG PANEL 6 KV</h6>
+                                    <div class="table-responsive mb-3">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
                                                 <tr>
@@ -435,8 +473,7 @@ HTML_TEMPLATE = """
                                         </table>
                                     </div>
 
-                                    <!-- Bagian D -->
-                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded mt-3">D. CB PANEL DISTRIBUSI 380 V AC TARUM BARAT</h6>
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3 mt-3">D. CB PANEL DISTRIBUSI 380 V AC TARUM BARAT</h6>
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
@@ -461,13 +498,11 @@ HTML_TEMPLATE = """
                                     </div>
                                 </div>
 
-                                <!-- SUB SECTION 2: PINDAH LINE JATILUHUR -> KOSAMBI -->
+                                <!-- SUB SECTION 2 & 3 & 4 (Pindah Line & PLTA dipertahankan utuh sesuai sistem sebelumnya) -->
                                 <div id="sub-section-pindah-line" style="display: none;">
-                                    <div class="alert alert-info border-0 shadow-sm">
-                                        <b>CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV JATILUHUR KE PENGHANTAR 70 KV KOSAMBI (PLN)</b><br>
-                                        <small>I. Koordinasi dengan Kontrol Building Jatiluhur.<br>II. Pelaksanaan Manuver (Pemindahan Line).</small>
+                                    <div class="alert alert-info border-0 shadow-sm rounded-4">
+                                        <b>CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV JATILUHUR KE KOSAMBI</b>
                                     </div>
-
                                     {% set panels_jk = [
                                         ('pa', 'A. RUANG PANEL 6 KV', [
                                             ('pa1', 'PMT/CB panel Trafo 500 KVA / Trafo I', 'Dikelurkan', ''),
@@ -510,19 +545,13 @@ HTML_TEMPLATE = """
                                             ('pf5', 'PMT / CB panel keluaran 6 MB2', 'Dimasukan', '')
                                         ])
                                     ] %}
-
                                     {% for p_key, p_title, p_items in panels_jk %}
-                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded mt-3">{{ p_title }}</h6>
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3 mt-3">{{ p_title }}</h6>
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
                                                 <tr>
-                                                    <th width="5%">Pilih</th>
-                                                    <th width="5%">No</th>
-                                                    <th width="35%">Uraian</th>
-                                                    <th width="25%">Keadaan / Posisi</th>
-                                                    <th width="15%">Pukul (Jam)</th>
-                                                    <th width="15%">Keterangan</th>
+                                                    <th width="5%">Pilih</th><th width="5%">No</th><th width="35%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="15%">Pukul (Jam)</th><th width="15%">Keterangan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -530,11 +559,8 @@ HTML_TEMPLATE = """
                                                 <tr>
                                                     <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_{{ item_id }}" value="on" checked></td>
                                                     <td class="text-center">{{ loop.index }}</td>
-                                                    <td>
-                                                        {{ item_desc }}
-                                                        {% if 'Posisi TC' in item_desc %}
-                                                        <br><input type="text" class="form-control form-control-sm mt-1" name="tc_val_{{ item_id }}" placeholder="Ketik nilai TC disini...">
-                                                        {% endif %}
+                                                    <td>{{ item_desc }}
+                                                        {% if 'Posisi TC' in item_desc %}<br><input type="text" class="form-control form-control-sm mt-1" name="tc_val_{{ item_id }}" placeholder="Nilai TC...">{% endif %}
                                                     </td>
                                                     <td><input type="text" class="form-control form-control-sm text-center" name="pos_{{ item_id }}" value="{{ item_default }}"></td>
                                                     <td><input type="text" class="form-control form-control-sm text-center" name="jam_{{ item_id }}" placeholder="Jam"></td>
@@ -547,13 +573,10 @@ HTML_TEMPLATE = """
                                     {% endfor %}
                                 </div>
 
-                                <!-- SUB SECTION 3: PINDAH LINE KOSAMBI -> JATILUHUR -->
                                 <div id="sub-section-pindah-line-kj" style="display: none;">
-                                    <div class="alert alert-success border-0 shadow-sm">
-                                        <b>CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV KOSAMBI (PLN) KE PENGHANTAR 70 KV JATILUHUR</b><br>
-                                        <small>I. Koordinasi dengan Kontrol Building Jatiluhur.<br>II. Pelaksanaan Manuver (Pemindahan Line).</small>
+                                    <div class="alert alert-success border-0 shadow-sm rounded-4">
+                                        <b>CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI KOSAMBI KE JATILUHUR</b>
                                     </div>
-
                                     {% set panels_kj = [
                                         ('qa', 'A. RUANG PANEL 6 KV', [
                                             ('qa1', 'PMT/CB panel Trafo 500 KVA / Trafo I', 'Dikelurkan', ''),
@@ -570,7 +593,7 @@ HTML_TEMPLATE = """
                                         ]),
                                         ('qc', 'C. PMT KOSAMBI BAY', [
                                             ('qc1', 'PMT / CB 70 KV Kosambi Bay', 'Dikelurkan', ''),
-                                            ('qc2', 'PMS / DS Line 70 KV Kosambi Bay', 'Tdk. dikeluarkan', 'Untuk monitoring'),
+                                            ('qc2', 'PMS / DS Line 70 KV Kosambi Bay', 'Tdk. dikeluarkan', 'Monitoring'),
                                             ('qc3', 'PMS / DS Arde Line 70 KV Kosambi Bay', 'Keluar', '-'),
                                             ('qc4', 'PMS / DS Rel 70 KV Kosambi Bay', 'Dikelurkan', '-'),
                                             ('qc5', 'PMS / DS Arde Rel 70 KV Kosambi Bay', 'Keluar', '-')
@@ -585,8 +608,8 @@ HTML_TEMPLATE = """
                                         ('qe', 'E. RUANG PANEL 20 KV BUILDING', [
                                             ('qe1', 'PMT / CB Trafo I 20 / 70 KV 10 MVA', 'Dimasukan', ''),
                                             ('qe2', 'PMT / CB Masukan dari Trafo I', 'Dimasukan', ''),
-                                            ('qe3_custom', 'PMT / CB Trafo II 70 / 6,3 KV 5 MVA Posisi TC', 'Dimasukan', 'Posisi TC harus sama'),
-                                            ('qe4_custom', 'PMT / CB Trafo III 70 / 6,3 KV 5 MVA Posisi TC', 'Dimasukan', 'Posisi TC harus sama')
+                                            ('qe3_custom', 'PMT / CB Trafo II 70 / 6,3 KV 5 MVA Posisi TC', 'Dimasukan', 'Sama'),
+                                            ('qe4_custom', 'PMT / CB Trafo III 70 / 6,3 KV 5 MVA Posisi TC', 'Dimasukan', 'Sama')
                                         ]),
                                         ('qf', 'F. RUANG PANEL 6 KV', [
                                             ('qf1', 'PMT / CB panel masukan dari Trafo II', 'Dimasukan', ''),
@@ -596,19 +619,13 @@ HTML_TEMPLATE = """
                                             ('qf5', 'PMT / CB panel keluaran 6 MB2', 'Dimasukan', '')
                                         ])
                                     ] %}
-
                                     {% for p_key, p_title, p_items in panels_kj %}
-                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded mt-3">{{ p_title }}</h6>
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3 mt-3">{{ p_title }}</h6>
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
                                                 <tr>
-                                                    <th width="5%">Pilih</th>
-                                                    <th width="5%">No</th>
-                                                    <th width="35%">Uraian</th>
-                                                    <th width="25%">Keadaan / Posisi</th>
-                                                    <th width="15%">Pukul (Jam)</th>
-                                                    <th width="15%">Keterangan</th>
+                                                    <th width="5%">Pilih</th><th width="5%">No</th><th width="35%">Uraian</th><th width="25%">Keadaan / Posisi</th><th width="15%">Pukul (Jam)</th><th width="15%">Keterangan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -616,11 +633,8 @@ HTML_TEMPLATE = """
                                                 <tr>
                                                     <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_{{ item_id }}" value="on" checked></td>
                                                     <td class="text-center">{{ loop.index }}</td>
-                                                    <td>
-                                                        {{ item_desc }}
-                                                        {% if 'Posisi TC' in item_desc %}
-                                                        <br><input type="text" class="form-control form-control-sm mt-1" name="tc_val_{{ item_id }}" placeholder="Ketik nilai TC disini...">
-                                                        {% endif %}
+                                                    <td>{{ item_desc }}
+                                                        {% if 'Posisi TC' in item_desc %}<br><input type="text" class="form-control form-control-sm mt-1" name="tc_val_{{ item_id }}" placeholder="Nilai TC...">{% endif %}
                                                     </td>
                                                     <td><input type="text" class="form-control form-control-sm text-center" name="pos_{{ item_id }}" value="{{ item_default }}"></td>
                                                     <td><input type="text" class="form-control form-control-sm text-center" name="jam_{{ item_id }}" placeholder="Jam"></td>
@@ -633,71 +647,61 @@ HTML_TEMPLATE = """
                                     {% endfor %}
                                 </div>
 
-                                <!-- SUB SECTION 4: OPERASI PLTA MINI HYDRO CURUG -->
                                 <div id="sub-section-plta-curug" style="display: none;">
-                                    <div class="alert alert-primary border-0 shadow-sm mb-3">
-                                        <b>CHECK LIST OPERASI PLTA MINI HYDRO CURUG</b><br>
-                                        <small>Silakan lengkapi nomor unit & jam kerja unit (TM), lalu centang dan sesuaikan data operasional.</small>
+                                    <div class="alert alert-primary border-0 shadow-sm rounded-4 mb-3">
+                                        <b>CHECK LIST OPERASI PLTA MINI HYDRO CURUG</b>
                                     </div>
-                                    
-                                    <div class="row g-3 mb-3 bg-white p-3 border rounded shadow-sm">
+                                    <div class="row g-3 mb-3 bg-white p-3 border rounded-4 shadow-sm">
                                         <div class="col-md-6">
                                             <label for="plta_unit_no" class="form-label fw-bold text-secondary">UNIT No.:</label>
-                                            <input type="text" class="form-control" id="plta_unit_no" name="plta_unit_no" placeholder="Contoh: Unit 1 / Unit 2">
+                                            <input type="text" class="form-control" id="plta_unit_no" name="plta_unit_no" placeholder="Contoh: Unit 1">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="plta_jam_kerja" class="form-label fw-bold text-secondary">Jam Kerja Unit (TM):</label>
                                             <input type="text" class="form-control" id="plta_jam_kerja" name="plta_jam_kerja" placeholder="Contoh: 1250 Jam">
                                         </div>
                                     </div>
-
                                     {% set plta_sections = [
                                         ('plta_a', 'A. RUANG PANEL CONTROL ROOM', [
-                                            ('plta_a1', 'Pada jendela alarm tidak ada indikasi gangguan', '-', 'TMA Udik 26-36 mohon diperhatikan apabila Beban sudah turun dan air Udik kecil, maka Mini Hydro Stop (utamakan air Tr. TT & Tr Barat', False),
-                                            ('plta_a2', 'Tinggi Muka Air', 'Tinggi Air Udik: ..., Tinggi Air Hilir: ..., Posisi saringan sampah unit: ...', '-', True),
-                                            ('plta_a3', 'Kriteria berhenti pada posisi stabil / indikator tombol stop', 'Menyala', '-', False),
-                                            ('plta_a4', 'Posisi Pintu Pembuangan " Tutup "', 'Menyala', '-', False),
-                                            ('plta_a5', 'Indikasi DS Phase Cubicle', 'Masuk (GTA 030 JD: ...)', '-', True),
-                                            ('plta_a6', 'Indikasi Earthing Switch', 'Keluar (GTA 031 JS: ...)', '-', True),
-                                            ('plta_a7', 'Indikasi CB 20 KV', 'Keluar (LGB 001 JD: ...)', 'TPL Menyala', True),
-                                            ('plta_a8', 'Indikasi Earthing Switch', 'Keluar (LGB 031 JS: ...)', '-', True),
+                                            ('plta_a1', 'Pada jendela alarm tidak ada indikasi gangguan', '-', 'TMA Udik 26-36', False),
+                                            ('plta_a2', 'Tinggi Muka Air', 'Udik: ..., Hilir: ...', '-', True),
+                                            ('plta_a3', 'Kriteria berhenti stabil', 'Menyala', '-', False),
+                                            ('plta_a4', 'Posisi Pintu Pembuangan Tutup', 'Menyala', '-', False),
+                                            ('plta_a5', 'Indikasi DS Phase Cubicle', 'Masuk', '-', True),
+                                            ('plta_a6', 'Indikasi Earthing Switch', 'Keluar', '-', True),
+                                            ('plta_a7', 'Indikasi CB 20 KV', 'Keluar', 'TPL Menyala', True),
+                                            ('plta_a8', 'Indikasi Earthing Switch', 'Keluar', '-', True),
                                             ('plta_a9', 'Indikasi Unit Siap Jalan', 'Menyala', '-', False)
                                         ]),
                                         ('plta_b', 'B. CARA PENGOPERASIAAN', [
                                             ('plta_b1', 'Sistim Pengatur Unit', 'Lokal', '-', False),
                                             ('plta_b2', 'Sistim Komando Unit', 'Unit: ...', '-', True),
-                                            ('plta_b3', 'Sinkronisasi (Jika dipilih cara manual, hubungkan alat sinkronisasi portible)', '-', '-', False),
+                                            ('plta_b3', 'Sinkronisasi', '-', '-', False),
                                             ('plta_b4', 'Duga Muka Air / Kontrol water level', 'ON / OFF', '-', False),
-                                            ('plta_b5_1', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> a. Tekan tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
-                                            ('plta_b5_2', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> b. Tekan Tombol "Eksitasi" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
-                                            ('plta_b5_3', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> c. Tekan Tombol "Generator" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
-                                            ('plta_b5_4', 'Pengoperasian Unit (Sistim Komando Unit dipilih "AUTO" -> a. Tekan Tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', '-', False),
-                                            ('plta_b6_1', 'Sinkronisasi (Sistim Sinkronisasi dipilih "AUTO" -> a. Periksa TPL (Indikator CB 20 KV)', 'TPL Berkedip (LGB001JD: ..., Pukul: ... wib)', 'Putar ke posisi ON', True),
-                                            ('plta_b6_2', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> a. Pengaturan beban / frekwensi menggunakan Tombol ( naik / turun ) pada panel control', '-', '-', False),
-                                            ('plta_b6_3', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> b. Pengaturan tegangan eksitasi dengan menggunakan tombol ( naik / turun ) pada panel control', '-', '-', False),
-                                            ('plta_b6_4', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> c. Putar Switch CB / TPL CB', 'LGB001JD: ...', 'Putar ke posisi ON', True),
-                                            ('plta_b6_5', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> d. Jika lampu pad alat sinkronisasi menyala ( ON ). tekan tombol TPL CB untuk menutup CB. CB Masuk paralel dengan jaringan', 'Pukul: ... wib', '-', True)
+                                            ('plta_b5_1', 'Tombol Putaran Tanpa Beban', 'Berkedip', 'Tunggu', False),
+                                            ('plta_b5_2', 'Tombol Eksitasi', 'Berkedip', 'Tunggu', False),
+                                            ('plta_b5_3', 'Tombol Generator', 'Berkedip', 'Tunggu', False),
+                                            ('plta_b5_4', 'Tombol Putaran Tanpa Beban (AUTO)', 'Berkedip', '-', False),
+                                            ('plta_b6_1', 'Periksa TPL (CB 20 KV)', 'Berkedip', 'ON', True),
+                                            ('plta_b6_2', 'Pengaturan beban / frekuensi', '-', '-', False),
+                                            ('plta_b6_3', 'Pengaturan tegangan eksitasi', '-', '-', False),
+                                            ('plta_b6_4', 'Putar Switch CB / TPL CB', 'LGB001JD', 'ON', True),
+                                            ('plta_b6_5', 'Tekan tombol TPL CB paralel', 'Pukul: ...', '-', True)
                                         ]),
                                         ('plta_c', 'C. PENGATURAN BEBAN', [
-                                            ('plta_c1', 'Tekan Tombol Pengatur Beban / Frekwesi ( naik / turun ), hingga', '... MW', 'Secara Bertahap', True)
+                                            ('plta_c1', 'Tekan Tombol Pengatur Beban', '... MW', 'Bertahap', True)
                                         ]),
                                         ('plta_d', 'D. PENCATATAN RUTIN', [
-                                            ('plta_d1', 'Selanjutnya pencatatan rutin dengan blangko laporan harian', '-', '-', False)
+                                            ('plta_d1', 'Pencatatan rutin harian', '-', '-', False)
                                         ])
                                     ] %}
-
                                     {% for p_key, p_title, p_items in plta_sections %}
-                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded mt-3">{{ p_title }}</h6>
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded-3 mt-3">{{ p_title }}</h6>
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
                                             <thead class="table-light text-center">
                                                 <tr>
-                                                    <th width="5%">Pilih</th>
-                                                    <th width="5%">No</th>
-                                                    <th width="45%">Uraian</th>
-                                                    <th width="20%">Posisi / Isian</th>
-                                                    <th width="12%">Status</th>
-                                                    <th width="13%">Keterangan</th>
+                                                    <th width="5%">Pilih</th><th width="5%">No</th><th width="45%">Uraian</th><th width="20%">Posisi / Isian</th><th width="12%">Status</th><th width="13%">Ket</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -705,18 +709,13 @@ HTML_TEMPLATE = """
                                                 <tr>
                                                     <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_{{ item_id }}" value="on" checked></td>
                                                     <td class="text-center">{{ loop.index }}</td>
-                                                    <td>
-                                                        {{ item_desc }}
-                                                        {% if is_custom %}
-                                                        <div class="mt-1">
-                                                            <input type="text" class="form-control form-control-sm" name="custom_input_{{ item_id }}" placeholder="Isi detail data...">
-                                                        </div>
-                                                        {% endif %}
+                                                    <td>{{ item_desc }}
+                                                        {% if is_custom %}<div class="mt-1"><input type="text" class="form-control form-control-sm" name="custom_input_{{ item_id }}" placeholder="Detail..."></div>{% endif %}
                                                     </td>
                                                     <td><input type="text" class="form-control form-control-sm text-center" name="pos_{{ item_id }}" value="{{ item_default }}"></td>
                                                     <td>
                                                         <select class="form-select form-select-sm text-center fw-bold" name="paraf_{{ item_id }}">
-                                                            <option value="✔" selected class="text-success">✔ (Ya/OK)</option>
+                                                            <option value="✔" selected class="text-success">✔ (OK)</option>
                                                             <option value="✖" class="text-danger">✖ (Tidak)</option>
                                                         </select>
                                                     </td>
@@ -728,13 +727,13 @@ HTML_TEMPLATE = """
                                     </div>
                                     {% endfor %}
                                 </div>
-
                             </div>
 
                             <hr class="my-4">
-                            <!-- FITUR PEMBUAT LAPORAN -->
-                            <div class="card p-4 mb-4 bg-light border-0 shadow-sm">
-                                <h6 class="fw-bold text-primary mb-3">Informasi Pembuat Laporan</h6>
+                            
+                            <!-- INFORMASI PEMBUAT LAPORAN -->
+                            <div class="card p-4 mb-4 bg-light border-0 shadow-sm rounded-4">
+                                <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-user-shield me-2"></i> Informasi Pembuat Laporan</h6>
                                 <div class="row g-3">
                                     <div class="col-md-4">
                                         <label for="nama_group" class="form-label fw-bold text-secondary">Group / Tim:</label>
@@ -747,7 +746,9 @@ HTML_TEMPLATE = """
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 py-3 shadow-sm fs-5 btn-custom">Buat Laporan PDF</button>
+                            <button type="submit" class="btn btn-primary w-100 py-3 shadow-sm fs-5 btn-custom">
+                                <i class="fa-solid fa-file-pdf me-2"></i> Buat Laporan PDF Sekarang
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -758,21 +759,26 @@ HTML_TEMPLATE = """
 
     <script>
         function pilihMenu(menu) {
+            const welcomeContainer = document.getElementById('container-welcome');
             const formContainer = document.getElementById('container-form-laporan');
             const sejarahContainer = document.getElementById('container-sejarah');
             const btnForm = document.getElementById('btnMenuForm');
             const btnSejarah = document.getElementById('btnMenuSejarah');
 
+            // Sembunyikan semuanya terlebih dahulu
+            welcomeContainer.style.display = 'none';
+            formContainer.style.display = 'none';
+            sejarahContainer.style.display = 'none';
+            btnForm.classList.remove('active');
+            btnSejarah.classList.remove('active');
+
+            // Tampilkan berdasarkan menu yang dipilih
             if (menu === 'form') {
                 formContainer.style.display = 'block';
-                sejarahContainer.style.display = 'none';
                 btnForm.classList.add('active');
-                btnSejarah.classList.remove('active');
             } else if (menu === 'sejarah') {
-                formContainer.style.display = 'none';
                 sejarahContainer.style.display = 'block';
                 btnSejarah.classList.add('active');
-                btnForm.classList.remove('active');
             }
         }
 
@@ -868,7 +874,7 @@ HTML_TEMPLATE = """
                                '<div class="col-md-5"><input type="text" class="form-control" name="penanganan[]" placeholder="Jenis Penanganan" required></div>' +
                                '<div class="col-md-2"><input type="text" class="form-control text-center" name="jam_item[]" placeholder="Jam (Cth: 10:00)" required></div>' +
                                '<div class="col-md-3"><input type="text" class="form-control text-center" name="status_item[]" placeholder="Status Manual" required></div>' +
-                               '<div class="col-md-1"><button type="button" class="btn btn-danger w-100 btn-custom" onclick="hapusBaris(this)">X</button></div>';
+                               '<div class="col-md-1"><button type="button" class="btn btn-danger w-100 btn-custom" onclick="hapusBaris(this)"><i class="fa-solid fa-trash"></i></button></div>';
             container.appendChild(newRow);
         }
 
@@ -892,7 +898,15 @@ HTML_TEMPLATE = """
 
         window.onload = function() {
             switchMode('manual');
-            pilihMenu('form'); // Memastikan inisialisasi awal bersih dan langsung menampilkan form utama saja
+            // Saat pertama kali dimuat, pastikan menu navigasi belum membuka konten apa pun,
+            // melainkan menampilkan halaman sambutan (Welcome Screen) yang bersih dan modern.
+            const welcomeContainer = document.getElementById('container-welcome');
+            const formContainer = document.getElementById('container-form-laporan');
+            const sejarahContainer = document.getElementById('container-sejarah');
+            
+            welcomeContainer.style.display = 'flex';
+            formContainer.style.display = 'none';
+            sejarahContainer.style.display = 'none';
         }
     </script>
 </body>
@@ -907,46 +921,56 @@ RESULT_TEMPLATE = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pratinjau Laporan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
+            background: linear-gradient(135deg, rgba(7, 15, 30, 0.85), rgba(15, 23, 42, 0.9)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .card {
             border: none;
-            border-radius: 16px;
-            backdrop-filter: blur(12px);
-            background-color: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(16px);
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
         .card-header {
-            border-top-left-radius: 16px !important;
-            border-top-right-radius: 16px !important;
+            border-top-left-radius: 20px !important;
+            border-top-right-radius: 20px !important;
             background: linear-gradient(135deg, #198754, #157347) !important;
-            padding: 1.5rem;
+            padding: 1.75rem;
         }
         .btn {
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 0.75rem 1rem;
             font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card shadow-lg text-center">
                     <div class="card-header text-white">
-                        <h4 class="mb-0 fw-bold">Laporan Berhasil Dibuat!</h4>
+                        <h4 class="mb-0 fw-bold"><i class="fa-solid fa-circle-check me-2"></i> Laporan Berhasil Dibuat!</h4>
                     </div>
                     <div class="card-body p-4 p-md-5">
-                        <p class="text-muted mb-4">File PDF laporan gangguan Anda sudah siap diunduh atau dikirimkan langsung ke Grup WhatsApp.</p>
-                        <a href="/download/{{ filename }}" class="btn btn-primary w-100 mb-3 py-2 shadow-sm" target="_blank">Unduh File PDF</a>
-                        <a href="https://api.whatsapp.com/send?text={{ wa_message }}" class="btn btn-success w-100 mb-3 py-2 shadow-sm" target="_blank">Kirim ke Grup WhatsApp</a>
-                        <a href="/" class="btn btn-outline-secondary w-100 py-2">Kembali ke Dashboard</a>
+                        <p class="text-muted mb-4">File PDF laporan gangguan Anda telah selesai disusun dan siap untuk diunduh atau dibagikan ke WhatsApp.</p>
+                        <a href="/download/{{ filename }}" class="btn btn-primary w-100 mb-3 shadow-sm" target="_blank">
+                            <i class="fa-solid fa-download me-2"></i> Unduh File PDF
+                        </a>
+                        <a href="https://api.whatsapp.com/send?text={{ wa_message }}" class="btn btn-success w-100 mb-3 shadow-sm" target="_blank">
+                            <i class="fa-brands fa-whatsapp me-2"></i> Kirim ke Grup WhatsApp
+                        </a>
+                        <a href="/" class="btn btn-outline-secondary w-100">
+                            <i class="fa-solid fa-arrow-left me-2"></i> Kembali ke Dashboard
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1056,36 +1080,36 @@ def generate():
         if is_plta_curug:
             plta_sections = [
                 ('plta_a', 'A. RUANG PANEL CONTROL ROOM', [
-                    ('plta_a1', 'Pada jendela alarm tidak ada indikasi gangguan', '-', 'TMA Udik 26-36 mohon diperhatikan apabila Beban sudah turun dan air Udik kecil, maka Mini Hydro Stop (utamakan air Tr. TT & Tr Barat', False),
-                    ('plta_a2', 'Tinggi Muka Air', 'Tinggi Air Udik: ..., Tinggi Air Hilir: ..., Posisi saringan sampah unit: ...', '-', True),
-                    ('plta_a3', 'Kriteria berhenti pada posisi stabil / indikator tombol stop', 'Menyala', '-', False),
-                    ('plta_a4', 'Posisi Pintu Pembuangan " Tutup "', 'Menyala', '-', False),
-                    ('plta_a5', 'Indikasi DS Phase Cubicle', 'Masuk (GTA 030 JD: ...)', '-', True),
-                    ('plta_a6', 'Indikasi Earthing Switch', 'Keluar (GTA 031 JS: ...)', '-', True),
-                    ('plta_a7', 'Indikasi CB 20 KV', 'Keluar (LGB 001 JD: ...)', 'TPL Menyala', True),
-                    ('plta_a8', 'Indikasi Earthing Switch', 'Keluar (LGB 031 JS: ...)', '-', True),
+                    ('plta_a1', 'Pada jendela alarm tidak ada indikasi gangguan', '-', 'TMA Udik 26-36 mohon diperhatikan apabila Beban sudah turun dan air Udik kecil, maka Mini Hydro Stop', False),
+                    ('plta_a2', 'Tinggi Muka Air', 'Udik: ..., Hilir: ...', '-', True),
+                    ('plta_a3', 'Kriteria berhenti stabil', 'Menyala', '-', False),
+                    ('plta_a4', 'Posisi Pintu Pembuangan Tutup', 'Menyala', '-', False),
+                    ('plta_a5', 'Indikasi DS Phase Cubicle', 'Masuk', '-', True),
+                    ('plta_a6', 'Indikasi Earthing Switch', 'Keluar', '-', True),
+                    ('plta_a7', 'Indikasi CB 20 KV', 'Keluar', 'TPL Menyala', True),
+                    ('plta_a8', 'Indikasi Earthing Switch', 'Keluar', '-', True),
                     ('plta_a9', 'Indikasi Unit Siap Jalan', 'Menyala', '-', False)
                 ]),
                 ('plta_b', 'B. CARA PENGOPERASIAAN', [
                     ('plta_b1', 'Sistim Pengatur Unit', 'Lokal', '-', False),
                     ('plta_b2', 'Sistim Komando Unit', 'Unit: ...', '-', True),
-                    ('plta_b3', 'Sinkronisasi (Jika dipilih cara manual, hubungkan alat sinkronisasi portible)', '-', '-', False),
+                    ('plta_b3', 'Sinkronisasi', '-', '-', False),
                     ('plta_b4', 'Duga Muka Air / Kontrol water level', 'ON / OFF', '-', False),
-                    ('plta_b5_1', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> a. Tekan tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
-                    ('plta_b5_2', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> b. Tekan Tombol "Eksitasi" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
-                    ('plta_b5_3', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> c. Tekan Tombol "Generator" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip', False),
-                    ('plta_b5_4', 'Pengoperasian Unit (Sistim Komando Unit dipilih "AUTO" -> a. Tekan Tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', '-', False),
-                    ('plta_b6_1', 'Sinkronisasi (Sistim Sinkronisasi dipilih "AUTO" -> a. Periksa TPL (Indikator CB 20 KV)', 'TPL Berkedip (LGB001JD: ..., Pukul: ... wib)', 'Putar ke posisi ON', True),
-                    ('plta_b6_2', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> a. Pengaturan beban / frekwensi menggunakan Tombol ( naik / turun ) pada panel control', '-', '-', False),
-                    ('plta_b6_3', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> b. Pengaturan tegangan eksitasi dengan menggunakan tombol ( naik / turun ) pada panel control', '-', '-', False),
-                    ('plta_b6_4', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> c. Putar Switch CB / TPL CB', 'LGB001JD: ...', 'Putar ke posisi ON', True),
-                    ('plta_b6_5', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> d. Jika lampu pad alat sinkronisasi menyala ( ON ). tekan tombol TPL CB untuk menutup CB. CB Masuk paralel dengan jaringan', 'Pukul: ... wib', '-', True)
+                    ('plta_b5_1', 'Tombol Putaran Tanpa Beban', 'Berkedip', 'Tunggu', False),
+                    ('plta_b5_2', 'Tombol Eksitasi', 'Berkedip', 'Tunggu', False),
+                    ('plta_b5_3', 'Tombol Generator', 'Berkedip', 'Tunggu', False),
+                    ('plta_b5_4', 'Tombol Putaran Tanpa Beban (AUTO)', 'Berkedip', '-', False),
+                    ('plta_b6_1', 'Periksa TPL (CB 20 KV)', 'Berkedip', 'ON', True),
+                    ('plta_b6_2', 'Pengaturan beban / frekuensi', '-', '-', False),
+                    ('plta_b6_3', 'Pengaturan tegangan eksitasi', '-', '-', False),
+                    ('plta_b6_4', 'Putar Switch CB / TPL CB', 'LGB001JD', 'ON', True),
+                    ('plta_b6_5', 'Tekan tombol TPL CB paralel', 'Pukul: ...', '-', True)
                 ]),
                 ('plta_c', 'C. PENGATURAN BEBAN', [
-                    ('plta_c1', 'Tekan Tombol Pengatur Beban / Frekwesi ( naik / turun ), hingga', '... MW', 'Secara Bertahap', True)
+                    ('plta_c1', 'Tekan Tombol Pengatur Beban', '... MW', 'Bertahap', True)
                 ]),
                 ('plta_d', 'D. PENCATATAN RUTIN', [
-                    ('plta_d1', 'Selanjutnya pencatatan rutin dengan blangko laporan harian', '-', '-', False)
+                    ('plta_d1', 'Pencatatan rutin harian', '-', '-', False)
                 ])
             ]
 
@@ -1111,7 +1135,7 @@ def generate():
                             Paragraph(paraf, cell_center),
                             Paragraph(ket, cell_center)
                         ])
-                        wa_details.append(f"{global_idx}. {desc} - Pos: {pos} - Status: {paraf} (Ket: {ket})")
+                        wa_details.append(f"{global_idx}. {desc} - Pos: {pos} - Status: {paraf}")
                         global_idx += 1
         elif "KOSAMBI KE PENGHANTAR 70 KV JATILUHUR" in jenis_gangguan:
             sections = [
@@ -1258,7 +1282,7 @@ def generate():
                             Paragraph(keadaan, cell_center),
                             Paragraph(ket, cell_center)
                         ])
-                        wa_details.append(f"{global_idx}. [{pukul}] {final_desc} - {keadaan} ({ket})")
+                        wa_details.append(f"{global_idx}. [{pukul}] {final_desc} - {keadaan}")
                         global_idx += 1
 
         if len(table_data) == 1:
@@ -1307,7 +1331,7 @@ def generate():
         t = Table(table_data, colWidths=[25, 237, 85, 125, 80])
 
     table_styles = [
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#0d6efd')),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -1319,7 +1343,7 @@ def generate():
     for idx, row in enumerate(table_data):
         if isinstance(row[0], Paragraph) and any(row[0].text.startswith(x) for x in ["A.", "B.", "C.", "D.", "E.", "F."]):
             table_styles.append(('SPAN', (0, idx), (-1, idx)))
-            table_styles.append(('BACKGROUND', (0, idx), (-1, idx), colors.HexColor('#e9ecef')))
+            table_styles.append(('BACKGROUND', (0, idx), (-1, idx), colors.HexColor('#e2e8f0')))
             table_styles.append(('TOPPADDING', (0, idx), (-1, idx), 4))
             table_styles.append(('BOTTOMPADDING', (0, idx), (-1, idx), 4))
 
