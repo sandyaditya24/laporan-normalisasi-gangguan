@@ -3,12 +3,14 @@ import os
 from datetime import datetime
 from pegawai import pegawai_bp
 from faq import faq_bp
+from normalisasi import normalisasi_bp  # Mengimpor blueprint normalisasi
 from google import genai  # Pustaka untuk Google Gemini AI
 from pdf_helper import generate_pdf_laporan  # Mengimpor fungsi pembuat PDF terpisah
 
 app = Flask(__name__)
 app.register_blueprint(pegawai_bp)
 app.register_blueprint(faq_bp)
+app.register_blueprint(normalisasi_bp)  # Mendaftarkan blueprint normalisasi
 
 PDF_FOLDER = "static"
 if not os.path.exists(PDF_FOLDER):
