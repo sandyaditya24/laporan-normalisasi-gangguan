@@ -1629,6 +1629,9 @@ def ask_ai():
         response = client.models.generate_content(
             model="gemini-3.5-flash",
             contents=formatted_prompt,
+            config={
+                "tools": [{"google_search": {}}],
+            },
         )
 
         answer = getattr(response, "text", None)
