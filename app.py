@@ -101,6 +101,7 @@ HTML_TEMPLATE = """
                                     <option value="CHECK LIST PENGAMANAN GANGGUAN / TRIP (GARDU INDUK 70 / 6,3 KV CURUG)">1. CHECK LIST PENGAMANAN GANGGUAN / TRIP (GARDU INDUK 70 / 6,3 KV CURUG)</option>
                                     <option value="CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV JATILUHUR KE PENGHANTAR 70 KV KOSAMBI">2. CHECK LIST PINDAH LINE (JATILUHUR -> KOSAMBI)</option>
                                     <option value="CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI PENGHANTAR 70 KV KOSAMBI KE PENGHANTAR 70 KV JATILUHUR">3. CHECK LIST PINDAH LINE (KOSAMBI -> JATILUHUR)</option>
+                                    <option value="CHECK LIST OPERASI PLTA MINI HYDRO CURUG">4. CHECK LIST OPERASI PLTA MINI HYDRO CURUG</option>
                                 </select>
                             </div>
 
@@ -461,6 +462,90 @@ HTML_TEMPLATE = """
                                     {% endfor %}
                                 </div>
 
+                                <!-- SUB SECTION 4: OPERASI PLTA MINI HYDRO CURUG -->
+                                <div id="sub-section-plta-curug" style="display: none;">
+                                    <div class="alert alert-primary border-0 shadow-sm mb-3">
+                                        <b>CHECK LIST OPERASI PLTA MINI HYDRO CURUG</b><br>
+                                        <small>Silakan lengkapi nomor unit & jam kerja unit (TM), lalu centang dan sesuaikan data operasional.</small>
+                                    </div>
+                                    
+                                    <div class="row g-3 mb-3 bg-white p-3 border rounded shadow-sm">
+                                        <div class="col-md-6">
+                                            <label for="plta_unit_no" class="form-label fw-bold text-secondary">UNIT No.:</label>
+                                            <input type="text" class="form-control" id="plta_unit_no" name="plta_unit_no" placeholder="Contoh: Unit 1 / Unit 2">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="plta_jam_kerja" class="form-label fw-bold text-secondary">Jam Kerja Unit (TM):</label>
+                                            <input type="text" class="form-control" id="plta_jam_kerja" name="plta_jam_kerja" placeholder="Contoh: 1250 Jam">
+                                        </div>
+                                    </div>
+
+                                    {% set plta_sections = [
+                                        ('plta_a', 'A. RUANG PANEL CONTROL ROOM', [
+                                            ('plta_a1', 'Pada jendela alarm tidak ada indikasi gangguan', '-', 'TMA Udik 26-36 mohon diperhatikan apabila Beban sudah turun dan air Udik kecil, maka Mini Hydro Stop (utamakan air Tr. TT & Tr Barat'),
+                                            ('plta_a2', 'Tinggi Muka Air : Tinggi Air Udik, Tinggi Air Hilir, Posisi saringan sampah unit .....', '-', '-'),
+                                            ('plta_a3', 'Kriteria berhenti pada posisi stabil / indikator tombol stop', 'Menyala', '-'),
+                                            ('plta_a4', 'Posisi Pintu Pembuangan " Tutup "', 'Menyala', '-'),
+                                            ('plta_a5', 'Indikasi DS Phase Cubicle / .... GTA 030 JD', 'Masuk', '-'),
+                                            ('plta_a6', 'Indikasi Earthing Switch / .... GTA 031 JS', 'Keluar', '-'),
+                                            ('plta_a7', 'Indikasi CB 20 KV / ..... LGB 001 JD', 'Keluar', 'TPL Menyala'),
+                                            ('plta_a8', 'Indikasi Earthing Switch / .... LGB 031 JS', 'Keluar', '-'),
+                                            ('plta_a9', 'Indikasi Unit Siap Jalan', 'Menyala', '-')
+                                        ]),
+                                        ('plta_b', 'B. CARA PENGOPERASIAAN', [
+                                            ('plta_b1', 'Sistim Pengatur Unit', 'Lokal', '-'),
+                                            ('plta_b2', 'Sistim Komando Unit .....', 'Manual / Auto', '-'),
+                                            ('plta_b3', 'Sinkronisasi (Jika dipilih cara manual, hubungkan alat sinkronisasi portible)', '-', '-'),
+                                            ('plta_b4', 'Duga Muka Air / Kontrol water level', 'ON / OFF', '-'),
+                                            ('plta_b5_1', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> a. Tekan tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
+                                            ('plta_b5_2', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> b. Tekan Tombol "Eksitasi" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
+                                            ('plta_b5_3', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> c. Tekan Tombol "Generator" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
+                                            ('plta_b5_4', 'Pengoperasian Unit (Sistim Komando Unit dipilih "AUTO" -> a. Tekan Tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', '-'),
+                                            ('plta_b6_1', 'Sinkronisasi (Sistim Sinkronisasi dipilih "AUTO" -> a. Periksa TPL (Indikator CB 20 KV) ..... LGB001JD - CB masuk paralel dengan jaringan Pukul ........ wib)', 'TPL Berkedip', 'Putar ke posisi ON'),
+                                            ('plta_b6_2', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> a. Pengaturan beban / frekwensi menggunakan Tombol ( naik / turun ) pada panel control)', '-', '-'),
+                                            ('plta_b6_3', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> b. Pengaturan tegangan eksitasi dengan menggunakan tombol ( naik / turun ) pada panel control)', '-', '-'),
+                                            ('plta_b6_4', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> c. Putar Switch CB / TPL CB ........ LGB001JD)', '-', 'Putar ke posisi ON'),
+                                            ('plta_b6_5', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> d. Jika lampu pad alat sinkronisasi menyala ( ON ). tekan tombol TPL CB untuk menutup CB. CB Masuk paralel dengan jaringan Pukul ........ wib)', '-', '-')
+                                        ]),
+                                        ('plta_c', 'C. PENGATURAN BEBAN', [
+                                            ('plta_c1', 'Tekan Tombol Pengatur Beban / Frekwesi ( naik / turun ), hingga : ...... MW', '........ MW', 'Secara Bertahap')
+                                        ]),
+                                        ('plta_d', 'D. PENCATATAN RUTIN', [
+                                            ('plta_d1', 'Selanjutnya pencatatan rutin dengan blangko laporan harian', '-', '-')
+                                        ])
+                                    ] %}
+
+                                    {% for p_key, p_title, p_items in plta_sections %}
+                                    <h6 class="fw-bold bg-secondary text-white p-2 rounded mt-3">{{ p_title }}</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-sm bg-white align-middle shadow-sm">
+                                            <thead class="table-light text-center">
+                                                <tr>
+                                                    <th width="5%">Pilih</th>
+                                                    <th width="5%">No</th>
+                                                    <th width="40%">Uraian</th>
+                                                    <th width="20%">Posisi</th>
+                                                    <th width="15%">Paraf</th>
+                                                    <th width="15%">Keterangan</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for item_id, item_desc, item_default, item_ket in p_items %}
+                                                <tr>
+                                                    <td class="text-center"><input class="form-check-input" type="checkbox" name="chk_{{ item_id }}" value="on" checked></td>
+                                                    <td class="text-center">{{ loop.index }}</td>
+                                                    <td>{{ item_desc }}</td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="pos_{{ item_id }}" value="{{ item_default }}"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="paraf_{{ item_id }}" placeholder="Paraf"></td>
+                                                    <td><input type="text" class="form-control form-control-sm text-center" name="ket_{{ item_id }}" value="{{ item_ket }}"></td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
                             </div>
 
                             <hr class="my-4">
@@ -528,10 +613,12 @@ HTML_TEMPLATE = """
             const subGiCurug = document.getElementById('sub-section-gi-curug');
             const subPindahLine = document.getElementById('sub-section-pindah-line');
             const subPindahLineKj = document.getElementById('sub-section-pindah-line-kj');
+            const subPltaCurug = document.getElementById('sub-section-plta-curug');
             
             subGiCurug.style.display = 'none';
             subPindahLine.style.display = 'none';
             subPindahLineKj.style.display = 'none';
+            subPltaCurug.style.display = 'none';
 
             if (val.includes("GARDU INDUK 70 / 6,3 KV CURUG")) {
                 subGiCurug.style.display = 'block';
@@ -539,6 +626,8 @@ HTML_TEMPLATE = """
                 subPindahLine.style.display = 'block';
             } else if (val.includes("KOSAMBI KE PENGHANTAR 70 KV JATILUHUR")) {
                 subPindahLineKj.style.display = 'block';
+            } else if (val.includes("PLTA MINI HYDRO CURUG")) {
+                subPltaCurug.style.display = 'block';
             }
         }
 
@@ -723,13 +812,25 @@ def generate():
         fontName="Helvetica-Bold"
     )
 
-    table_data = [[
-        Paragraph("<b>No</b>", cell_center),
-        Paragraph("<b>Uraian / Jenis Penanganan</b>", cell_style),
-        Paragraph("<b>Pukul</b>", cell_center),
-        Paragraph("<b>Keadaan / Posisi</b>", cell_center),
-        Paragraph("<b>Keterangan</b>", cell_center)
-    ]]
+    is_plta_curug = "PLTA MINI HYDRO CURUG" in jenis_gangguan
+
+    if is_plta_curug:
+        table_data = [[
+            Paragraph("<b>No</b>", cell_center),
+            Paragraph("<b>URAIAN</b>", cell_style),
+            Paragraph("<b>POSISI</b>", cell_center),
+            Paragraph("<b>PARAF</b>", cell_center),
+            Paragraph("<b>KETERANGAN</b>", cell_center)
+        ]]
+    else:
+        table_data = [[
+            Paragraph("<b>No</b>", cell_center),
+            Paragraph("<b>Uraian / Jenis Penanganan</b>", cell_style),
+            Paragraph("<b>Pukul</b>", cell_center),
+            Paragraph("<b>Keadaan / Posisi</b>", cell_center),
+            Paragraph("<b>Keterangan</b>", cell_center)
+        ]]
+
     wa_details = []
 
     if mode == "manual":
@@ -747,7 +848,62 @@ def generate():
             ])
             wa_details.append(f"{i}. [{jam_item}] {penang} - {stat}")
     else:
-        if "KOSAMBI KE PENGHANTAR 70 KV JATILUHUR" in jenis_gangguan:
+        if is_plta_curug:
+            plta_sections = [
+                ('plta_a', 'A. RUANG PANEL CONTROL ROOM', [
+                    ('plta_a1', 'Pada jendela alarm tidak ada indikasi gangguan', '-', 'TMA Udik 26-36 mohon diperhatikan apabila Beban sudah turun dan air Udik kecil, maka Mini Hydro Stop (utamakan air Tr. TT & Tr Barat'),
+                    ('plta_a2', 'Tinggi Muka Air : Tinggi Air Udik, Tinggi Air Hilir, Posisi saringan sampah unit .....', '-', '-'),
+                    ('plta_a3', 'Kriteria berhenti pada posisi stabil / indikator tombol stop', 'Menyala', '-'),
+                    ('plta_a4', 'Posisi Pintu Pembuangan " Tutup "', 'Menyala', '-'),
+                    ('plta_a5', 'Indikasi DS Phase Cubicle / .... GTA 030 JD', 'Masuk', '-'),
+                    ('plta_a6', 'Indikasi Earthing Switch / .... GTA 031 JS', 'Keluar', '-'),
+                    ('plta_a7', 'Indikasi CB 20 KV / ..... LGB 001 JD', 'Keluar', 'TPL Menyala'),
+                    ('plta_a8', 'Indikasi Earthing Switch / .... LGB 031 JS', 'Keluar', '-'),
+                    ('plta_a9', 'Indikasi Unit Siap Jalan', 'Menyala', '-')
+                ]),
+                ('plta_b', 'B. CARA PENGOPERASIAAN', [
+                    ('plta_b1', 'Sistim Pengatur Unit', 'Lokal', '-'),
+                    ('plta_b2', 'Sistim Komando Unit .....', 'Manual / Auto', '-'),
+                    ('plta_b3', 'Sinkronisasi (Jika dipilih cara manual, hubungkan alat sinkronisasi portible)', '-', '-'),
+                    ('plta_b4', 'Duga Muka Air / Kontrol water level', 'ON / OFF', '-'),
+                    ('plta_b5_1', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> a. Tekan tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
+                    ('plta_b5_2', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> b. Tekan Tombol "Eksitasi" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
+                    ('plta_b5_3', 'Pengoperasian Unit (Sistim Komando Unit dipilih "Manual" -> c. Tekan Tombol "Generator" - Indikator Tombol)', 'Berkedip', 'Tunggu sampai tombol tdk berkedip'),
+                    ('plta_b5_4', 'Pengoperasian Unit (Sistim Komando Unit dipilih "AUTO" -> a. Tekan Tombol "Putaran Tanpa Beban" - Indikator Tombol)', 'Berkedip', '-'),
+                    ('plta_b6_1', 'Sinkronisasi (Sistim Sinkronisasi dipilih "AUTO" -> a. Periksa TPL (Indikator CB 20 KV) ..... LGB001JD - CB masuk paralel dengan jaringan Pukul ........ wib)', 'TPL Berkedip', 'Putar ke posisi ON'),
+                    ('plta_b6_2', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> a. Pengaturan beban / frekwensi menggunakan Tombol ( naik / turun ) pada panel control)', '-', '-'),
+                    ('plta_b6_3', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> b. Pengaturan tegangan eksitasi dengan menggunakan tombol ( naik / turun ) pada panel control)', '-', '-'),
+                    ('plta_b6_4', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> c. Putar Switch CB / TPL CB ........ LGB001JD)', '-', 'Putar ke posisi ON'),
+                    ('plta_b6_5', 'Sinkronisasi (Sistim Sinkronisasi dipilih "MANUAL" -> d. Jika lampu pad alat sinkronisasi menyala ( ON ). tekan tombol TPL CB untuk menutup CB. CB Masuk paralel dengan jaringan Pukul ........ wib)', '-', '-')
+                ]),
+                ('plta_c', 'C. PENGATURAN BEBAN', [
+                    ('plta_c1', 'Tekan Tombol Pengatur Beban / Frekwesi ( naik / turun ), hingga : ...... MW', '........ MW', 'Secara Bertahap')
+                ]),
+                ('plta_d', 'D. PENCATATAN RUTIN', [
+                    ('plta_d1', 'Selanjutnya pencatatan rutin dengan blangko laporan harian', '-', '-')
+                ])
+            ]
+
+            global_idx = 1
+            for p_key, p_title, p_items in plta_sections:
+                table_data.append([Paragraph(p_title, sec_style), "", "", "", ""])
+                for item_id, desc, item_default, item_ket in p_items:
+                    chk_val = request.form.get(f"chk_{item_id}")
+                    if chk_val == "on":
+                        pos = request.form.get(f"pos_{item_id}", item_default)
+                        paraf = request.form.get(f"paraf_{item_id}", "-")
+                        ket = request.form.get(f"ket_{item_id}", item_ket)
+
+                        table_data.append([
+                            Paragraph(str(global_idx), cell_center),
+                            Paragraph(desc, cell_style),
+                            Paragraph(pos, cell_center),
+                            Paragraph(paraf, cell_center),
+                            Paragraph(ket, cell_center)
+                        ])
+                        wa_details.append(f"{global_idx}. {desc} - Posisi: {pos} (Ket: {ket})")
+                        global_idx += 1
+        elif "KOSAMBI KE PENGHANTAR 70 KV JATILUHUR" in jenis_gangguan:
             sections = [
                 ("A. RUANG PANEL 6 KV", [
                     ('qa1', 'PMT/CB panel Trafo 500 KVA / Trafo I'),
@@ -868,31 +1024,32 @@ def generate():
                 ])
             ]
 
-        global_idx = 1
-        for sec_title, items in sections:
-            table_data.append([Paragraph(sec_title, sec_style), "", "", "", ""])
-            for item_id, desc in items:
-                chk_val = request.form.get(f"chk_{item_id}") or request.form.get(item_id)
-                if chk_val == "on" or "PINDAH LINE" in jenis_gangguan:
-                    pukul = request.form.get(f"jam_{item_id}") or default_jam
-                    keadaan = request.form.get(f"pos_{item_id}") or "-"
-                    ket = request.form.get(f"ket_{item_id}") or "-"
-                    
-                    final_desc = desc
-                    if "Posisi TC" in desc:
-                        custom_tc = request.form.get(f"tc_val_{item_id}")
-                        if custom_tc:
-                            final_desc += f" {custom_tc}"
+        if not is_plta_curug:
+            global_idx = 1
+            for sec_title, items in sections:
+                table_data.append([Paragraph(sec_title, sec_style), "", "", "", ""])
+                for item_id, desc in items:
+                    chk_val = request.form.get(f"chk_{item_id}") or request.form.get(item_id)
+                    if chk_val == "on" or "PINDAH LINE" in jenis_gangguan:
+                        pukul = request.form.get(f"jam_{item_id}") or default_jam
+                        keadaan = request.form.get(f"pos_{item_id}") or "-"
+                        ket = request.form.get(f"ket_{item_id}") or "-"
+                        
+                        final_desc = desc
+                        if "Posisi TC" in desc:
+                            custom_tc = request.form.get(f"tc_val_{item_id}")
+                            if custom_tc:
+                                final_desc += f" {custom_tc}"
 
-                    table_data.append([
-                        Paragraph(str(global_idx), cell_center),
-                        Paragraph(final_desc, cell_style),
-                        Paragraph(pukul, cell_center),
-                        Paragraph(keadaan, cell_center),
-                        Paragraph(ket, cell_center)
-                    ])
-                    wa_details.append(f"{global_idx}. [{pukul}] {final_desc} - {keadaan} ({ket})")
-                    global_idx += 1
+                        table_data.append([
+                            Paragraph(str(global_idx), cell_center),
+                            Paragraph(final_desc, cell_style),
+                            Paragraph(pukul, cell_center),
+                            Paragraph(keadaan, cell_center),
+                            Paragraph(ket, cell_center)
+                        ])
+                        wa_details.append(f"{global_idx}. [{pukul}] {final_desc} - {keadaan} ({ket})")
+                        global_idx += 1
 
         if len(table_data) == 1:
             table_data.append([
@@ -913,22 +1070,32 @@ def generate():
         "TitleStyle",
         parent=styles["Heading1"],
         alignment=1,
-        fontSize=14,
-        spaceAfter=15
+        fontSize=13,
+        spaceAfter=10
     )
 
-    story.append(Paragraph("<b>LAPORAN NORMALISASI GANGGUAN / MANUVER</b>", title_style))
-    story.append(Spacer(1, 8))
-    story.append(Paragraph(f"<b>Kategori / Lokasi:</b> {kategori}", styles["Normal"]))
-    story.append(Spacer(1, 4))
-    story.append(Paragraph(f"<b>Jenis Kegiatan:</b> {jenis_gangguan}", styles["Normal"]))
+    if is_plta_curug:
+        plta_unit = request.form.get("plta_unit_no", "-")
+        plta_tm = request.form.get("plta_jam_kerja", "-")
+        story.append(Paragraph("<b>CHECK LIST OPERASI PLTA MINI HYDRO CURUG</b>", title_style))
+        story.append(Spacer(1, 4))
+        story.append(Paragraph(f"<b>UNIT No.:</b> {plta_unit} &nbsp;&nbsp;&nbsp;&nbsp; <b>Jam Kerja Unit (TM):</b> {plta_tm}", styles["Normal"]))
+    else:
+        story.append(Paragraph("<b>LAPORAN NORMALISASI GANGGUAN / MANUVER</b>", title_style))
+        story.append(Spacer(1, 4))
+        story.append(Paragraph(f"<b>Kategori / Lokasi:</b> {kategori}", styles["Normal"]))
+        story.append(Spacer(1, 2))
+        story.append(Paragraph(f"<b>Jenis Kegiatan:</b> {jenis_gangguan}", styles["Normal"]))
+    
     story.append(Spacer(1, 4))
     story.append(Paragraph(f"<b>Waktu Kejadian:</b> {waktu}", styles["Normal"]))
-    story.append(Spacer(1, 10))
-    story.append(Paragraph("<b>Detail Pelaksanaan:</b>", styles["Normal"]))
-    story.append(Spacer(1, 4))
+    story.append(Spacer(1, 8))
 
-    t = Table(table_data, colWidths=[25, 237, 85, 125, 80])
+    # Lebar kolom PDF disesuaikan jika PLTA (5 kolom: No, Uraian, Posisi, Paraf, Keterangan)
+    if is_plta_curug:
+        t = Table(table_data, colWidths=[25, 237, 85, 85, 122])
+    else:
+        t = Table(table_data, colWidths=[25, 237, 85, 125, 80])
 
     table_styles = [
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#0d6efd')),
@@ -956,7 +1123,7 @@ def generate():
     doc.build(story)
 
     joined_details = "\n".join(wa_details)
-    raw_message = f"📢 *LAPORAN NORMALISASI / MANUVER* 📢\n\n📌 Kategori: {kategori}\n⚠ Kegiatan: {jenis_gangguan}\n📅 Waktu: {waktu}\n\n⚙️ *Detail Pelaksanaan:*\n{joined_details}\n\n✍️ *Pembuat Laporan:* {nama_group} ({nama_petugas})\n\n_(Laporan otomatis tercatat)_"
+    raw_message = f"📢 *LAPORAN OPERASIONAL / CHECKLIST* 📢\n\n📌 Kategori: {kategori}\n⚠ Kegiatan: {jenis_gangguan}\n📅 Waktu: {waktu}\n\n⚙️ *Detail Pelaksanaan:*\n{joined_details}\n\n✍️ *Pembuat Laporan:* {nama_group} ({nama_petugas})\n\n_(Laporan otomatis tercatat)_"
     wa_message = urllib.parse.quote(raw_message)
 
     return render_template_string(RESULT_TEMPLATE, filename=filename, wa_message=wa_message)
