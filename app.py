@@ -1567,69 +1567,36 @@ def ask_ai():
     if len(user_question) > 8000:
         return jsonify({"success": False, "error": "Pertanyaan terlalu panjang. Maksimal 8.000 karakter."}), 400
 
-    system_instruction = (
-        "Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug dan PJT II. "
-        "Jawab dalam bahasa Indonesia yang jelas dan profesional. "
-        "Bantu menjelaskan operasi PLTA, gardu induk, gangguan, normalisasi, checklist, SOP, "
-        "keselamatan kerja, dan informasi umum. Jangan mengarang data teknis, setting proteksi, "
-        "nomor SOP, atau instruksi switching. Jika data tidak tersedia, sarankan verifikasi "
-        "dengan SOP resmi dan petugas berwenang."
-    )
-
-    api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key:
-        return jsonify({"success": False, "error": "API Gemini belum dikonfigurasi. Set GEMINI_API_KEY pada environment server."}), 500
-
     try:
-        client = get_ai_client()
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            return jsonify({"success": False, "error": "API Gemini belum dikonfigurasi."}), 500
+
+        # Inisialisasi klien standar
+        client = genai.Client(api_key=api_key)
+
+        # Prompt sistem digabung langsung ke teks pertanyaan agar kompatibel secara universal
+        full_prompt = (
+            "Instruksi Sistem: Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug dan PJT II. "
+            "Jawab dalam bahasa Indonesia yang jelas dan profesional terkait operasi PLTA, gardu induk, gangguan, SOP, dan normalisasi. "
+            "Jangan mengarang data teknis atau nomor SOP.\n\n"
+            f"Pertanyaan Pengguna: {user_question}"
+        )
+
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=full_prompt,
+        )
+
+        answer = getattr(response, "text", None)
+        if not answer:
+            return jsonify({"success": False, "error": "AI tidak mengembalikan jawaban."}), 502
+
+        return jsonify({"success": True, "answer": answer.strip()})
+
     except Exception as e:
-        return jsonify({"success": False, "error": f"Gagal menginisialisasi AI Client: {str(e)}"}), 500
-
-    max_retries = 3
-    delay = 2
-    answer = None
-    last_exception = None
-
-    for attempt in range(max_retries):
-        try:
-            response = client.models.generate_content(
-                model="gemini-1.5-flash",
-                contents=user_question,
-                config={
-                    "system_instruction": system_instruction,
-                    "temperature": 0.4,
-                    "max_output_tokens": 1200,
-                },
-            )
-            answer = getattr(response, "text", None)
-            if answer:
-                break
-        except Exception as e:
-            last_exception = e
-            err_str = str(e).lower()
-            if "503" in err_str or "unavailable" in err_str or "overloaded" in err_str:
-                time.sleep(delay)
-                delay *= 2
-                continue
-            else:
-                break
-
-    if not answer:
-        if last_exception:
-            print(f"[AI ERROR] {type(last_exception).__name__}: {last_exception}")
-            err = str(last_exception).lower()
-            if "quota" in err or "resource_exhausted" in err:
-                msg = "Kuota Gemini sedang habis atau terbatas. Silakan coba lagi nanti."
-            elif "not found" in err or "404" in err:
-                msg = "Model AI tidak ditemukan. Periksa konfigurasi nama model di server."
-            else:
-                msg = f"Terjadi kesalahan AI: {type(last_exception).__name__} - {str(last_exception)}"
-        else:
-            msg = "Gemini tidak mengembalikan jawaban teks."
-        
-        return jsonify({"success": False, "error": msg}), 502
-
-    return jsonify({"success": True, "answer": answer.strip()})
+        print(f"[AI ERROR] {type(e).__name__}: {e}")
+        return jsonify({"success": False, "error": f"Terjadi kesalahan AI: {str(e)}"}), 500
 
 
 @app.route("/generate-laporan-baru", methods=["POST"])
