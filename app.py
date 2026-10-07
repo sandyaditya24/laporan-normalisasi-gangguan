@@ -1544,15 +1544,15 @@ def ask_ai():
     try:
         # Menggunakan model gemini-2.5-flash untuk respon teks yang cepat dan akurat
         response = ai_client.models.generate_content(
-          model="gemini-3.8-flash",
-            contents=(
-                "Anda adalah asisten virtual profesional untuk Sistem Manajemen PLTA Curug "
-                "dan Perum Jasa Tirta II (PJT II). Tugas Anda adalah membantu operator atau staf "
-                "menjawab pertanyaan teknis, SOP penanganan gangguan, normalisasi gardu induk, "
-                "maupun informasi umum secara ramah, akurat, dan profesional dalam bahasa Indonesia.\n\n"
-                f"Pertanyaan Pengguna: {user_question}"
-            )
-        )
+    model="gemini-2.5-flash",
+    contents=(
+        "Anda adalah asisten virtual profesional untuk Sistem Manajemen PLTA Curug "
+        "dan Perum Jasa Tirta II (PJT II). Tugas Anda adalah membantu operator atau staf "
+        "menjawab pertanyaan teknis, SOP penanganan gangguan, normalisasi gardu induk, "
+        "maupun informasi umum secara ramah, akurat, dan profesional dalam bahasa Indonesia.\n\n"
+        f"Pertanyaan Pengguna: {user_question}"
+    )
+)
         return jsonify({"answer": response.text})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
