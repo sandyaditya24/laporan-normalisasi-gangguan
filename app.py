@@ -1553,9 +1553,11 @@ def ai_chat_page():
 
 import time  # Pastikan modul time sudah diimpor di bagian atas app.py jika belum
 
+import time  # Pastikan modul time ada di bagian paling atas file app.py
+
 @app.route("/api/ask-ai", methods=["POST"])
 def ask_ai():
-    """Endpoint untuk memproses pertanyaan menggunakan Google Gemini dengan mekanisme retry."""
+    """Endpoint untuk memproses pertanyaan menggunakan Google Gemini."""
     data = request.get_json(silent=True) or {}
     user_question = str(data.get("question", "")).strip()
 
@@ -1587,7 +1589,6 @@ def ask_ai():
     except Exception:
         client = get_ai_client()
 
-    # Mekanisme Retry otomatis hingga 3 kali jika terjadi gangguan sementara (misal 503 Service Unavailable)
     max_retries = 3
     delay = 2
     answer = None
@@ -1595,8 +1596,9 @@ def ask_ai():
 
     for attempt in range(max_retries):
         try:
+            # Menggunakan model standar resmi yang stabil: gemini-2.0-flash
             response = client.models.generate_content(
-                model="gemini-2.5-flash",  # Menggunakan model stabil yang cepat dan handal
+                model="gemini-2.0-flash",
                 contents=user_question,
                 config={
                     "system_instruction": system_instruction,
@@ -1610,13 +1612,12 @@ def ask_ai():
         except Exception as e:
             last_exception = e
             err_str = str(e).lower()
-            # Jika error berkaitan dengan server sibuk (503 / unavailable / overloaded), coba lagi
             if "503" in err_str or "unavailable" in err_str or "overloaded" in err_str:
                 time.sleep(delay)
-                delay *= 2  # Exponential backoff
+                delay *= 2
                 continue
             else:
-                break  # Keluar loop jika error selain server sibuk
+                break
 
     if not answer:
         if last_exception:
@@ -1626,17 +1627,19 @@ def ask_ai():
                 msg = "Kuota Gemini sedang habis atau terbatas. Silakan coba lagi nanti."
             elif "503" in err or "unavailable" in err or "overloaded" in err:
                 msg = "Layanan AI sedang mengalami lonjakan permintaan tinggi (503). Silakan coba beberapa saat lagi."
+            elif "not found" in err or "404" in err:
+                msg = "Model AI tidak ditemukan. Periksa konfigurasi nama model di server."
             elif "timeout" in err:
                 msg = "Koneksi ke layanan AI terlalu lama. Periksa internet/server lalu coba lagi."
             else:
-                msg = "Terjadi kesalahan saat menghubungi layanan AI. Cek terminal Flask untuk detail."
+                # Menampilkan detail error asli di pesan agar mudah dilacak jika masih terjadi kendala
+                msg = f"Terjadi kesalahan AI: {type(last_exception).__name__} - {str(last_exception)}"
         else:
             msg = "Gemini tidak mengembalikan jawaban teks."
         
         return jsonify({"success": False, "error": msg}), 502
 
     return jsonify({"success": True, "answer": answer.strip()})
-
 
 
 @app.route("/generate-laporan-baru", methods=["POST"])
