@@ -9,7 +9,6 @@ import urllib.parse
 from datetime import datetime
 from pegawai import pegawai_bp
 from faq import faq_bp
-from faq import faq_bp
 
 app = Flask(__name__)
 app.register_blueprint(pegawai_bp)
@@ -1237,24 +1236,24 @@ HTML_TEMPLATE = """
             sejarahContainer.style.display = 'none';
             historyGangguanContainer.style.display = 'none';
             buatLaporanBaruContainer.style.display = 'none';
-            if(pegawaiContainer) pegawaiContainer.style.display = 'none';
+            if (pegawaiContainer) pegawaiContainer.style.display = 'none';
 
-            btnLaporanGroup.classList.remove('active');
             btnSubBuatBaru.classList.remove('active');
             btnSubHistory.classList.remove('active');
             btnForm.classList.remove('active');
             btnSejarah.classList.remove('active');
-            if(btnPegawai) btnPegawai.classList.remove('active');
+            btnPegawai.classList.remove('active');
+            btnLaporanGroup.classList.remove('active');
 
             if (menu === 'buat-laporan-baru') {
                 buatLaporanBaruContainer.style.display = 'block';
-                btnLaporanGroup.classList.add('active');
                 btnSubBuatBaru.classList.add('active');
+                btnLaporanGroup.classList.add('active');
                 document.getElementById('laporan-gangguan-submenu').style.display = 'block';
             } else if (menu === 'history-gangguan') {
                 historyGangguanContainer.style.display = 'block';
-                btnLaporanGroup.classList.add('active');
                 btnSubHistory.classList.add('active');
+                btnLaporanGroup.classList.add('active');
                 document.getElementById('laporan-gangguan-submenu').style.display = 'block';
             } else if (menu === 'form') {
                 formContainer.style.display = 'block';
@@ -1263,8 +1262,8 @@ HTML_TEMPLATE = """
                 sejarahContainer.style.display = 'block';
                 btnSejarah.classList.add('active');
             } else if (menu === 'struktural-pegawai') {
-                if(pegawaiContainer) pegawaiContainer.style.display = 'block';
-                if(btnPegawai) btnPegawai.classList.add('active');
+                if (pegawaiContainer) pegawaiContainer.style.display = 'block';
+                btnPegawai.classList.add('active');
             }
         }
 
@@ -1274,247 +1273,447 @@ HTML_TEMPLATE = """
             document.getElementById('container-history-gangguan').style.display = 'none';
             document.getElementById('container-buat-laporan-baru').style.display = 'none';
             const pegawaiContainer = document.getElementById('container-struktural-pegawai');
-            if(pegawaiContainer) pegawaiContainer.style.display = 'none';
+            if (pegawaiContainer) pegawaiContainer.style.display = 'none';
 
-            document.getElementById('btnMenuLaporanGangguan').classList.remove('active');
-            document.getElementById('btnSubBuatLaporanBaru').classList.remove('active');
-            document.getElementById('btnSubHistoryGangguan').classList.remove('active');
-            document.getElementById('btnMenuForm').classList.remove('active');
-            document.getElementById('btnMenuSejarah').classList.remove('active');
-            const btnPegawai = document.getElementById('btnMenuPegawai');
-            if(btnPegawai) btnPegawai.classList.remove('active');
+            document.querySelectorAll('.menu-btn, .submenu-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('laporan-gangguan-submenu').style.display = 'none';
         }
 
         function switchMode(mode) {
-            const secManual = document.getElementById('section-manual');
-            const secOtomatis = document.getElementById('section-otomatis');
-            const wrapManual = document.getElementById('wrapper-jenis-manual');
-            const wrapOtomatis = document.getElementById('wrapper-jenis-otomatis');
-            const inputManual = document.getElementById('jenis_gangguan_manual');
-            const selectOtomatis = document.getElementById('jenis_gangguan_otomatis');
-            
+            const sectionManual = document.getElementById('section-manual');
+            const sectionOtomatis = document.getElementById('section-otomatis');
+            const wrapperManual = document.getElementById('wrapper-jenis-manual');
+            const wrapperOtomatis = document.getElementById('wrapper-jenis-otomatis');
+
             if (mode === 'manual') {
-                secManual.style.display = 'block';
-                secOtomatis.style.display = 'none';
-                wrapManual.style.display = 'block';
-                wrapOtomatis.style.display = 'none';
-                inputManual.setAttribute('required', 'required');
-                selectOtomatis.removeAttribute('required');
+                sectionManual.style.display = 'block';
+                sectionOtomatis.style.display = 'none';
+                wrapperManual.style.display = 'block';
+                wrapperOtomatis.style.display = 'none';
             } else {
-                secManual.style.display = 'none';
-                secOtomatis.style.display = 'block';
-                wrapManual.style.display = 'none';
-                wrapOtomatis.style.display = 'block';
-                inputManual.removeAttribute('required');
-                selectOtomatis.setAttribute('required', 'required');
+                sectionManual.style.display = 'none';
+                sectionOtomatis.style.display = 'block';
+                wrapperManual.style.display = 'none';
+                wrapperOtomatis.style.display = 'block';
             }
         }
 
         function switchOtomatisSub(val) {
-            document.getElementById('sub-section-gi-curug').style.display = val.includes("CHECK LIST PENGAMANAN GANGGUAN") ? 'block' : 'none';
-            document.getElementById('sub-section-pindah-line-jtl-ksb').style.display = val.includes("DARI PENGHANTAR 70 KV JATILUHUR KE PENGHANTAR 70 KV KOSAMBI") ? 'block' : 'none';
-            document.getElementById('sub-section-pindah-line-ksb-jtl').style.display = val.includes("DARI PENGHANTAR 70 KV KOSAMBI") && !val.includes("JATILUHUR KE") ? 'block' : 'none';
-            document.getElementById('sub-section-mini-hydro').style.display = val.includes("CHECK LIST OPERASI PLTA MINI HYDRO CURUG") ? 'block' : 'none';
-        }
+            document.getElementById('sub-section-gi-curug').style.display = 'none';
+            document.getElementById('sub-section-pindah-line-jtl-ksb').style.display = 'none';
+            document.getElementById('sub-section-pindah-line-ksb-jtl').style.display = 'none';
+            document.getElementById('sub-section-mini-hydro').style.display = 'none';
 
-        function updatePreview(val) {
-            if (!val) return;
-            const dt = new Date(val);
-            const hariList = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-            const bulanList = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            document.getElementById('preview-waktu').innerText = 'Format Tampil: ' + hariList[dt.getDay()] + ', ' + dt.getDate() + ' ' + bulanList[dt.getMonth()] + ' ' + dt.getFullYear() + ' Pukul ' + String(dt.getHours()).padStart(2, '0') + ':' + String(dt.getMinutes()).padStart(2, '0') + ' WIB';
+            if (val.includes('GARDU INDUK')) {
+                document.getElementById('sub-section-gi-curug').style.display = 'block';
+            } else if (val.includes('JATILUHUR KE KOSAMBI')) {
+                document.getElementById('sub-section-pindah-line-jtl-ksb').style.display = 'block';
+            } else if (val.includes('KOSAMBI KE JATILUHUR')) {
+                document.getElementById('sub-section-pindah-line-ksb-jtl').style.display = 'block';
+            } else if (val.includes('MINI HYDRO')) {
+                document.getElementById('sub-section-mini-hydro').style.display = 'block';
+            }
         }
 
         function tambahBaris() {
             const container = document.getElementById('penanganan-container');
-            const newNum = container.getElementsByClassName('penanganan-row').length + 1;
-            const newRow = document.createElement('div');
-            newRow.className = 'row g-2 mb-2 penanganan-row';
-            newRow.innerHTML = '<div class="col-md-1"><input type="text" class="form-control text-center nomor-urut bg-white" value="' + newNum + '" readonly></div>' +
-                               '<div class="col-md-5"><input type="text" class="form-control" name="penanganan[]" placeholder="Jenis Penanganan" required></div>' +
-                               '<div class="col-md-2"><input type="text" class="form-control text-center" name="jam_item[]" placeholder="Jam" required></div>' +
-                               '<div class="col-md-3"><input type="text" class="form-control text-center" name="status_item[]" placeholder="Status" required></div>' +
-                               '<div class="col-md-1"><button type="button" class="btn btn-danger w-100 btn-custom" onclick="hapusBaris(this)"><i class="fa-solid fa-trash"></i></button></div>';
-            container.appendChild(newRow);
+            const row = container.querySelector('.penanganan-row').cloneNode(true);
+            row.querySelectorAll('input').forEach(input => input.value = '');
+            container.appendChild(row);
+            perbaruiNomorUrut();
         }
 
         function hapusBaris(btn) {
-            const container = document.getElementById('penanganan-container');
-            if (container.getElementsByClassName('penanganan-row').length > 1) {
+            const rows = document.querySelectorAll('.penanganan-row');
+            if (rows.length > 1) {
                 btn.closest('.penanganan-row').remove();
+                perbaruiNomorUrut();
             } else {
-                alert("Minimal harus ada 1 baris!");
+                alert('Minimal harus ada 1 baris penanganan.');
             }
         }
 
-        window.onload = function() {
-            switchMode('manual');
-            kosongkanKanan();
+        function perbaruiNomorUrut() {
+            const rows = document.querySelectorAll('.penanganan-row');
+            rows.forEach((row, index) => {
+                row.querySelector('.nomor-urut').value = index + 1;
+            });
+        }
+
+        function updatePreview(val) {
+            if(val) {
+                const formatted = val.replace('T', ' Pukul ');
+                document.getElementById('preview-waktu').innerText = "Waktu Terpilih: " + formatted + " WIB";
+            } else {
+                document.getElementById('preview-waktu').innerText = "";
+            }
+        }
+
+        function toggleCloseImage() {
+            const wrap = document.getElementById('imageWrapper');
+            wrap.style.opacity = '0';
+            setTimeout(() => {
+                wrap.style.display = 'none';
+            }, 300);
         }
     </script>
 </body>
 </html>
 """
 
-RESULT_TEMPLATE = """
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pratinjau Laporan</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, rgba(7, 15, 30, 0.85), rgba(15, 23, 42, 0.9)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card {
-            border: none;
-            border-radius: 20px;
-            backdrop-filter: blur(16px);
-            background-color: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        .card-header {
-            border-top-left-radius: 20px !important;
-            border-top-right-radius: 20px !important;
-            background: linear-gradient(135deg, #198754, #157347) !important;
-            padding: 1.75rem;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-lg text-center">
-                    <div class="card-header text-white">
-                        <h4 class="mb-0 fw-bold"><i class="fa-solid fa-circle-check me-2"></i> Laporan Berhasil Dibuat!</h4>
-                    </div>
-                    <div class="card-body p-4 p-md-5">
-                        <p class="text-muted mb-4">Laporan dan file PDF telah berhasil disusun serta otomatis tersimpan ke Hystori Gangguan.</p>
-                        <a href="/download/{{ filename }}" class="btn btn-primary w-100 mb-3 shadow-sm" target="_blank">
-                            <i class="fa-solid fa-download me-2"></i> Unduh File PDF
-                        </a>
-                        <a href="https://api.whatsapp.com/send?text={{ wa_message }}" class="btn btn-success w-100 mb-3 shadow-sm" target="_blank">
-                            <i class="fa-brands fa-whatsapp me-2"></i> Kirim ke WhatsApp
-                        </a>
-                        <a href="/" class="btn btn-outline-secondary w-100">
-                            <i class="fa-solid fa-arrow-left me-2"></i> Kembali ke Dashboard
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-"""
-
-def get_pdf_files_list():
-    files = []
-    if os.path.exists(PDF_FOLDER):
-        for f in os.listdir(PDF_FOLDER):
-            if f.endswith(".pdf"):
-                full_path = os.path.join(PDF_FOLDER, f)
-                mod_time = os.path.getmtime(full_path)
-                date_str = datetime.fromtimestamp(mod_time).strftime('%d-%m-%Y %H:%M')
-                files.append({"name": f, "timestamp": mod_time, "date": date_str})
-        files.sort(key=lambda x: x["timestamp"], reverse=True)
-    return files
-
-@app.route("/")
+@app.route('/')
 def index():
-    pdf_files = get_pdf_files_list()
-    return render_template_string(HTML_TEMPLATE, pdf_files=pdf_files, history_laporan_baru=HISTORY_LAPORAN_DB)
+    # Ambil daftar file PDF di static folder untuk riwayat
+    pdf_files = []
+    if os.path.exists(PDF_FOLDER):
+        for f in sorted(os.listdir(PDF_FOLDER), reverse=True):
+            if f.endswith('.pdf'):
+                full_path = os.path.join(PDF_FOLDER, f)
+                mtime = os.path.getmtime(full_path)
+                date_str = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d %H:%M:%S')
+                pdf_files.append({'name': f, 'date': date_str})
 
-@app.route("/generate-laporan-baru", methods=["POST"])
+    return render_template_string(
+        HTML_TEMPLATE, 
+        history_laporan_baru=HISTORY_LAPORAN_DB, 
+        pdf_files=pdf_files
+    )
+
+@app.route('/generate-laporan-baru', methods=['POST'])
 def generate_laporan_baru():
-    jenis = request.form["baru_jenis_gangguan"]
-    waktu = request.form["baru_waktu"]
-    tanggal = request.form["baru_tanggal_lengkap"]
-    kronologi = request.form["baru_kronologi"]
+    jenis = request.form.get('baru_jenis_gangguan')
+    waktu = request.form.get('baru_waktu')
+    tanggal = request.form.get('baru_tanggal_lengkap')
+    kronologi = request.form.get('baru_kronologi')
 
-    clean_jenis = re.sub(r'[^a-zA-Z0-9]', '_', jenis).strip('_')[:30]
-    filename = f"laporan_baru_{clean_jenis}_{datetime.now().strftime('%d%m%Y_%H%M%S')}.pdf"
-    filepath = os.path.join(PDF_FOLDER, filename)
+    pdf_filename = f"Laporan_Gangguan_Baru_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    pdf_path = os.path.join(PDF_FOLDER, pdf_filename)
 
-    doc = SimpleDocTemplate(filepath, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
+    doc = SimpleDocTemplate(pdf_path, pagesize=letter, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
     styles = getSampleStyleSheet()
-    story = [
-        Paragraph("<b>LAPORAN GANGGUAN OPERASIONAL BARU</b>", ParagraphStyle("Title", parent=styles["Heading1"], alignment=1, fontSize=14, spaceAfter=15)),
-        Paragraph(f"<b>Jenis Gangguan:</b> {jenis}", styles["Normal"]),
-        Spacer(1, 6),
-        Paragraph(f"<b>Waktu Kejadian:</b> Pukul {waktu} WIB", styles["Normal"]),
-        Spacer(1, 6),
-        Paragraph(f"<b>Tanggal, Bulan & Tahun:</b> {tanggal}", styles["Normal"]),
-        Spacer(1, 12),
-        Paragraph("<b>Kronologi Gangguan:</b>", ParagraphStyle("Sub", parent=styles["Normal"], fontName="Helvetica-Bold")),
-        Spacer(1, 4),
-        Paragraph(kronologi, styles["Normal"])
+    
+    title_style = ParagraphStyle(
+        'TitleStyle',
+        parent=styles['Heading1'],
+        fontSize=14,
+        leading=18,
+        alignment=1,
+        textColor=colors.HexColor('#0f172a'),
+        fontName='Helvetica-Bold'
+    )
+    
+    subtitle_style = ParagraphStyle(
+        'SubTitleStyle',
+        parent=styles['Normal'],
+        fontSize=10,
+        leading=14,
+        alignment=1,
+        textColor=colors.HexColor('#475569'),
+        fontName='Helvetica'
+    )
+
+    body_style = ParagraphStyle(
+        'BodyStyle',
+        parent=styles['Normal'],
+        fontSize=10,
+        leading=15,
+        textColor=colors.HexColor('#1e293b'),
+        fontName='Helvetica'
+    )
+
+    story = []
+    story.append(Paragraph("PERUM JASA TIRTA II", title_style))
+    story.append(Paragraph("DIVISI PLTA CURUG - LAPORAN GANGGUAN OPERASIONAL", title_style))
+    story.append(Paragraph("Jl. Ir. H. Djuanda, Purwakarta, Jawa Barat", subtitle_style))
+    story.append(Spacer(1, 15))
+
+    data_meta = [
+        [Paragraph("<b>Jenis Gangguan:</b>", body_style), Paragraph(jenis, body_style)],
+        [Paragraph("<b>Hari / Tanggal:</b>", body_style), Paragraph(tanggal, body_style)],
+        [Paragraph("<b>Waktu Kejadian:</b>", body_style), Paragraph(f"{waktu} WIB", body_style)]
     ]
+
+    t_meta = Table(data_meta, colWidths=[130, 400])
+    t_meta.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#f8fafc')),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#cbd5e1')),
+        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#e2e8f0')),
+        ('TOPPADDING', (0,0), (-1,-1), 6),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+        ('LEFTPADDING', (0,0), (-1,-1), 8),
+        ('RIGHTPADDING', (0,0), (-1,-1), 8),
+    ]))
+
+    story.append(t_meta)
+    story.append(Spacer(1, 15))
+
+    story.append(Paragraph("<b>KRONOLOGI KEJADIAN:</b>", body_style))
+    story.append(Spacer(1, 5))
+    
+    story.append(Paragraph(kronologi.replace('\n', '<br/>'), body_style))
+    story.append(Spacer(1, 30))
+
+    # Tanda Tangan
+    data_ttd = [
+        [Paragraph("<b>Dibuat Oleh:</b>", body_style), Paragraph("<b>Mengetahui:</b>", body_style)],
+        [Spacer(1, 40), Spacer(1, 40)],
+        [Paragraph("<b>( Petugas / Operator )</b>", body_style), Paragraph("<b>( Pengawas / Supervisor )</b>", body_style)]
+    ]
+    t_ttd = Table(data_ttd, colWidths=[265, 265])
+    t_ttd.setStyle(TableStyle([
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+    ]))
+    story.append(t_ttd)
+
     doc.build(story)
 
+    # Simpan ke in-memory database
     HISTORY_LAPORAN_DB.insert(0, {
-        "jenis": jenis,
-        "waktu": f"Pukul {waktu} WIB",
-        "tanggal": tanggal,
-        "kronologi": kronologi,
-        "pdf_name": filename
+        'jenis': jenis,
+        'tanggal': tanggal,
+        'waktu': waktu,
+        'kronologi': kronologi,
+        'pdf_name': pdf_filename
     })
 
-    raw_msg = f"📢 *LAPORAN GANGGUAN BARU* 📢\n\n⚠ Gangguan: {jenis}\n📅 Tanggal: {tanggal}\n⏰ Waktu: {waktu}\n\n📝 *Kronologi:*\n{kronologi}"
-    wa_message = urllib.parse.quote(raw_msg)
+    return redirect(url_for('index'))
 
-    return render_template_string(RESULT_TEMPLATE, filename=filename, wa_message=wa_message)
+@app.route('/generate', methods=['POST'])
+def generate_pdf():
+    kategori = request.form.get('kategori', 'Gardu Induk Curug')
+    mode = request.form.get('mode_pencatatan', 'manual')
+    waktu_input = request.form.get('waktu', '')
+    nama_group = request.form.get('nama_group', '-')
+    nama_petugas = request.form.get('nama_petugas', '-')
 
-@app.route("/generate", methods=["POST"])
-def generate():
-    kategori = request.form["kategori"]
-    mode = request.form.get("mode_pencatatan", "manual")
-    jenis_gangguan = request.form.get("jenis_gangguan_manual", "-") if mode == "manual" else request.form.get("jenis_gangguan_otomatis", "-")
-    waktu_raw = request.form["waktu"]
-    
-    try:
-        dt = datetime.strptime(waktu_raw, "%Y-%m-%dT%H:%M")
-        waktu = f"{dt.day} {dt.strftime('%B %Y')} Pukul {dt.strftime('%H:%M')} WIB"
-        file_date_str = dt.strftime('%d-%m-%Y_%H%M')
-    except:
-        waktu = waktu_raw
-        file_date_str = datetime.now().strftime('%d-%m-%Y_%H%M')
+    waktu_str = waktu_input.replace('T', ' Pukul ') if waktu_input else datetime.now().strftime('%Y-%m-%d Pukul %H:%M')
 
-    clean_jenis = re.sub(r'[^a-zA-Z0-9]', '_', jenis_gangguan).strip('_')[:30]
-    filename = f"checklist_{clean_jenis}_{file_date_str}.pdf"
-    filepath = os.path.join(PDF_FOLDER, filename)
+    pdf_filename = f"Checklist_Normalisasi_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    pdf_path = os.path.join(PDF_FOLDER, pdf_filename)
 
-    doc = SimpleDocTemplate(filepath, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
+    doc = SimpleDocTemplate(pdf_path, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
     styles = getSampleStyleSheet()
-    story = [
-        Paragraph("<b>LAPORAN NORMALISASI & CHECKLIST</b>", ParagraphStyle("Title", parent=styles["Heading1"], alignment=1, fontSize=14, spaceAfter=10)),
-        Paragraph(f"<b>Kategori:</b> {kategori}", styles["Normal"]),
-        Spacer(1, 4),
-        Paragraph(f"<b>Kegiatan:</b> {jenis_gangguan}", styles["Normal"]),
-        Spacer(1, 4),
-        Paragraph(f"<b>Waktu:</b> {waktu}", styles["Normal"])
+
+    title_style = ParagraphStyle('TStyle', parent=styles['Heading1'], fontSize=12, leading=16, alignment=1, textColor=colors.HexColor('#0f172a'), fontName='Helvetica-Bold')
+    subtitle_style = ParagraphStyle('STStyle', parent=styles['Normal'], fontSize=9, leading=12, alignment=1, textColor=colors.HexColor('#475569'), fontName='Helvetica')
+    body_style = ParagraphStyle('BStyle', parent=styles['Normal'], fontSize=8.5, leading=11, textColor=colors.HexColor('#1e293b'), fontName='Helvetica')
+    header_table_style = ParagraphStyle('HTStyle', parent=styles['Normal'], fontSize=8.5, leading=11, textColor=colors.white, fontName='Helvetica-Bold', alignment=1)
+
+    story = []
+    story.append(Paragraph("PERUM JASA TIRTA II - DIVISI PLTA CURUG", title_style))
+    story.append(Paragraph(f"LAPORAN & CHECKLIST NORMALISASI - {kategori.upper()}", title_style))
+    story.append(Paragraph(f"Waktu Pelaksanaan: {waktu_str} WIB | Tim: {nama_group} | Petugas: {nama_petugas}", subtitle_style))
+    story.append(Spacer(1, 10))
+
+    table_data = []
+
+    if mode == 'manual':
+        jenis_manual = request.form.get('jenis_gangguan_manual', '-')
+        story.append(Paragraph(f"<b>Jenis Gangguan:</b> {jenis_manual}", body_style))
+        story.append(Spacer(1, 6))
+
+        table_data.append([
+            Paragraph("<b>No</b>", header_table_style),
+            Paragraph("<b>Jenis Penanganan</b>", header_table_style),
+            Paragraph("<b>Jam</b>", header_table_style),
+            Paragraph("<b>Status</b>", header_table_style)
+        ])
+
+        penanganan_list = request.form.getlist('penanganan[]')
+        jam_list = request.form.getlist('jam_item[]')
+        status_list = request.form.getlist('status_item[]')
+
+        for i in range(len(penanganan_list)):
+            table_data.append([
+                Paragraph(str(i+1), body_style),
+                Paragraph(penanganan_list[i], body_style),
+                Paragraph(jam_list[i] if i < len(jam_list) else '', body_style),
+                Paragraph(status_list[i] if i < len(status_list) else '', body_style)
+            ])
+
+        t = Table(table_data, colWidths=[30, 310, 80, 135])
+        t.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1e293b')),
+            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e1')),
+            ('TOPPADDING', (0,0), (-1,-1), 5),
+            ('BOTTOMPADDING', (0,0), (-1,-1), 5),
+            ('LEFTPADDING', (0,0), (-1,-1), 6),
+            ('RIGHTPADDING', (0,0), (-1,-1), 6),
+        ]))
+        story.append(t)
+
+    else:
+        jenis_otomatis = request.form.get('jenis_gangguan_otomatis', '')
+        story.append(Paragraph(f"<b>Checklist Otomatis:</b> {jenis_otomatis}", body_style))
+        story.append(Spacer(1, 6))
+
+        table_data.append([
+            Paragraph("<b>No</b>", header_table_style),
+            Paragraph("<b>Uraian Kegiatan / Komponen</b>", header_table_style),
+            Paragraph("<b>Keadaan / Posisi</b>", header_table_style),
+            Paragraph("<b>Pukul (Jam)</b>", header_table_style)
+        ])
+
+        # Parsing dinamis berdasarkan input checklist otomatis yang dikirim
+        if "GARDU INDUK" in jenis_otomatis:
+            items = [
+                ("A.1", "PMT / CB Panel Trafo 500 KVA / Trafo I", request.form.get('pos_a1',''), request.form.get('jam_a1','')),
+                ("A.2", "PMT / CB Panel Trafo 500 KVA / Trafo II", request.form.get('pos_a2',''), request.form.get('jam_a2','')),
+                ("A.3", "PMT / CB Panel Keluaran 6 MB2", request.form.get('pos_a3',''), request.form.get('jam_a3','')),
+                ("B.1", "PMT / CB Masukan dari Trafo I", request.form.get('pos_b1',''), request.form.get('jam_b1','')),
+                ("B.2", "PMT / CB Trafo I 20 / 70 KV 10 MVA", request.form.get('pos_b2',''), request.form.get('jam_b2','')),
+                ("B.3", "PMT / CB Trafo II 70 / 6,3 KV 5 MVA", request.form.get('pos_b3',''), request.form.get('jam_b3','')),
+                ("B.4", "PMT / CB Trafo III 70 / 6,3 KV 5 MVA", request.form.get('pos_b4',''), request.form.get('jam_b4','')),
+                ("B.5", "Riset Semua Gangguan", request.form.get('pos_b5',''), request.form.get('jam_b5','')),
+                ("B.6", "Koordinasi dengan Kontrol Building", request.form.get('pos_b6',''), request.form.get('jam_b6','')),
+                ("B.7", "PMT / CB Jatiluhur / Kosambi", request.form.get('pos_b7',''), request.form.get('jam_b7','')),
+                ("B.8", "PMT / CB Trafo I 20 / 70 KV 10 MVA", request.form.get('pos_b8',''), request.form.get('jam_b8','')),
+                ("B.9", "PMT / CB Masukan dari Trafo I", request.form.get('pos_b9',''), request.form.get('jam_b9','')),
+                ("B.10", f"PMT / CB Trafo II 70/6,3 KV (TC {request.form.get('tc_b10','1')})", request.form.get('pos_b10',''), request.form.get('jam_b10','')),
+                ("B.11", f"PMT / CB Trafo III 70/6,3 KV (TC {request.form.get('tc_b11','1')})", request.form.get('pos_b11',''), request.form.get('jam_b11','')),
+                ("B.12", "Riset Semua Gangguan", request.form.get('pos_b12',''), request.form.get('jam_b12','')),
+                ("C.1", "Riset Semua Gangguan (Panel 6 KV)", request.form.get('pos_c1',''), request.form.get('jam_c1','')),
+                ("C.2", "PMT / CB Masukan dari Trafo II", request.form.get('pos_c2',''), request.form.get('jam_c2','')),
+                ("C.3", "PMT / CB Masukan dari Trafo III", request.form.get('pos_c3',''), request.form.get('jam_c3','')),
+                ("C.4", "PMT / CB Trafo 500 KVA / Trafo I", request.form.get('pos_c4',''), request.form.get('jam_c4','')),
+                ("C.5", "PMT / CB Trafo 500 KVA / Trafo II", request.form.get('pos_c5',''), request.form.get('jam_c5','')),
+                ("C.6", "PMT / CB Keluaran 6 MB2", request.form.get('pos_c6',''), request.form.get('jam_c6','')),
+                ("C.7", "Riset Semua Gangguan", request.form.get('pos_c7',''), request.form.get('jam_c7','')),
+                ("D.1", "PMT / CB Panel Distribusi 380 V AC Tarum Barat", request.form.get('pos_d1',''), request.form.get('jam_d1','')),
+            ]
+            for idx, desc, pos, jam in items:
+                table_data.append([
+                    Paragraph(str(idx), body_style),
+                    Paragraph(desc, body_style),
+                    Paragraph(pos, body_style),
+                    Paragraph(jam, body_style)
+                ])
+
+        elif "JATILUHUR KE KOSAMBI" in jenis_otomatis:
+            items = [
+                ("1", "PMT/CB panel Trafo 500 KVA / Trafo I", request.form.get('pos_pl_a1',''), request.form.get('jam_pl_a1','')),
+                ("2", "PMT/CB panel Trafo 500 KVA / Trafo II", request.form.get('pos_pl_a2',''), request.form.get('jam_pl_a2','')),
+                ("3", "PMT/CB panel keluaran 6 MB2", request.form.get('pos_pl_a3',''), request.form.get('jam_pl_a3','')),
+                ("4", "PMT/CB panel masukan dari Trafo II", request.form.get('pos_pl_a4',''), request.form.get('jam_pl_a4','')),
+                ("5", "PMT/CB panel masukan dari Trafo III", request.form.get('pos_pl_a5',''), request.form.get('jam_pl_a5','')),
+                ("6", "PMT/CB Masukan dari trafo I (20 KV)", request.form.get('pos_pl_b1',''), request.form.get('jam_pl_b1','')),
+                ("7", "PMT/CB Trafo I 20 / 70 KV 10 MVA", request.form.get('pos_pl_b2',''), request.form.get('jam_pl_b2','')),
+                ("8", "PMT/CB Trafo II 70 / 6,3 KV 5 MVA", request.form.get('pos_pl_b3',''), request.form.get('jam_pl_b3','')),
+                ("9", "PMT/CB Trafo III 70 / 6,3 KV 5 MVA", request.form.get('pos_pl_b4',''), request.form.get('jam_pl_b4','')),
+                ("10", "PMT / CB 70 KV Jatiluhur Bay", request.form.get('pos_pl_c1',''), request.form.get('jam_pl_c1','')),
+                ("11", "PMS / DS Line 70 KV Jatiluhur Bay", request.form.get('pos_pl_c2',''), request.form.get('jam_pl_c2','')),
+                ("12", "PMS / DS Arde Line 70 KV Jatiluhur Bay", request.form.get('pos_pl_c3',''), request.form.get('jam_pl_c3','')),
+                ("13", "PMS / DS Rel 70 KV Jatiluhur Bay", request.form.get('pos_pl_c4',''), request.form.get('jam_pl_c4','')),
+                ("14", "PMS / DS Arde Rel 70 KV Jatiluhur Bay", request.form.get('pos_pl_c5',''), request.form.get('jam_pl_c5','')),
+                ("15", "PMS / DS Arde Line 70 KV Kosambi Bay", request.form.get('pos_pl_d1',''), request.form.get('jam_pl_d1','')),
+                ("16", "PMS / DS Line 70 KV Kosambi Bay", request.form.get('pos_pl_d2',''), request.form.get('jam_pl_d2','')),
+                ("17", "PMS / DS Arde Rel 70 KV Kosambi Bay", request.form.get('pos_pl_d3',''), request.form.get('jam_pl_d3','')),
+                ("18", "PMS / DS Rel 70 KV Kosambi Bay", request.form.get('pos_pl_d4',''), request.form.get('jam_pl_d4','')),
+                ("19", "PMT / CB 70 KV Kosambi Bay", request.form.get('pos_pl_d5',''), request.form.get('jam_pl_d5','')),
+            ]
+            for idx, desc, pos, jam in items:
+                table_data.append([
+                    Paragraph(str(idx), body_style),
+                    Paragraph(desc, body_style),
+                    Paragraph(pos, body_style),
+                    Paragraph(jam, body_style)
+                ])
+
+        elif "KOSAMBI KE JATILUHUR" in jenis_otomatis:
+            items = [
+                ("1", "PMT / CB panel trafo 500 KVA / Trafo I", request.form.get('pos_ksb_a1',''), request.form.get('jam_ksb_a1','')),
+                ("2", "PMT / CB panel trafo 500 KVA / Trafo II", request.form.get('pos_ksb_a2',''), request.form.get('jam_ksb_a2','')),
+                ("3", "PMT / CB panel keluaran 6 MB2", request.form.get('pos_ksb_a3',''), request.form.get('jam_ksb_a3','')),
+                ("4", "PMT / CB panel masukan dari Trafo II", request.form.get('pos_ksb_a4',''), request.form.get('jam_ksb_a4','')),
+                ("5", "PMT / CB panel masukan dari Trafo III", request.form.get('pos_ksb_a5',''), request.form.get('jam_ksb_a5','')),
+                ("6", "PMT / CB Masukan dari trafo I", request.form.get('pos_ksb_b1',''), request.form.get('jam_ksb_b1','')),
+                ("7", "PMT / CB Trafo I 20 / 70 KV 10 MVA", request.form.get('pos_ksb_b2',''), request.form.get('jam_ksb_b2','')),
+                ("8", "PMT / CB Trafo II 70 / 6,3 KV 5 MVA", request.form.get('pos_ksb_b3',''), request.form.get('jam_ksb_b3','')),
+                ("9", "PMT / CB Trafo III 70 / 6,3 KV 5 MVA", request.form.get('pos_ksb_b4',''), request.form.get('jam_ksb_b4','')),
+                ("10", "PMT / CB 70 KV Kosambi Bay", request.form.get('pos_ksb_c1',''), request.form.get('jam_ksb_c1','')),
+                ("11", "PMS / DS Line 70 KV Kosambi Bay", request.form.get('pos_ksb_c2',''), request.form.get('jam_ksb_c2','')),
+                ("12", "PMS / DS Arde Line 70 KV Kosambi Bay", request.form.get('pos_ksb_c3',''), request.form.get('jam_ksb_c3','')),
+                ("13", "PMS / DS Rel 70 KV Kosambi Bay", request.form.get('pos_ksb_c4',''), request.form.get('jam_ksb_c4','')),
+                ("14", "PMS / DS Arde Rel 70 KV Kosambi Bay", request.form.get('pos_ksb_c5',''), request.form.get('jam_ksb_c5','')),
+                ("15", "PMS / DS Arde Line 70 KV Jatiluhur Bay", request.form.get('pos_ksb_d1',''), request.form.get('jam_ksb_d1','')),
+                ("16", "PMS / DS Line 70 KV Jatiluhur Bay", request.form.get('pos_ksb_d2',''), request.form.get('jam_ksb_d2','')),
+                ("17", "PMS / DS Arde Rel 70 KV Jatiluhur Bay", request.form.get('pos_ksb_d3',''), request.form.get('jam_ksb_d3','')),
+                ("18", "PMS / DS Rel 70 KV Jatiluhur Bay", request.form.get('pos_ksb_d4',''), request.form.get('jam_ksb_d4','')),
+                ("19", "PMT / CB 70 KV Jatiluhur Bay", request.form.get('pos_ksb_d5',''), request.form.get('jam_ksb_d5','')),
+            ]
+            for idx, desc, pos, jam in items:
+                table_data.append([
+                    Paragraph(str(idx), body_style),
+                    Paragraph(desc, body_style),
+                    Paragraph(pos, body_style),
+                    Paragraph(jam, body_style)
+                ])
+
+        elif "MINI HYDRO" in jenis_otomatis:
+            items = [
+                ("I.1", "Koordinasi debit air dengan Operator Bendung Curug", request.form.get('pos_mh_i1',''), request.form.get('paraf_mh_i1','')),
+                ("I.2", "Koordinasi dengan Operator Control Building Jatiluhur", request.form.get('pos_mh_i2',''), request.form.get('paraf_mh_i2','')),
+                ("II.1", "Pelaksanaan Pengoperasian Unit Mini Hydro", request.form.get('pos_mh_p1',''), request.form.get('paraf_mh_p1','')),
+                ("II.2", "Pengecekan Air Baku I & II (>= 3 bar)", request.form.get('pos_mh_p2',''), request.form.get('paraf_mh_p2','')),
+                ("II.3", "Pengecekan Sudu - Sudu (60 bar)", request.form.get('pos_mh_p3',''), request.form.get('paraf_mh_p3','')),
+                ("II.4", "Pengecekan Down Stream (120 bar)", request.form.get('pos_mh_p4',''), request.form.get('paraf_mh_p4','')),
+                ("A.1", "Jendela alarm tidak ada indikasi gangguan", request.form.get('pos_mh_a1',''), request.form.get('jam_mh_a1','')),
+                ("A.2", f"Tinggi Muka Air (Udik: {request.form.get('pos_mh_udik','-')}, Hilir: {request.form.get('pos_mh_hilir','-')})", request.form.get('pos_mh_a2',''), request.form.get('jam_mh_a2','')),
+                ("A.3", "Kriteria berhenti pada posisi stabil", request.form.get('pos_mh_a3',''), request.form.get('jam_mh_a3','')),
+                ("A.4", "Posisi Pintu Pembuangan", request.form.get('pos_mh_a4',''), request.form.get('jam_mh_a4','')),
+                ("A.5", "Indikasi DS Phase Cubicle (GTA 030 JD)", request.form.get('pos_mh_a5',''), request.form.get('jam_mh_a5','')),
+                ("A.6", "Indikasi Earthing Switch (GTA 031 JS)", request.form.get('pos_mh_a6',''), request.form.get('jam_mh_a6','')),
+                ("A.7", "Indikasi CB 20 KV (LGB 001 JD)", request.form.get('pos_mh_a7',''), request.form.get('jam_mh_a7','')),
+                ("A.8", "Indikasi Earthing Switch (LGB 031 JS)", request.form.get('pos_mh_a8',''), request.form.get('jam_mh_a8','')),
+                ("A.9", "Indikasi Unit Siap Jalan (Ready)", request.form.get('pos_mh_a9',''), request.form.get('jam_mh_a9','')),
+            ]
+            for idx, desc, pos, jam in items:
+                table_data.append([
+                    Paragraph(str(idx), body_style),
+                    Paragraph(desc, body_style),
+                    Paragraph(pos, body_style),
+                    Paragraph(jam, body_style)
+                ])
+
+        t = Table(table_data, colWidths=[35, 300, 115, 90])
+        t.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1e293b')),
+            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e1')),
+            ('TOPPADDING', (0,0), (-1,-1), 4),
+            ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+            ('LEFTPADDING', (0,0), (-1,-1), 6),
+            ('RIGHTPADDING', (0,0), (-1,-1), 6),
+        ]))
+        story.append(t)
+
+    story.append(Spacer(1, 15))
+    
+    # Tanda Tangan Ringkas
+    data_ttd = [
+        [Paragraph(f"<b>Petugas Pelaksana:</b><br/>{nama_petugas} ({nama_group})", body_style), Paragraph("<b>Pengawas / Supervisor:</b><br/><br/>( .................................... )", body_style)]
     ]
+    t_ttd = Table(data_ttd, colWidths=[270, 270])
+    t_ttd.setStyle(TableStyle([
+        ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ('BOX', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e1')),
+        ('TOPPADDING', (0,0), (-1,-1), 8),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 8),
+        ('LEFTPADDING', (0,0), (-1,-1), 8),
+        ('RIGHTPADDING', (0,0), (-1,-1), 8),
+    ]))
+    story.append(t_ttd)
+
     doc.build(story)
+    return send_file(pdf_path, as_attachment=True)
 
-    raw_msg = f"📢 *CHECKLIST NORMALISASI* 📢\n\n📌 Kategori: {kategori}\n⚠ Kegiatan: {jenis_gangguan}\n📅 Waktu: {waktu}"
-    wa_message = urllib.parse.quote(raw_msg)
-
-    return render_template_string(RESULT_TEMPLATE, filename=filename, wa_message=wa_message)
-
-@app.route("/download/<filename>")
-def download(filename):
+@app.route('/download/<filename>')
+def download_pdf(filename):
     return send_file(os.path.join(PDF_FOLDER, filename), as_attachment=True)
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
