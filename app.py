@@ -103,6 +103,9 @@ HTML_TEMPLATE = """
                         <button type="button" class="btn btn-outline-primary menu-btn active" id="btnMenuForm" onclick="pilihMenu('form')">
                             📋 Form Laporan
                         </button>
+                        <button type="button" class="btn btn-outline-success menu-btn" id="btnMenuSejarah" onclick="pilihMenu('sejarah')">
+                            📜 Sejarah Bendung Curug
+                        </button>
                     </div>
                 </div>
             </div>
@@ -113,6 +116,64 @@ HTML_TEMPLATE = """
                     <h2 class="fw-bold text-primary mb-2 fs-3">SELAMAT DATANG DI APLIKASI SISTEM MANAJEMEN PLTA CURUG</h2>
                     <h4 class="fw-semibold text-secondary mb-2 fs-5">PERUM JASA TIRTA 2</h4>
                     <p class="text-muted mb-0 small">Silakan pilih menu di sebelah kiri dan gunakan form di bawah ini untuk mengelola dan mencatat laporan normalisasi serta pengoperasian unit.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ARTIKEL SEJARAH BENDUNG CURUG (TERSEMBUNYI SECARA DEFAULT) -->
+        <div class="row justify-content-center mb-4" id="container-sejarah" style="display: none;">
+            <div class="col-md-12">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-success text-white text-center">
+                        <h3 class="mb-0 fw-bold fs-4">SEJARAH BENDUNG CURUG & PENGEMBANGAN WILAYAH SUNGAI</h3>
+                        <p class="mb-0 text-white-50 small mt-1">Perum Jasa Tirta II - Perjalanan Infrastruktur Pengairan & Kelistrikan di Jawa Barat</p>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md-7">
+                                <h4 class="fw-bold text-primary">Awal Mula Pembangunan Bendung Curug</h4>
+                                <p class="text-muted" style="text-align: justify; line-height: 1.7;">
+                                    Bendung Curug memiliki peranan yang sangat vital dalam sejarah pengelolaan sumber daya air dan kelistrikan di Indonesia, khususnya di Jawa Barat. Pembangunan kompleks pengairan di kawasan Curug (Kecamatan Klari / Ciampel, Karawang) tidak dapat dilepaskan dari sejarah besar proyek irigasi Jatiluhur (Waduk Jatiluhur / Waduk Ir. H. Djuanda). Bendung Curug berfungsi sebagai pengatur pembagian air (intake utama) yang mengalirkan air dari Sungai Citarum ke Saluran Induk Tarum Barat (Malaka) dan Salrum Tarum Timur, yang menjadi urat nadi pertanian di wilayah Karawang, Bekasi, hingga DKI Jakarta serta penunjang pasokan air industri.
+                                </p>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <img src="/static/CURUGTEMPODULU.jpg" alt="Bendung Curug Tempo Dulu" class="img-fluid rounded shadow-sm border" style="max-height: 280px; object-fit: cover;">
+                                <small class="d-block text-muted mt-2 fst-italic">Dokumentasi historis kawasan Bendung Curug tempo dulu.</small>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h4 class="fw-bold text-primary mb-3">Transformasi dan Peran Strategis PLTA Mini Hydro Curug</h4>
+                        <p class="text-muted" style="text-align: justify; line-height: 1.7;">
+                            Selain berfungsi sebagai pengendali dan pembagi debit air irigasi primer, kawasan Bendung Curug juga dimanfaatkan untuk potensi energi terbarukan melalui Pembangkit Listrik Tenaga Air (PLTA) Mini Hydro Curug serta fasilitas Gardu Induk (GI) Curug 70/6,3 kV. Integrasi antara sistem kelistrikan dan pengairan ini dikelola secara profesional untuk memastikan stabilitas suplai energi lokal serta keandalan distribusi air baku.
+                        </p>
+
+                        <div class="row mt-4 g-3">
+                            <div class="col-md-4">
+                                <div class="p-3 bg-light border rounded-3 h-100">
+                                    <h5 class="fw-bold text-success fs-6">🌾 Sektor Pertanian</h5>
+                                    <p class="small text-muted mb-0">Menjamin pasokan irigasi teknis ratusan ribu hektar lahan sawah di lumbung padi nasional (Karawang-Bekasi).</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 bg-light border rounded-3 h-100">
+                                    <h5 class="fw-bold text-success fs-6">⚡ Sektor Energi & Industri</h5>
+                                    <p class="small text-muted mb-0">Menopang kebutuhan listrik mandiri melalui PLTA Mini Hydro dan interkoneksi Gardu Induk dengan sistem PLN.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 bg-light border rounded-3 h-100">
+                                    <h5 class="fw-bold text-success fs-6">🏛️ Pengelolaan PJT II</h5>
+                                    <p class="small text-muted mb-0">Berada di bawah naungan Perum Jasa Tirta II yang terus konsisten merawat infrastruktur bersejarah ini sejak era pembangunan nasional.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-center">
+                            <button type="button" class="btn btn-outline-primary px-4 btn-custom" onclick="pilihMenu('form')">⬅ Kembali ke Form Laporan</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -648,13 +709,22 @@ HTML_TEMPLATE = """
     <script>
         function pilihMenu(menu) {
             const formContainer = document.getElementById('container-form-laporan');
+            const sejarahContainer = document.getElementById('container-sejarah');
             const btnForm = document.getElementById('btnMenuForm');
+            const btnSejarah = document.getElementById('btnMenuSejarah');
 
             if (menu === 'form') {
                 formContainer.style.display = 'flex';
+                sejarahContainer.style.display = 'none';
                 btnForm.classList.add('active');
-                // Gulir secara halus ke form
+                btnSejarah.classList.remove('active');
                 formContainer.scrollIntoView({ behavior: 'smooth' });
+            } else if (menu === 'sejarah') {
+                formContainer.style.display = 'none';
+                sejarahContainer.style.display = 'flex';
+                btnSejarah.classList.add('active');
+                btnForm.classList.remove('active');
+                sejarahContainer.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
