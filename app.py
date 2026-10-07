@@ -1580,7 +1580,7 @@ def ask_ai():
     if not api_key:
         return jsonify({"success": False, "error": "API Gemini belum dikonfigurasi. Set GEMINI_API_KEY pada environment server."}), 500
 
-    try:
+  try:
         from google.genai import types
         client = genai.Client(
             api_key=api_key,
@@ -1596,15 +1596,15 @@ def ask_ai():
 
     for attempt in range(max_retries):
         try:
-           # Menggunakan nama model standar resmi google-genai yang paling stabil dan universal
+            # Gunakan format pemanggilan model eksplisit
             response = client.models.generate_content(
                 model="gemini-1.5-flash",
                 contents=user_question,
-                config={
-                    "system_instruction": system_instruction,
-                    "temperature": 0.4,
-                    "max_output_tokens": 1200,
-                },
+                config=types.GenerateContentConfig(
+                    system_instruction=system_instruction,
+                    temperature=0.4,
+                    max_output_tokens=1200,
+                )
             )
             answer = getattr(response, "text", None)
             if answer:
