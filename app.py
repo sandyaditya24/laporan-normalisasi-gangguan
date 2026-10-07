@@ -34,12 +34,14 @@ HTML_TEMPLATE = """
             --border-color: rgba(226, 232, 240, 0.8);
         }
         body {
+            /* Background dinamis yang diatur via JavaScript */
             background: linear-gradient(135deg, rgba(7, 15, 30, 0.85), rgba(15, 23, 42, 0.9)), url('/static/CURUGTEMPODULU.jpg') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             color: var(--text-main);
             padding-bottom: 3rem;
+            transition: background 0.8s ease-in-out;
         }
         .enterprise-wrapper {
             max-width: 1450px;
@@ -206,6 +208,15 @@ HTML_TEMPLATE = """
         .btn-close-img:hover {
             background: rgba(220, 53, 69, 0.9);
         }
+        /* Widget Ganti Background PJT II */
+        .bg-switcher-badge {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .bg-switcher-badge:hover {
+            background-color: #1d4ed8 !important;
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
@@ -216,15 +227,21 @@ HTML_TEMPLATE = """
             <div class="col-md-12">
                 <div class="dashboard-header">
                     <div class="row align-items-center">
-                        <div class="col-lg-9">
+                        <div class="col-lg-8">
                             <h2 class="fw-bold text-dark mb-2 fs-3 tracking-tight">SISTEM MANAJEMEN PLTA CURUG</h2>
                             <h5 class="fw-semibold text-primary mb-2">PERUM JASA TIRTA II</h5>
                             <p class="text-muted mb-0">Platform pelaporan operasional, normalisasi gangguan, dan manajemen teknis gardu induk yang terintegrasi.</p>
                         </div>
-                        <div class="col-lg-3 text-lg-end mt-3 mt-lg-0">
+                        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
                             <span class="badge bg-primary px-3 py-2 rounded-pill fs-6 fw-normal shadow-sm">
                                 <i class="fa-solid fa-shield-halved me-1"></i> Enterprise v3.1
                             </span>
+                            <!-- Tombol Ganti Background PJT II -->
+                            <div class="mt-2">
+                                <span class="badge bg-dark bg-switcher-badge px-3 py-2 rounded-pill fs-7 shadow-sm" onclick="gantiBackgroundPJT()" title="Klik untuk mengganti background PJT II">
+                                    <i class="fa-solid fa-image me-1"></i> Ganti Background PJT II (<span id="bgName">Curug Tempo Dulu</span>)
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -795,6 +812,36 @@ HTML_TEMPLATE = """
     </div>
 
     <script>
+        // Array Gambar Background PJT II secara otomatis/berganti-ganti
+        const backgroundListPJT = [
+            {
+                url: '/static/CURUGTEMPODULU.jpg',
+                name: 'Bendung Curug Tempo Dulu'
+            },
+            {
+                url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80',
+                name: 'Waduk Ir. H. Djuanda (Jatiluhur)'
+            },
+            {
+                url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80',
+                name: 'Kawasan Aliran Sungai & Hijau PJT II'
+            },
+            {
+                url: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1920&q=80',
+                name: 'Infrastruktur Air & PLTA'
+            }
+        ];
+        let currentBgIndex = 0;
+
+        function gantiBackgroundPJT() {
+            currentBgIndex = (currentBgIndex + 1) % backgroundListPJT.length;
+            const selectedBg = backgroundListPJT[currentBgIndex];
+            
+            // Terapkan ke background body dengan gradient overlay khas
+            document.body.style.backgroundImage = `linear-gradient(135deg, rgba(7, 15, 30, 0.85), rgba(15, 23, 42, 0.9)), url('${selectedBg.url}')`;
+            document.getElementById('bgName').innerText = selectedBg.name;
+        }
+
         function pilihMenu(menu) {
             const formContainer = document.getElementById('container-form-laporan');
             const sejarahContainer = document.getElementById('container-sejarah');
