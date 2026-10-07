@@ -1429,6 +1429,24 @@ AI_CHAT_TEMPLATE = """
         .typing-dots span:nth-child(2) { animation-delay: -1.1s; }
         .typing-dots span:nth-child(3) { animation-delay: -0.9s; }
         @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+        /* Tambahan untuk merapikan teks dan poin jawaban AI */
+    .chat-message-content {
+        line-height: 1.6;
+        font-size: 14px;
+    }
+    .chat-message-content p {
+        margin-bottom: 10px;
+    }
+    .chat-message-content ul, 
+    .chat-message-content ol {
+        margin-top: 5px;
+        margin-bottom: 10px;
+        padding-left: 20px;
+    }
+    .chat-message-content li {
+        margin-bottom: 6px;
+    }
+</style>
     </style>
 </head>
 <body>
@@ -1599,9 +1617,11 @@ def ask_ai():
 
         client = genai.Client(api_key=api_key)
         
-        formatted_prompt = (
+       formatted_prompt = (
             "Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug & PJT II. "
-            "Jawab dalam bahasa Indonesia yang terstruktur dan rapi menggunakan poin-poin.\n\n"
+            "Berikan jawaban secara langsung, to the point, dan terstruktur rapi menggunakan poin-poin. "
+            "JANGAN gunakan kalimat basa-basi pembuka seperti 'Selamat siang', 'Selamat malam', atau 'Terima kasih atas pertanyaan Anda'. "
+            "Langsung masuk ke inti jawaban.\n\n"
             f"Pertanyaan: {user_question}"
         )
 
