@@ -20,13 +20,11 @@ if not os.path.exists(PDF_FOLDER):
     os.makedirs(PDF_FOLDER)
 
 # Google GenAI Client dibuat saat endpoint AI dipanggil.
-# Dengan cara ini aplikasi utama tetap bisa berjalan jika API key belum diset.
 def get_ai_client():
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise RuntimeError(
-            "GEMINI_API_KEY belum diset. Set environment variable GEMINI_API_KEY "
-            "dengan API key Google Gemini terlebih dahulu."
+            "GEMINI_API_KEY belum diset. Set environment variable GEMINI_API_KEY terlebih dahulu."
         )
     return genai.Client(api_key=api_key)
 
@@ -1474,14 +1472,21 @@ AI_CHAT_TEMPLATE = """
             const loadingId = appendMessage('Sedang memproses jawaban...', 'ai loading');
 
             try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 50000);
+
                 const response = await fetch('/api/ask-ai', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question: question })
+                    body: JSON.stringify({ question: question }),
+                    signal: controller.signal
                 });
-                
+
+                clearTimeout(timeoutId);
+
                 const data = await response.json();
-                document.getElementById(loadingId).remove();
+                const loadingElement = document.getElementById(loadingId);
+                if (loadingElement) loadingElement.remove();
 
                 if (response.ok && data.success !== false && data.answer) {
                     appendMessage(data.answer, 'ai');
@@ -1489,8 +1494,14 @@ AI_CHAT_TEMPLATE = """
                     appendMessage('Maaf, terjadi kesalahan: ' + (data.error || 'Gagal merespons'), 'ai');
                 }
             } catch (error) {
-                document.getElementById(loadingId).remove();
-                appendMessage('Terjadi kesalahan koneksi ke server.', 'ai');
+                const loadingElement = document.getElementById(loadingId);
+                if (loadingElement) loadingElement.remove();
+
+                if (error && error.name === 'AbortError') {
+                    appendMessage('Permintaan AI terlalu lama. Periksa internet/API key Gemini lalu coba lagi.', 'ai');
+                } else {
+                    appendMessage('Terjadi kesalahan koneksi ke server. Cek terminal Flask untuk detail.', 'ai');
+                }
             } finally {
                 userInput.disabled = false;
                 sendBtn.disabled = false;
@@ -1543,39 +1554,38 @@ def ai_chat_page():
 
 @app.route("/api/ask-ai", methods=["POST"])
 def ask_ai():
-    """Endpoint untuk menjawab pertanyaan pengguna dengan Google Gemini."""
+    """Endpoint untuk memproses pertanyaan menggunakan Google Gemini."""
     data = request.get_json(silent=True) or {}
     user_question = str(data.get("question", "")).strip()
 
     if not user_question:
-        return jsonify({
-            "success": False,
-            "error": "Pertanyaan tidak boleh kosong."
-        }), 400
+        return jsonify({"success": False, "error": "Pertanyaan tidak boleh kosong."}), 400
 
-    # Batasi input agar request tidak terlalu besar.
     if len(user_question) > 8000:
-        return jsonify({
-            "success": False,
-            "error": "Pertanyaan terlalu panjang. Maksimal 8.000 karakter."
-        }), 400
+        return jsonify({"success": False, "error": "Pertanyaan terlalu panjang. Maksimal 8.000 karakter."}), 400
 
     system_instruction = (
-        "Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug "
-        "dan Perum Jasa Tirta II (PJT II). "
-        "Jawab dalam bahasa Indonesia yang jelas, ringkas, dan profesional. "
-        "Bantu menjelaskan operasi PLTA, gardu induk, gangguan, normalisasi, "
-        "checklist, SOP, keselamatan kerja, dan informasi umum. "
-        "Jangan mengarang data teknis, nomor SOP, nilai setting proteksi, atau "
-        "instruksi switching yang tidak diberikan pengguna. Jika informasi "
-        "tidak tersedia, katakan bahwa informasi tersebut perlu diverifikasi "
-        "dengan SOP/dokumen resmi dan petugas berwenang. "
-        "Untuk pekerjaan kelistrikan bertegangan atau switching, jangan menggantikan "
-        "prosedur keselamatan dan otorisasi petugas."
+        "Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug dan PJT II. "
+        "Jawab dalam bahasa Indonesia yang jelas dan profesional. "
+        "Bantu menjelaskan operasi PLTA, gardu induk, gangguan, normalisasi, checklist, SOP, "
+        "keselamatan kerja, dan informasi umum. Jangan mengarang data teknis, setting proteksi, "
+        "nomor SOP, atau instruksi switching. Jika data tidak tersedia, sarankan verifikasi "
+        "dengan SOP resmi dan petugas berwenang."
     )
 
     try:
-        client = get_ai_client()
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise RuntimeError("GEMINI_API_KEY belum diset.")
+
+        try:
+            from google.genai import types
+            client = genai.Client(
+                api_key=api_key,
+                http_options=types.HttpOptions(timeout=45000)
+            )
+        except Exception:
+            client = get_ai_client()
 
         response = client.models.generate_content(
             model="gemini-3.8-flash",
@@ -1588,41 +1598,29 @@ def ask_ai():
         )
 
         answer = getattr(response, "text", None)
-
         if not answer:
-            return jsonify({
-                "success": False,
-                "error": "Gemini tidak mengembalikan jawaban teks."
-            }), 502
+            return jsonify({"success": False, "error": "Gemini tidak mengembalikan jawaban teks."}), 502
 
-        return jsonify({
-            "success": True,
-            "answer": answer.strip()
-        })
+        return jsonify({"success": True, "answer": answer.strip()})
 
     except Exception as e:
-        # Jangan tampilkan detail internal Python ke pengguna.
         print(f"[AI ERROR] {type(e).__name__}: {e}")
+        err = str(e).lower()
 
-        error_message = str(e).lower()
-        if "api key" in error_message or "gemini_api_key" in error_message:
-            message = (
-                "API Gemini belum dikonfigurasi. "
-                "Pastikan GEMINI_API_KEY sudah diset pada environment server."
-            )
-        elif "quota" in error_message or "resource_exhausted" in error_message:
-            message = "Kuota Gemini sedang habis/terbatas. Silakan coba lagi nanti."
-        elif "permission" in error_message or "unauthorized" in error_message:
-            message = "API key Gemini tidak memiliki izin yang diperlukan."
-        elif "not found" in error_message or "404" in error_message:
-            message = "Model Gemini tidak tersedia pada API key/versi API yang digunakan."
+        if "api key" in err or "gemini_api_key" in err:
+            msg = "API Gemini belum dikonfigurasi. Set GEMINI_API_KEY pada environment server."
+        elif "quota" in err or "resource_exhausted" in err:
+            msg = "Kuota Gemini sedang habis atau terbatas. Silakan coba lagi nanti."
+        elif "permission" in err or "unauthorized" in err:
+            msg = "API key Gemini tidak memiliki izin yang diperlukan."
+        elif "not found" in err or "404" in err:
+            msg = "Model Gemini tidak tersedia pada API key atau versi API yang digunakan."
+        elif "timeout" in err or "timed out" in err:
+            msg = "Koneksi ke layanan AI terlalu lama. Periksa internet/server lalu coba lagi."
         else:
-            message = "Terjadi kesalahan saat menghubungi layanan AI. Silakan coba lagi."
+            msg = "Terjadi kesalahan saat menghubungi layanan AI. Cek terminal Flask untuk detail."
 
-        return jsonify({
-            "success": False,
-            "error": message
-        }), 500
+        return jsonify({"success": False, "error": msg}), 500
 
 
 @app.route("/generate-laporan-baru", methods=["POST"])
