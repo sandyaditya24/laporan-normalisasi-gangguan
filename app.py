@@ -1586,33 +1586,26 @@ import time  # Pastikan modul time ada di bagian paling atas file app.py
 
 @app.route("/api/ask-ai", methods=["POST"])
 def ask_ai():
-    """Endpoint untuk memproses pertanyaan menggunakan Google Gemini."""
     data = request.get_json(silent=True) or {}
     user_question = str(data.get("question", "")).strip()
 
     if not user_question:
         return jsonify({"success": False, "error": "Pertanyaan tidak boleh kosong."}), 400
 
-    if len(user_question) > 8000:
-        return jsonify({"success": False, "error": "Pertanyaan terlalu panjang. Maksimal 8.000 karakter."}), 400
-
     try:
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
             return jsonify({"success": False, "error": "API Gemini belum dikonfigurasi."}), 500
 
-        # Inisialisasi klien standar
         client = genai.Client(api_key=api_key)
-
-        # Prompt sistem digabung langsung ke teks pertanyaan agar kompatibel secara universal
-        full_prompt = (
-            "Instruksi Sistem: Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug dan PJT II. "
-            "Jawab dalam bahasa Indonesia yang jelas dan profesional terkait operasi PLTA, gardu induk, gangguan, SOP, dan normalisasi. "
-            "Jangan mengarang data teknis atau nomor SOP.\n\n"
-            f"Pertanyaan Pengguna: {user_question}"
+        
+        formatted_prompt = (
+            "Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug & PJT II. "
+            "Jawab dalam bahasa Indonesia yang terstruktur dan rapi menggunakan poin-poin.\n\n"
+            f"Pertanyaan: {user_question}"
         )
 
-      response = client.models.generate_content(
+        response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=formatted_prompt,
         )
@@ -1622,10 +1615,8 @@ def ask_ai():
             return jsonify({"success": False, "error": "AI tidak mengembalikan jawaban."}), 502
 
         return jsonify({"success": True, "answer": answer.strip()})
-
     except Exception as e:
-        print(f"[AI ERROR] {type(e).__name__}: {e}")
-        return jsonify({"success": False, "error": f"Terjadi kesalahan AI: {str(e)}"}), 500
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @app.route("/generate-laporan-baru", methods=["POST"])
