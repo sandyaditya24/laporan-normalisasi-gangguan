@@ -3,81 +3,111 @@ from flask import Blueprint, render_template_string
 # Membuat Blueprint untuk modul Pegawai
 pegawai_bp = Blueprint('pegawai', __name__)
 
-# Template HTML khusus untuk bagian Struktural Pegawai dengan gaya Diagram Pohon
+# Template HTML khusus untuk bagian Struktural Pegawai bertema Pembangkit & Gardu Induk
 PEGAWAI_SECTION_TEMPLATE = """
 <style>
-    .tree-container {
+    .power-plant-container {
+        background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%);
+        border-radius: 16px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    .power-plant-container::before {
+        content: "⚡ 💧 ⚡";
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 1.5rem;
+        opacity: 0.2;
+        letter-spacing: 10px;
+    }
+    .tree-grid {
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 100%;
         overflow-x: auto;
-        padding: 20px 0;
+        padding: 10px 0;
     }
-    .tree-node {
+    .plant-card {
         background: #ffffff;
-        border: 2px solid #3b82f6;
-        border-radius: 12px;
-        padding: 12px 20px;
+        border-radius: 16px;
+        padding: 15px 20px;
         text-align: center;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-        min-width: 260px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        min-width: 280px;
         max-width: 320px;
         position: relative;
-        margin: 10px;
-        transition: transform 0.2s;
+        margin: 12px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
     }
-    .tree-node:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(37, 99, 235, 0.2);
+    .plant-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(37, 99, 235, 0.15);
     }
-    .tree-node.puncak {
+    /* Tema Pimpinan Puncak (Pusat Kontrol Utama) */
+    .card-puncak {
         background: linear-gradient(135deg, #1e293b, #0f172a);
         color: white;
-        border-color: #0f172a;
+        border: 2px solid #38bdf8;
     }
-    .tree-node.manajemen {
-        background: #eff6ff;
-        border-color: #2563eb;
+    /* Tema Pembangkit (Nuansa Air / Biru) */
+    .card-pembangkit {
+        background: linear-gradient(135deg, #eff6ff, #dbeafe);
+        border-color: #3b82f6;
     }
-    .tree-node.supervisor {
-        background: #f8fafc;
+    /* Tema Gardu Induk (Nuansa Listrik / Kuning-Oranye) */
+    .card-gardu {
+        background: linear-gradient(135deg, #fefce8, #fef9c3);
+        border-color: #eab308;
+    }
+    /* Tema Supervisor (Operasional Lapangan) */
+    .card-lapangan {
+        background: #ffffff;
         border-color: #cbd5e1;
     }
-    .tree-level {
+    .plant-level {
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
         gap: 20px;
         width: 100%;
-        position: relative;
         margin-top: 15px;
     }
-    .tree-connector-vertical {
-        width: 2px;
-        height: 25px;
-        background: #cbd5e1;
+    .connector-line {
+        width: 3px;
+        height: 30px;
+        background: linear-gradient(to bottom, #3b82f6, #eab308);
         margin: 0 auto;
+        border-radius: 2px;
     }
-    .badge-jabatan {
+    .badge-icon {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 50px;
         font-size: 0.75rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #2563eb;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .badge-puncak { background: #38bdf8; color: #0f172a; }
+    .badge-pembangkit { background: #2563eb; color: #ffffff; }
+    .badge-gardu { background: #ca8a04; color: #ffffff; }
+    .badge-lapangan { background: #475569; color: #ffffff; }
+    
+    .team-badge {
+        font-size: 0.75rem;
+        background: rgba(0,0,0,0.04);
+        padding: 6px 10px;
+        border-radius: 8px;
+        color: #334155;
+        margin-top: 8px;
         display: block;
-    }
-    .tree-node.puncak .badge-jabatan {
-        color: #93c5fd;
-    }
-    .team-list {
-        font-size: 0.8rem;
-        color: #64748b;
-        margin-top: 6px;
-        border-top: 1px dashed #e2e8f0;
-        padding-top: 6px;
         text-align: left;
+        border-left: 3px solid #3b82f6;
     }
 </style>
 
@@ -86,94 +116,109 @@ PEGAWAI_SECTION_TEMPLATE = """
         <i class="fa-solid fa-xmark"></i>
     </button>
     <div class="card-header-custom text-white text-center">
-        <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-sitemap me-2"></i> DIAGRAM STRUKTURAL PEGAWAI & ORGANISASI</h3>
-        <p class="mb-0 text-white-50 small mt-1">Bagan susunan hirarki dan penanggung jawab operasional PLTA Curug - PJT II</p>
+        <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-bolt me-2 text-warning"></i> STRUKTURAL PEMBANGKIT & GARDU INDUK PLTA CURUG</h3>
+        <p class="mb-0 text-white-50 small mt-1">Kolaborasi Energi Air & Listrik — Perum Jasa Tirta II</p>
     </div>
-    <div class="card-body p-4 p-md-4">
-        <div class="tree-container">
+    <div class="card-body p-4 p-md-4 power-plant-container">
+        <div class="tree-grid">
             
             <!-- LEVEL 1: PIMPINAN PUNCAK -->
-            <span class="badge-jabatan text-dark mb-1">Pimpinan Puncak</span>
-            <div class="tree-node puncak">
-                <span class="badge-jabatan">General Manajer PLTA</span>
-                <h6 class="fw-bold mb-0 text-white">BUDIYO, ST</h6>
+            <div class="plant-card card-puncak">
+                <span class="badge-icon badge-puncak"><i class="fa-solid fa-crown me-1"></i> Pusat Kendali Utama</span>
+                <h5 class="fw-bold mb-1 text-white">BUDIYO, ST</h5>
+                <p class="small text-white-50 mb-0">General Manajer PLTA</p>
             </div>
 
-            <div class="tree-connector-vertical"></div>
+            <div class="connector-line"></div>
 
-            <!-- LEVEL 2: MANAJEMEN JARINGAN -->
-            <div class="tree-level">
-                <div class="tree-node manajemen">
-                    <span class="badge-jabatan">Manajemen Jaringan</span>
-                    <h6 class="fw-bold mb-0 text-dark">CARTONO, ST</h6>
+            <!-- LEVEL 2: PEMBANGKIT & GARDU INDUK -->
+            <div class="plant-level">
+                <!-- Sektor Pembangkit (Air) -->
+                <div class="plant-card card-pembangkit">
+                    <span class="badge-icon badge-pembangkit"><i class="fa-solid fa-water me-1"></i> Sektor Pembangkit (Mini Hydro)</span>
+                    <h6 class="fw-bold mb-1 text-dark">CARTONO, ST</h6>
+                    <p class="small text-primary fw-semibold mb-0">Manajer Operasional Jaringan</p>
                 </div>
-                <div class="tree-node manajemen">
-                    <span class="badge-jabatan">Asisten Manajer Pemeliharaan</span>
-                    <h6 class="fw-bold mb-0 text-dark">SUMITRA DJARNUDJI, ST</h6>
-                    <div class="team-list">Unit: Gardu Induk Curug, Mini Hydro, dll</div>
+
+                <!-- Sektor Gardu Induk (Listrik) -->
+                <div class="plant-card card-gardu">
+                    <span class="badge-icon badge-gardu"><i class="fa-solid fa-bolt me-1"></i> Sektor Pemeliharaan Listrik</span>
+                    <h6 class="fw-bold mb-1 text-dark">SUMITRA DJARNUDJI, ST</h6>
+                    <p class="small text-warning-emphasis fw-semibold mb-0">Asisten Manajer Pemeliharaan</p>
+                    <span class="team-badge">Gardu Induk Curug, Mini Hydro, dll</span>
                 </div>
             </div>
 
-            <div class="tree-connector-vertical"></div>
-            <div class="text-center fw-bold text-muted small mb-2">— SUPERVISOR & TIM OPERASI / PEMELIHARAAN —</div>
+            <div class="connector-line"></div>
+            <div class="text-center fw-bold text-primary small my-2">
+                <i class="fa-solid fa-users-gear me-1"></i> ⚡ UNIT SUPERVISOR & TIM OPERASI LAPANGAN ⚡
+            </div>
 
-            <!-- LEVEL 3: SUPERVISOR & TIM -->
-            <div class="tree-level">
+            <!-- LEVEL 3: SUPERVISOR & TIM LAPANGAN -->
+            <div class="plant-level">
                 
                 <!-- 1. Mulyadi -->
-                <div class="tree-node supervisor">
-                    <span class="badge-jabatan">Supervisor Pemeliharaan</span>
+                <div class="plant-card card-lapangan">
+                    <span class="badge-icon badge-lapangan"><i class="fa-solid fa-screwdriver-wrench me-1"></i> Pemeliharaan</span>
                     <h6 class="fw-bold mb-1 text-dark">Mulyadi</h6>
-                    <div class="team-list"><strong>Tim:</strong> Kholidin Tri Sandy Nasution, Sandy Aditya, dll</div>
+                    <p class="small text-muted mb-1">Supervisor Pemeliharaan Mini Hydro & GI</p>
+                    <span class="team-badge"><strong>Tim:</strong> Kholidin Tri Sandy, Sandy Aditya, dll</span>
                 </div>
 
                 <!-- 2. Ahlan Sopiana -->
-                <div class="tree-node supervisor">
-                    <span class="badge-jabatan">Supervisor Operasi (Kel. IV)</span>
+                <div class="plant-card card-lapangan">
+                    <span class="badge-icon badge-lapangan"><i class="fa-solid fa-gauge-high me-1"></i> Operasi Kel. IV</span>
                     <h6 class="fw-bold mb-1 text-dark">Ahlan Sopiana</h6>
-                    <div class="team-list"><strong>Tim:</strong> Lugi Rama Diansyah, Rizal Kurniawan, dll</div>
+                    <p class="small text-muted mb-1">Supervisor Operasi Mini Hydro</p>
+                    <span class="team-badge"><strong>Tim:</strong> Lugi Rama Diansyah, Rizal Kurniawan</span>
                 </div>
 
                 <!-- 3. Yadi Suwarma -->
-                <div class="tree-node supervisor">
-                    <span class="badge-jabatan">Supervisor Operasi (Kel. II)</span>
+                <div class="plant-card card-lapangan">
+                    <span class="badge-icon badge-lapangan"><i class="fa-solid fa-gauge-high me-1"></i> Operasi Kel. II</span>
                     <h6 class="fw-bold mb-1 text-dark">Yadi Suwarma</h6>
-                    <div class="team-list"><strong>Tim:</strong> Achmad Hidayat, Angga Hermawan, dll</div>
+                    <p class="small text-muted mb-1">Supervisor Operasi Mini Hydro</p>
+                    <span class="team-badge"><strong>Tim:</strong> Achmad Hidayat, Angga Hermawan</span>
                 </div>
 
                 <!-- 4. Andriana -->
-                <div class="tree-node supervisor">
-                    <span class="badge-jabatan">Supervisor Operasi (Kel. III)</span>
+                <div class="plant-card card-lapangan">
+                    <span class="badge-icon badge-lapangan"><i class="fa-solid fa-gauge-high me-1"></i> Operasi Kel. III</span>
                     <h6 class="fw-bold mb-1 text-dark">Andriana, ST</h6>
-                    <div class="team-list"><strong>Tim:</strong> Ejan Suryadi, Yanuar Utomo Mandala Putra, dll</div>
+                    <p class="small text-muted mb-1">Supervisor Operasi Mini Hydro</p>
+                    <span class="team-badge"><strong>Tim:</strong> Ejan Suryadi, Yanuar Utomo</span>
                 </div>
 
                 <!-- 5. Saepudin -->
-                <div class="tree-node supervisor">
-                    <span class="badge-jabatan">Supervisor Operasi (Kel. I)</span>
+                <div class="plant-card card-lapangan">
+                    <span class="badge-icon badge-lapangan"><i class="fa-solid fa-gauge-high me-1"></i> Operasi Kel. I</span>
                     <h6 class="fw-bold mb-1 text-dark">Saepudin</h6>
-                    <div class="team-list"><strong>Tim:</strong> Ibnu Aulia, Willy Wiriawan Hasan Mulyadi, S.T., dll</div>
+                    <p class="small text-muted mb-1">Supervisor Operasi Mini Hydro</p>
+                    <span class="team-badge"><strong>Tim:</strong> Ibnu Aulia, Willy Wiriawan</span>
                 </div>
 
                 <!-- 6. Ahmad Hotib -->
-                <div class="tree-node supervisor">
-                    <span class="badge-jabatan">Supervisor Pemeliharaan SUTT & SUTM</span>
+                <div class="plant-card card-lapangan">
+                    <span class="badge-icon badge-lapangan"><i class="fa-solid fa-tower-broadcast me-1"></i> Transmisi SUTT</span>
                     <h6 class="fw-bold mb-1 text-dark">Ahmad Hotib</h6>
-                    <div class="team-list"><strong>Tim:</strong> Staf terkait pemeliharaan SUTT & SUTM</div>
+                    <p class="small text-muted mb-1">Supervisor Pemeliharaan SUTT & SUTM</p>
+                    <span class="team-badge"><strong>Tim:</strong> Staf SUTT & SUTM Curug</span>
                 </div>
 
                 <!-- 7. Yosep Yusnandar -->
-                <div class="tree-node supervisor">
-                    <span class="badge-jabatan">Supervisor Pemeliharaan Pompa</span>
+                <div class="plant-card card-lapangan">
+                    <span class="badge-icon badge-lapangan"><i class="fa-solid fa-water-ladder me-1"></i> Pompa Elektrik</span>
                     <h6 class="fw-bold mb-1 text-dark">Yosep Yusnandar, S.T.</h6>
-                    <div class="team-list"><strong>Tim:</strong> Akbar Jejef Maulana, S.T., Ade Irfan Sopian, dll</div>
+                    <p class="small text-muted mb-1">Supervisor Pemeliharaan Pompa Tarum Timur</p>
+                    <span class="team-badge"><strong>Tim:</strong> Akbar Jejef, Ade Irfan Sopian</span>
                 </div>
 
                 <!-- 8. Yusron -->
-                <div class="tree-node supervisor">
-                    <span class="badge-jabatan">Supervisor Pemeliharaan SUTR</span>
+                <div class="plant-card card-lapangan">
+                    <span class="badge-icon badge-lapangan"><i class="fa-solid fa-plug me-1"></i> Jaringan SUTR</span>
                     <h6 class="fw-bold mb-1 text-dark">Yusron</h6>
-                    <div class="team-list"><strong>Tim:</strong> Nurwanto</div>
+                    <p class="small text-muted mb-1">Supervisor Pemeliharaan SUTR Curug</p>
+                    <span class="team-badge"><strong>Tim:</strong> Nurwanto</span>
                 </div>
 
             </div>
@@ -183,7 +228,6 @@ PEGAWAI_SECTION_TEMPLATE = """
 </div>
 """
 
-@pegawai_bp.route('/get-struktural-png') # (atau route aslinya)
 @pegawai_bp.route('/get-struktural-pegawai')
 def get_struktural_pegawai():
     return PEGAWAI_SECTION_TEMPLATE
