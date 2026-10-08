@@ -22,10 +22,15 @@ if not os.path.exists(PDF_FOLDER):
 # OpenAI Client dibuat saat endpoint AI dipanggil.
 def get_ai_client():
     api_key = os.getenv("OPENAI_API_KEY")
+
+    print("[DEBUG] OPENAI_API_KEY tersedia:", bool(api_key))
+    print("[DEBUG] OPENAI_API_KEY panjang:", len(api_key) if api_key else 0)
+
     if not api_key:
         raise RuntimeError(
             "OPENAI_API_KEY belum diset. Set environment variable OPENAI_API_KEY terlebih dahulu."
         )
+
     return OpenAI(api_key=api_key)
 
 # In-memory database sederhana untuk menyimpan riwayat laporan baru & checklist
