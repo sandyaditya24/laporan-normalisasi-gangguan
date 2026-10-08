@@ -318,20 +318,23 @@ HTML_TEMPLATE = """
                             <i class="fa-solid fa-sitemap fa-fw"></i> Struktural Pegawai
                         </button>
 
-                        <!-- ASISTEN AI OPERASIONAL - OPENAI -->
-                        <a href="/ai-chat" class="btn menu-btn text-decoration-none" id="btnMenuAI">
-                            <i class="fa-solid fa-robot fa-fw text-info"></i> Asisten AI Operasional
-                        </a>
-                    </div>
-                    
-                    <div class="p-3 bg-light rounded-4 border border-light">
-                        <small class="text-muted d-block fw-semibold mb-1">Status Sistem:</small>
-                        <span class="d-flex align-items-center text-success fw-bold small">
-                            <span class="spinner-grow spinner-grow-sm me-2 text-success" role="status"></span> Server Aktif & Aman
-                        </span>
-                    </div>
-                </div>
-            </div>
+                       <!-- ASISTEN AI OPERASIONAL - OPENAI -->
+<a href="/ai-chat" class="btn menu-btn text-decoration-none" id="btnMenuAI">
+    <i class="fa-solid fa-robot fa-fw text-info"></i> Asisten AI Operasional
+</a>
+
+<!-- EDUKASI KELISTRIKAN -->
+<a href="/edukasi-kelistrikan" class="btn menu-btn text-decoration-none" id="btnMenuEdukasi">
+    <i class="fa-solid fa-bolt fa-fw text-warning"></i> Edukasi Kelistrikan
+</a>
+
+<div class="p-3 bg-light rounded-4 border border-light">
+    <small class="text-muted d-block fw-semibold mb-1">Status Sistem:</small>
+    <span class="d-flex align-items-center text-success fw-bold small">
+        <span class="spinner-grow spinner-grow-sm me-2 text-success" role="status"></span>
+        Server Aktif & Aman
+    </span>
+</div>
 
             <!-- AREA KONTEN -->
             <div class="col-lg-9">
@@ -1535,6 +1538,575 @@ AI_CHAT_TEMPLATE = """
 </html>
 """
 
+EDUKASI_KELISTRIKAN_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edukasi Kelistrikan - Sistem Manajemen PLTA Curug</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(7, 15, 30, 0.88),
+                    rgba(15, 23, 42, 0.92)
+                ),
+                url('/static/CURUGTEMPODULU.jpg')
+                no-repeat center center fixed;
+
+            background-size: cover;
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: #1e293b;
+            padding: 2rem 0;
+        }
+
+        .education-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .education-card {
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.4);
+            overflow: hidden;
+        }
+
+        .education-header {
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            padding: 2rem;
+            color: white;
+        }
+
+        .education-icon {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.12);
+            font-size: 1.6rem;
+        }
+
+        .category-card {
+            height: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            background: #ffffff;
+            transition: all 0.25s ease;
+            overflow: hidden;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(15,23,42,0.12);
+            border-color: #bfdbfe;
+        }
+
+        .category-header {
+            padding: 1.25rem;
+            background: linear-gradient(135deg, #eff6ff, #f8fafc);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .category-icon {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 1.2rem;
+        }
+
+        .topic-list {
+            padding: 1rem 1.25rem 1.25rem;
+        }
+
+        .topic-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.65rem 0;
+            color: #334155;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.92rem;
+        }
+
+        .topic-item:last-child {
+            border-bottom: none;
+        }
+
+        .topic-icon {
+            color: #2563eb;
+            width: 20px;
+            text-align: center;
+        }
+
+        .topic-item span:last-child {
+            flex: 1;
+        }
+
+        .video-badge {
+            font-size: 0.68rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            background: #fee2e2;
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        .intro-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 1.25rem;
+        }
+
+        .footer-note {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0;
+            }
+
+            .education-header {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container education-wrapper">
+
+    <div class="education-card">
+
+        <!-- HEADER -->
+        <div class="education-header">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <div class="education-icon">
+                        <i class="fa-solid fa-bolt text-warning"></i>
+                    </div>
+
+                    <div>
+                        <h1 class="mb-1 fw-bold fs-3">
+                            Edukasi Kelistrikan
+                        </h1>
+
+                        <p class="mb-0 text-white-50">
+                            Materi dasar dan teknis kelistrikan untuk mendukung
+                            pemahaman operasional PLTA dan sistem tenaga listrik.
+                        </p>
+                    </div>
+
+                </div>
+
+                <a href="/"
+                   class="btn btn-outline-light btn-sm px-3 rounded-pill fw-semibold">
+                    <i class="fa-solid fa-arrow-left me-1"></i>
+                    Kembali
+                </a>
+
+            </div>
+        </div>
+
+
+        <!-- CONTENT -->
+        <div class="p-3 p-md-4">
+
+            <div class="intro-box mb-4">
+
+                <div class="d-flex align-items-start gap-3">
+
+                    <i class="fa-solid fa-graduation-cap text-primary fs-4 mt-1"></i>
+
+                    <div>
+                        <h5 class="fw-bold mb-1">
+                            Pusat Pembelajaran Kelistrikan
+                        </h5>
+
+                        <p class="mb-0 text-muted small">
+                            Pelajari konsep kelistrikan mulai dari dasar,
+                            sistem tenaga listrik, proteksi, PLTA/PLTMH,
+                            hingga keselamatan kerja listrik.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- 5 KATEGORI -->
+            <div class="row g-4">
+
+
+                <!-- 1. DASAR KELISTRIKAN -->
+                <div class="col-lg-6">
+
+                    <div class="category-card">
+
+                        <div class="category-header">
+
+                            <div class="d-flex align-items-center gap-3">
+
+                                <div class="category-icon">
+                                    <i class="fa-solid fa-plug"></i>
+                                </div>
+
+                                <div>
+                                    <h5 class="fw-bold mb-1">
+                                        Dasar Kelistrikan
+                                    </h5>
+
+                                    <small class="text-muted">
+                                        Konsep dasar listrik
+                                    </small>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="topic-list">
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Tegangan, Arus, Resistansi</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Hukum Ohm</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Daya Listrik</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Sistem 1 Fasa &amp; 3 Fasa</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- 2. SISTEM TENAGA LISTRIK -->
+                <div class="col-lg-6">
+
+                    <div class="category-card">
+
+                        <div class="category-header">
+
+                            <div class="d-flex align-items-center gap-3">
+
+                                <div class="category-icon">
+                                    <i class="fa-solid fa-tower-broadcast"></i>
+                                </div>
+
+                                <div>
+                                    <h5 class="fw-bold mb-1">
+                                        Sistem Tenaga Listrik
+                                    </h5>
+
+                                    <small class="text-muted">
+                                        Pembangkitan dan jaringan
+                                    </small>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="topic-list">
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Sistem Pembangkitan</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Generator</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Transformator</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Jaringan 20 kV</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Gardu Induk</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- 3. PROTEKSI -->
+                <div class="col-lg-6">
+
+                    <div class="category-card">
+
+                        <div class="category-header">
+
+                            <div class="d-flex align-items-center gap-3">
+
+                                <div class="category-icon">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+
+                                <div>
+                                    <h5 class="fw-bold mb-1">
+                                        Proteksi
+                                    </h5>
+
+                                    <small class="text-muted">
+                                        Sistem perlindungan tenaga listrik
+                                    </small>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="topic-list">
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>CT &amp; PT</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>PMT &amp; PMS</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>OCR</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>GFR</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Differential Protection</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- 4. PLTA / PLTMH -->
+                <div class="col-lg-6">
+
+                    <div class="category-card">
+
+                        <div class="category-header">
+
+                            <div class="d-flex align-items-center gap-3">
+
+                                <div class="category-icon">
+                                    <i class="fa-solid fa-water"></i>
+                                </div>
+
+                                <div>
+                                    <h5 class="fw-bold mb-1">
+                                        PLTA / PLTMH
+                                    </h5>
+
+                                    <small class="text-muted">
+                                        Sistem pembangkit tenaga air
+                                    </small>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="topic-list">
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Prinsip Kerja PLTA</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Turbin</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Generator PLTA</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Sistem Hidrolis</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Sistem Eksitasi</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Governor</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- 5. K3 LISTRIK -->
+                <div class="col-lg-6">
+
+                    <div class="category-card">
+
+                        <div class="category-header">
+
+                            <div class="d-flex align-items-center gap-3">
+
+                                <div class="category-icon">
+                                    <i class="fa-solid fa-helmet-safety"></i>
+                                </div>
+
+                                <div>
+                                    <h5 class="fw-bold mb-1">
+                                        K3 Listrik
+                                    </h5>
+
+                                    <small class="text-muted">
+                                        Keselamatan kerja kelistrikan
+                                    </small>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="topic-list">
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>LOTO</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>APD Listrik</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Bahaya Arc Flash</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                            <div class="topic-item">
+                                <i class="fa-solid fa-play topic-icon"></i>
+                                <span>Prosedur Keselamatan Kerja</span>
+                                <span class="video-badge">VIDEO</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="text-center mt-4 pt-3 border-top">
+                <div class="footer-note">
+                    <i class="fa-solid fa-circle-info me-1"></i>
+                    Materi edukasi ditujukan untuk pembelajaran dan peningkatan
+                    pemahaman kelistrikan. Untuk pekerjaan operasional,
+                    tetap ikuti SOP, izin kerja, dan prosedur K3 yang berlaku.
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+"""
+
 @app.route("/")
 def index():
     # Mengambil daftar file PDF tersimpan di folder static untuk riwayat
@@ -1555,6 +2127,11 @@ def index():
 def ai_chat_page():
     """Halaman antarmuka Asisten AI Q&A."""
     return render_template_string(AI_CHAT_TEMPLATE)
+
+@app.route("/edukasi-kelistrikan", methods=["GET"])
+def edukasi_kelistrikan_page():
+    """Halaman Edukasi Kelistrikan."""
+    return render_template_string(EDUKASI_KELISTRIKAN_TEMPLATE)
 
 
 @app.route("/api/ask-ai", methods=["POST"])
