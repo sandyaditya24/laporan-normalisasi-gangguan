@@ -24,7 +24,7 @@ def get_ai_client():
     api_key = os.getenv("OPENAI_API_KEY")
 
     print("[DEBUG] OPENAI_API_KEY tersedia:", bool(api_key))
-    print("[DEBUG] OPENAI_API_KEY panjang:", len(api_key) if api_key else 0)
+    print("[DEBUG] Panjang API key:", len(api_key) if api_key else 0)
 
     if not api_key:
         raise RuntimeError(
