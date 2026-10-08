@@ -1594,7 +1594,6 @@ def ask_ai():
             model=model,
             instructions=system_instruction,
             input=user_question,
-            temperature=0.4,
             max_output_tokens=1200,
         )
 
