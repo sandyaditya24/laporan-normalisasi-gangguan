@@ -7,10 +7,9 @@ import os
 import re
 import urllib.parse
 from datetime import datetime
-import time
 from pegawai import pegawai_bp
 from faq import faq_bp
-from google import genai  # Pustaka untuk Google Gemini AI
+from openai import OpenAI  # OpenAI API
 
 app = Flask(__name__)
 app.register_blueprint(pegawai_bp)
@@ -20,14 +19,14 @@ PDF_FOLDER = "static"
 if not os.path.exists(PDF_FOLDER):
     os.makedirs(PDF_FOLDER)
 
-# Google GenAI Client dibuat saat endpoint AI dipanggil.
+# OpenAI Client dibuat saat endpoint AI dipanggil.
 def get_ai_client():
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError(
-            "GEMINI_API_KEY belum diset. Set environment variable GEMINI_API_KEY terlebih dahulu."
+            "OPENAI_API_KEY belum diset. Set environment variable OPENAI_API_KEY terlebih dahulu."
         )
-    return genai.Client(api_key=api_key)
+    return OpenAI(api_key=api_key)
 
 # In-memory database sederhana untuk menyimpan riwayat laporan baru & checklist
 HISTORY_LAPORAN_DB = []
@@ -314,9 +313,9 @@ HTML_TEMPLATE = """
                             <i class="fa-solid fa-sitemap fa-fw"></i> Struktural Pegawai
                         </button>
 
-                        <!-- TOMBOL MENU BARU UNTUK ASISTEN AI Q&A -->
+                        <!-- ASISTEN AI OPERASIONAL - OPENAI -->
                         <a href="/ai-chat" class="btn menu-btn text-decoration-none" id="btnMenuAI">
-                            <i class="fa-solid fa-robot fa-fw text-info"></i> Asisten AI Q&A
+                            <i class="fa-solid fa-robot fa-fw text-info"></i> Asisten AI Operasional
                         </a>
                     </div>
                     
@@ -1400,7 +1399,7 @@ AI_CHAT_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asisten AI Q&A - Sistem Manajemen PLTA Curug</title>
+    <title>Asisten AI Operasional - Sistem Manajemen PLTA Curug</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -1412,56 +1411,25 @@ AI_CHAT_TEMPLATE = """
             color: #1e293b;
             padding: 2rem 0;
         }
-        .chat-wrapper { max-width: 950px; margin: 0 auto; }
-        .chat-card { border-radius: 20px; background: rgba(255, 255, 255, 0.97); backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.25); border: 1px solid rgba(255, 255, 255, 0.5); overflow: hidden; }
+        .chat-wrapper { max-width: 900px; margin: 0 auto; }
+        .chat-card { border-radius: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255, 255, 255, 0.4); overflow: hidden; }
         .chat-header { background: linear-gradient(135deg, #0f172a, #1e293b); padding: 1.5rem 2rem; color: white; }
-        .chat-box { height: 500px; overflow-y: auto; padding: 1.75rem; background: #f8fafc; display: flex; flex-direction: column; gap: 1rem; }
-        .message { display: flex; gap: 12px; max-width: 85%; animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .message.user { margin-left: auto; flex-direction: row-reverse; }
-        .message.ai { margin-right: auto; }
-        .avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .user .avatar { background: #2563eb; color: white; }
-        .ai .avatar { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; }
-        .bubble { padding: 0.9rem 1.25rem; border-radius: 16px; font-size: 0.95rem; line-height: 1.6; word-break: break-word; white-space: pre-wrap; }
-        .user .bubble { background-color: #2563eb; color: white; border-bottom-right-radius: 4px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
-        .ai .bubble { background-color: #ffffff; color: #1e293b; border-bottom-left-radius: 4px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .typing-dots span { height: 8px; width: 8px; float: left; margin: 0 2px; background-color: #94a3b8; border-radius: 50%; display: inline-block; animation: bounce 1.3s infinite ease-in-out; }
-        .typing-dots span:nth-child(2) { animation-delay: -1.1s; }
-        .typing-dots span:nth-child(3) { animation-delay: -0.9s; }
-        @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
-        
-        /* Tambahan CSS untuk merapikan teks dan poin jawaban AI */
-        .chat-message-content {
-            line-height: 1.6;
-            font-size: 14px;
-        }
-        .chat-message-content p {
-            margin-bottom: 10px;
-        }
-        .chat-message-content ul, 
-        .chat-message-content ol {
-            margin-top: 5px;
-            margin-bottom: 10px;
-            padding-left: 20px;
-        }
-        .chat-message-content li {
-            margin-bottom: 6px;
-        }
+        .chat-box { height: 450px; overflow-y: auto; padding: 1.5rem; background: #f8fafc; }
+        .message { margin-bottom: 1rem; }
+        .message.user { text-align: right; }
+        .message.ai { text-align: left; }
+        .bubble { display: inline-block; padding: 0.75rem 1.25rem; border-radius: 15px; max-width: 75%; text-align: left; font-size: 0.95rem; line-height: 1.5; }
+        .user .bubble { background-color: #2563eb; color: white; border-bottom-right-radius: 2px; }
+        .ai .bubble { background-color: #e2e8f0; color: #1e293b; border-bottom-left-radius: 2px; }
     </style>
 </head>
 <body>
     <div class="container chat-wrapper">
         <div class="chat-card">
             <div class="chat-header d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-3">
-                    <div style="background: rgba(255,255,255,0.15); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fa-solid fa-robot text-info fs-4"></i>
-                    </div>
-                    <div>
-                        <h3 class="mb-0 fw-bold fs-5">Asisten AI Q&A Operasional</h3>
-                        <p class="mb-0 text-white-50 small">Didukung oleh Google AI (Gemini)</p>
-                    </div>
+                <div>
+                    <h3 class="mb-0 fw-bold fs-4"><i class="fa-solid fa-robot me-2 text-info"></i> Asisten AI Q&A Operasional</h3>
+                    <p class="mb-0 text-white-50 small mt-1">Konsultasi prosedur SOP, normalisasi, dan informasi teknis Bendung Curug</p>
                 </div>
                 <a href="/" class="btn btn-outline-light btn-sm px-3 rounded-pill fw-semibold">
                     <i class="fa-solid fa-arrow-left me-1"></i> Kembali
@@ -1470,15 +1438,14 @@ AI_CHAT_TEMPLATE = """
             
             <div class="chat-box" id="chatBox">
                 <div class="message ai">
-                    <div class="avatar"><i class="fa-solid fa-robot"></i></div>
-                    <div class="bubble">Halo! Saya Asisten AI untuk Sistem Manajemen PLTA Curug & PJT II. Silakan tanyakan hal seputar prosedur penanganan gangguan, operasional gardu induk, atau informasi SOP terkait.</div>
+                    <div class="bubble">Halo! Saya adalah Asisten AI Operasional untuk Sistem Manajemen PLTA Curug & PJT II, didukung OpenAI. Silakan tanyakan hal seputar operasi PLTA, gardu induk, gangguan, normalisasi, K3, checklist, atau informasi teknis lainnya.</div>
                 </div>
             </div>
             
             <div class="p-3 p-md-4 bg-white border-top">
                 <form id="chatForm" class="d-flex gap-2">
-                    <input type="text" id="userInput" class="form-control form-control-lg fs-6" placeholder="Ketik pertanyaan atau konsultasi SOP di sini..." autocomplete="off" required>
-                    <button type="submit" class="btn btn-primary px-4 fw-semibold" id="sendBtn" style="border-radius: 12px;">
+                    <input type="text" id="userInput" class="form-control form-control-lg fs-6" placeholder="Ketik pertanyaan Anda di sini..." autocomplete="off" required>
+                    <button type="submit" class="btn btn-primary px-4 btn-custom" id="sendBtn">
                         <i class="fa-solid fa-paper-plane me-1"></i> Kirim
                     </button>
                 </form>
@@ -1502,26 +1469,39 @@ AI_CHAT_TEMPLATE = """
             userInput.disabled = true;
             sendBtn.disabled = true;
 
-            const loadingId = appendTypingIndicator();
+            const loadingId = appendMessage('Sedang memproses jawaban...', 'ai loading');
 
             try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 50000);
+
                 const response = await fetch('/api/ask-ai', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question: question })
+                    body: JSON.stringify({ question: question }),
+                    signal: controller.signal
                 });
 
+                clearTimeout(timeoutId);
+
                 const data = await response.json();
-                removeElement(loadingId);
+                const loadingElement = document.getElementById(loadingId);
+                if (loadingElement) loadingElement.remove();
 
                 if (response.ok && data.success !== false && data.answer) {
                     appendMessage(data.answer, 'ai');
                 } else {
-                    appendMessage('Maaf: ' + (data.error || 'Gagal merespons'), 'ai');
+                    appendMessage('Maaf, terjadi kesalahan: ' + (data.error || 'Gagal merespons'), 'ai');
                 }
             } catch (error) {
-                removeElement(loadingId);
-                appendMessage('Terjadi kesalahan koneksi ke server.', 'ai');
+                const loadingElement = document.getElementById(loadingId);
+                if (loadingElement) loadingElement.remove();
+
+                if (error && error.name === 'AbortError') {
+                    appendMessage('Permintaan AI terlalu lama. Periksa koneksi server dan konfigurasi OpenAI lalu coba lagi.', 'ai');
+                } else {
+                    appendMessage('Terjadi kesalahan koneksi ke server. Cek terminal Flask untuk detail.', 'ai');
+                }
             } finally {
                 userInput.disabled = false;
                 sendBtn.disabled = false;
@@ -1532,52 +1512,18 @@ AI_CHAT_TEMPLATE = """
         function appendMessage(text, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
-            
-            const avatarDiv = document.createElement('div');
-            avatarDiv.className = 'avatar';
-            avatarDiv.innerHTML = sender === 'user' ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
-            
-            const bubbleDiv = document.createElement('div');
-            bubbleDiv.className = 'bubble chat-message-content';
-            
-            // Menggunakan innerHTML agar tag poin/list atau teks tebal dari AI ter-render rapi
-            if (sender === 'ai') {
-                bubbleDiv.innerHTML = text.replace(/\\n/g, '<br>');
-            } else {
-                bubbleDiv.textContent = text;
-            }
-            
-            messageDiv.appendChild(avatarDiv);
-            messageDiv.appendChild(bubbleDiv);
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        function appendTypingIndicator() {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message ai';
-            const uniqueId = 'typing-' + Date.now();
+            const uniqueId = 'msg-' + Date.now();
             messageDiv.id = uniqueId;
-            
-            const avatarDiv = document.createElement('div');
-            avatarDiv.className = 'avatar';
-            avatarDiv.innerHTML = '<i class="fa-solid fa-robot"></i>';
             
             const bubbleDiv = document.createElement('div');
             bubbleDiv.className = 'bubble';
-            bubbleDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+            bubbleDiv.innerText = text;
             
-            messageDiv.appendChild(avatarDiv);
             messageDiv.appendChild(bubbleDiv);
             chatBox.appendChild(messageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
             
             return uniqueId;
-        }
-
-        function removeElement(id) {
-            const el = document.getElementById(id);
-            if (el) el.remove();
         }
     </script>
 </body>
@@ -1586,6 +1532,7 @@ AI_CHAT_TEMPLATE = """
 
 @app.route("/")
 def index():
+    # Mengambil daftar file PDF tersimpan di folder static untuk riwayat
     pdf_files = []
     if os.path.exists(PDF_FOLDER):
         for f in os.listdir(PDF_FOLDER):
@@ -1595,6 +1542,7 @@ def index():
                 date_str = datetime.fromtimestamp(mod_time).strftime('%Y-%m-%d %H:%M:%S')
                 pdf_files.append({"name": f, "date": date_str})
     
+    # Urutkan berdasarkan waktu terbaru
     pdf_files = sorted(pdf_files, key=lambda x: x['date'], reverse=True)
     return render_template_string(HTML_TEMPLATE, pdf_files=pdf_files, history_laporan_baru=HISTORY_LAPORAN_DB)
 
@@ -1603,80 +1551,74 @@ def ai_chat_page():
     """Halaman antarmuka Asisten AI Q&A."""
     return render_template_string(AI_CHAT_TEMPLATE)
 
+
 @app.route("/api/ask-ai", methods=["POST"])
 def ask_ai():
+    """Endpoint untuk memproses pertanyaan menggunakan OpenAI API."""
     data = request.get_json(silent=True) or {}
     user_question = str(data.get("question", "")).strip()
 
     if not user_question:
         return jsonify({"success": False, "error": "Pertanyaan tidak boleh kosong."}), 400
 
+    if len(user_question) > 8000:
+        return jsonify({"success": False, "error": "Pertanyaan terlalu panjang. Maksimal 8.000 karakter."}), 400
+
+    system_instruction = (
+        "Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug dan PJT II. "
+        "Jawab dalam bahasa Indonesia yang jelas, profesional, dan mudah dipahami. "
+        "Bantu menjelaskan operasi PLTA, gardu induk, gangguan, normalisasi, checklist, SOP, "
+        "K3, pemeliharaan, dan informasi umum berdasarkan informasi yang tersedia. "
+        "Jangan mengarang data teknis, rating peralatan, setting proteksi, nomor SOP, "
+        "nilai parameter, atau instruksi switching yang tidak diberikan. "
+        "Jika informasi tidak tersedia atau tidak pasti, katakan dengan jelas dan sarankan "
+        "verifikasi menggunakan SOP/dokumen resmi serta petugas berwenang. "
+        "Untuk pekerjaan listrik, mekanik, hidrolis, switching, atau kondisi darurat, "
+        "jangan menggantikan prosedur keselamatan, izin kerja, interlock, dan otorisasi operator. "
+        "Jangan memberikan instruksi yang dapat menyebabkan tindakan berbahaya secara langsung. "
+        "Berikan analisis, penjelasan, langkah pemeriksaan tingkat tinggi, dan opsi verifikasi yang aman."
+    )
+
     try:
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            return jsonify({"success": False, "error": "API Gemini belum dikonfigurasi."}), 500
+        client = get_ai_client()
+        model = os.getenv("OPENAI_MODEL", "gpt-6-luna").strip()
+        if not model:
+            model = "gpt-6-luna"
 
-        client = genai.Client(api_key=api_key)
-        
-        formatted_prompt = (
-            "Anda adalah Asisten AI profesional dan ahli teknis senior untuk Sistem Manajemen PLTA Curug & Perum Jasa Tirta II (PJT II). "
-            "Gunakan basis pengetahuan komprehensif resmi berikut untuk menjawab setiap pertanyaan secara mutlak dan akurat:\n\n"
-            
-            "1. PROFIL & DASAR HUKUM:\n"
-            "- Perum Jasa Tirta II (PJT II) adalah BUMN berbentuk Perusahaan Umum (Perum) di bawah Kementerian BUMN yang berlandaskan PP No. 25 Tahun 2022.\n"
-            "- Bergerak dalam pengusahaan dan pengelolaan Sumber Daya Air (SDA) serta Sumber Daya Listrik (SDL).\n\n"
-            
-            "2. WILAYAH KERJA & STRATEGI:\n"
-            "- Meliputi Wilayah Sungai (WS) Citarum, sebagian WS Ciliwung-Cisadane, sebagian WS Cimanuk-Cisanggarung, sebagian WS Cidanau-Ciujung-Cidurian, hingga sebagian WS Seputih-Sekampung (Lampung).\n"
-            "- Portofolio mencakup SDA, listrik/EBT, air baku, SPAM, AMDK, lahan/properti, pariwisata, hingga laboratorium lingkungan.\n\n"
-            
-            "3. ASET TANAH, LAHAN & BANGUNAN (ASET SERAH KELOLA / SERAH OPERASI):\n"
-            "- Berdasarkan Berita Acara No. 03/BAST/II/2014 (berasal dari Eks Perum Otorita Jatiluhur dan Proyek Serbaguna Jatiluhur), PJT II mengelola aset serah operasi seluas 27.461 hektare (274,61 km²) tanah dan 2.430.750 meter persegi bangunan.\n"
-            "- Pembagian Wilayah: Unit Wilayah I (9.085 ha / 264.210 m²), Unit Wilayah II (3.211 ha / 239.282 m²), Unit Wilayah III (5.343 ha / 561.689 m²), dan Unit Wilayah IV (9.822 ha / 1.365.570 m²).\n"
-            "- Status aset: Merupakan Aset Serah Kelola/Serah Operasi dari pemerintah (bukan hak milik mutlak korporasi), dengan nilai buku aset serah kelola sekitar Rp33,405 miliar.\n"
-            "- Aset Korporasi: Total aset finansial per 31 Desember 2024 tercatat sebesar Rp2,147 triliun (dengan modal negara berupa kekayaan negara yang dipisahkan sebesar Rp164,55 miliar).\n\n"
-            
-            "4. INFRASTRUKTUR SUMBER DAYA AIR (SDA) & KETENAGANGAAN:\n"
-            "- Pengelolaan waduk utama Waduk Ir. H. Djuanda / Waduk Jatiluhur (Bendungan Ir. H. Djuanda) dengan luas genangan sekitar 8.300 hektare.\n"
-            "- Layanan ketahanan pangan dan irigasi mencakup areal seluas 264.929,70 hektare.\n"
-            "- Penyediaan air baku sebesar 1.297,71 juta meter kubik untuk PAM Jaya, PDAM kabupaten/kota, dan kawasan industri.\n"
-            "- Fasilitas Pompa Air Saluran Tarum Timur (Karawang)[cite: 1]: Total 6 unit pompa listrik yang terdiri dari 4 unit berkapasitas masing-masing 17,5 meter kubik per detik dan 2 unit berkapasitas masing-masing 10 meter kubik per detik[cite: 1].\n\n"
-            
-            "5. SUMBER DAYA LISTRIK (SDL) & KETENAGALISTRIKAN:\n"
-            "- Pengoperasian PLTA Ir. H. Djuanda dengan kapasitas terpasang 187,5 MW dan produksi rata-rata sekitar 830 juta kWh per tahun.\n"
-            "- Pengoperasian fasilitas pendukung seperti PLTA Mini Hydro Curug (memiliki TEPAT 2 unit turbin dengan kapasitas maksimum per unit 3,5 MW).\n"
-            "- Integrasi sistem kelistrikan gardu induk (seperti Gardu Induk Curug 70 kV & 6,3 kV) serta jaringan transmisi penghantar 70 kV antara Jatiluhur dan Kosambi.\n\n"
-            
-            "6. FAKTA & CAKUPAN PENGETAHUAN UMUM DUNIA (YANG DIKETAHUI GOOGLE):\n"
-            "- Sains, sejarah global, geografi, teknologi, regulasi publik, statistik, serta arsip data terbuka di internet.\n"
-            "- Batasan: Tidak mencakup informasi privat, dokumen internal perusahaan yang dikunci, atau data rahasia instansi.\n\n"
-            
-            "7. OPERASIONAL & PROSEDUR (SOP):\n"
-            "- Sistem pelaporan penanganan gangguan mencakup Mode Manual dan Mode Otomatis (Checklist Pengamanan Gangguan/Trip GI Curug, Checklist Pindah Line Jatiluhur-Kosambi, dan Checklist Operasi PLTA Mini Hydro F-20/DPL/IK.10-01).\n\n"
-            
-            "ATURAN PENYAJIAN JAWABAN:\n"
-            "1. Berikan jawaban secara langsung, to the point, dan terstruktur rapi menggunakan poin-poin.\n"
-            "2. JANGAN gunakan kalimat basa-basi pembuka seperti 'Selamat siang', 'Selamat malam', atau 'Terima kasih atas pertanyaan Anda'.\n"
-            "3. Langsung masuk ke inti jawaban.\n\n"
-            
-            f"Pertanyaan: {user_question}"
+        response = client.responses.create(
+            model=model,
+            instructions=system_instruction,
+            input=user_question,
+            temperature=0.4,
+            max_output_tokens=1200,
         )
 
-        response = client.models.generate_content(
-            model="gemini-3.5-flash",
-            contents=formatted_prompt,
-        )
-
-        answer = getattr(response, "text", None)
+        answer = getattr(response, "output_text", None)
         if not answer:
-            return jsonify({"success": False, "error": "AI tidak mengembalikan jawaban."}), 502
+            return jsonify({"success": False, "error": "OpenAI tidak mengembalikan jawaban teks."}), 502
 
         return jsonify({"success": True, "answer": answer.strip()})
-        
+
     except Exception as e:
-        print(f"[AI ERROR] {str(e)}")
-        return jsonify({"success": False, "error": str(e)}), 500
-        
+        print(f"[OPENAI ERROR] {type(e).__name__}: {e}")
+        err = str(e).lower()
+
+        if "openai_api_key" in err or "api key" in err or "authentication" in err or "unauthorized" in err:
+            msg = "OpenAI API belum dikonfigurasi atau API key tidak valid. Set OPENAI_API_KEY pada environment server."
+        elif "quota" in err or "billing" in err or "insufficient_quota" in err:
+            msg = "Kuota atau saldo OpenAI tidak mencukupi. Periksa billing dan usage API OpenAI."
+        elif "rate limit" in err or "429" in err:
+            msg = "Permintaan AI sedang terlalu banyak. Silakan tunggu beberapa saat lalu coba lagi."
+        elif "model" in err and ("not found" in err or "404" in err):
+            msg = "Model OpenAI yang dikonfigurasi tidak tersedia untuk API project ini. Periksa OPENAI_MODEL."
+        elif "timeout" in err or "timed out" in err:
+            msg = "Koneksi ke layanan OpenAI terlalu lama. Periksa koneksi server lalu coba lagi."
+        else:
+            msg = "Terjadi kesalahan saat menghubungi OpenAI. Cek log server untuk detail."
+
+        return jsonify({"success": False, "error": msg}), 500
+
+
 @app.route("/generate-laporan-baru", methods=["POST"])
 def generate_laporan_baru():
     jenis = request.form.get("baru_jenis_gangguan")
