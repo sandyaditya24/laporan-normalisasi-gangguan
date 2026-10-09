@@ -1608,161 +1608,7 @@ AI_CHAT_TEMPLATE = """
 """
 
 EDUKASI_KELISTRIKAN_TEMPLATE = """
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Edukasi Kelistrikan - Sistem Manajemen PLTA Curug</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(7, 15, 30, 0.88),
-                    rgba(15, 23, 42, 0.92)
-                ),
-                url('/static/CURUGTEMPODULU.jpg')
-                no-repeat center center fixed;
-
-            background-size: cover;
-            min-height: 100vh;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            color: #1e293b;
-            padding: 2rem 0;
-        }
-
-        .education-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .education-card {
-            border-radius: 24px;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(16px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-            border: 1px solid rgba(255,255,255,0.4);
-            overflow: hidden;
-        }
-
-        .education-header {
-            background: linear-gradient(135deg, #0f172a, #1e3a8a);
-            padding: 2rem;
-            color: white;
-        }
-
-        .education-icon {
-            width: 58px;
-            height: 58px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 16px;
-            background: rgba(255,255,255,0.12);
-            font-size: 1.6rem;
-        }
-
-        .category-card {
-            height: 100%;
-            border: 1px solid #e2e8f0;
-            border-radius: 18px;
-            background: #ffffff;
-            transition: all 0.25s ease;
-            overflow: hidden;
-        }
-
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(15,23,42,0.12);
-            border-color: #bfdbfe;
-        }
-
-        .category-header {
-            padding: 1.25rem;
-            background: linear-gradient(135deg, #eff6ff, #f8fafc);
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .category-icon {
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            background: #dbeafe;
-            color: #1d4ed8;
-            font-size: 1.2rem;
-        }
-
-        .topic-list {
-            padding: 1rem 1.25rem 1.25rem;
-        }
-
-        .topic-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 0.65rem 0;
-            color: #334155;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 0.92rem;
-        }
-
-        .topic-item:last-child {
-            border-bottom: none;
-        }
-
-        .topic-icon {
-            color: #2563eb;
-            width: 20px;
-            text-align: center;
-        }
-
-        .topic-item span:last-child {
-            flex: 1;
-        }
-
-        .video-badge {
-            font-size: 0.68rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 999px;
-            background: #fee2e2;
-            color: #dc2626;
-            font-weight: 700;
-        }
-
-        .intro-box {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 1.25rem;
-        }
-
-        .footer-note {
-            color: #64748b;
-            font-size: 0.85rem;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem 0;
-            }
-
-            .education-header {
-                padding: 1.5rem;
-            }
-        }
-    </style>
-</head>
-
-<body>
 
 <div class="container education-wrapper">
 
@@ -2180,6 +2026,60 @@ EDUKASI_KELISTRIKAN_TEMPLATE = """
 
 </div>
 
+<!-- VIDEO MODAL -->
+<div class="modal fade" id="videoModal" tabindex="-1"
+     aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content rounded-4 overflow-hidden">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="videoModalLabel">
+                    Video Pembelajaran
+                </h5>
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body bg-dark p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe id="youtubePlayer"
+                            src=""
+                            title="Video Pembelajaran Kelistrikan"
+                            allow="autoplay; encrypted-media; picture-in-picture"
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modalElement = document.getElementById('videoModal');
+    const player = document.getElementById('youtubePlayer');
+    const title = document.getElementById('videoModalLabel');
+
+    document.querySelectorAll('.video-button').forEach(function (button) {
+        button.addEventListener('click', function () {
+            const id = this.dataset.videoId;
+            if (!id) return;
+
+            title.textContent =
+                this.dataset.videoTitle || 'Video Pembelajaran';
+
+            player.src = 'https://www.youtube.com/embed/' +
+                encodeURIComponent(id) + '?autoplay=1';
+
+            bootstrap.Modal.getOrCreateInstance(modalElement).show();
+        });
+    });
+
+    modalElement.addEventListener('hidden.bs.modal', function () {
+        player.src = '';
+    });
+});
+</script>
 </body>
 </html>
 """
