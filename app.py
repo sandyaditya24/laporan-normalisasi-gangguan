@@ -1706,7 +1706,7 @@ EDUKASI_KELISTRIKAN_TEMPLATE = """
 
                         <div class="topic-list">
 
-                           <div
+<div
     class="topic-item video-button"
     data-video-id="dQw4w9WgXcQ"
     data-video-title="Tegangan, Arus, Resistansi"
@@ -1714,23 +1714,27 @@ EDUKASI_KELISTRIKAN_TEMPLATE = """
     tabindex="0">
 
     <i class="fa-solid fa-play topic-icon"></i>
-
     <span>Tegangan, Arus, Resistansi</span>
-
     <span class="video-badge">VIDEO</span>
 </div>
 
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Hukum Ohm</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
+<div
+    class="topic-item video-button"
+    data-video-id="ID_VIDEO_YOUTUBE_HUKUM_OHM"
+    data-video-title="Hukum Ohm"
+    role="button"
+    tabindex="0">
 
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Daya Listrik</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
+    <i class="fa-solid fa-play topic-icon"></i>
+    <span>Hukum Ohm</span>
+    <span class="video-badge">VIDEO</span>
+</div>
+
+<div class="topic-item">
+    <i class="fa-solid fa-play topic-icon"></i>
+    <span>Daya Listrik</span>
+    <span class="video-badge">VIDEO</span>
+</div>
 
                             <div class="topic-item">
                                 <i class="fa-solid fa-play topic-icon"></i>
