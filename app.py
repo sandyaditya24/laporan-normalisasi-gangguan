@@ -5,7 +5,10 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 import os
 import re
+import html
+import sqlite3
 import urllib.parse
+from pathlib import Path
 from datetime import datetime
 from pegawai import pegawai_bp
 from faq import faq_bp
@@ -33,8 +36,42 @@ def get_ai_client():
 
     return OpenAI(api_key=api_key)
 
-# In-memory database sederhana untuk menyimpan riwayat laporan baru & checklist
+# Penyimpanan riwayat dan PDF yang persisten.
+# Pada Railway, pasang Volume dengan mount path /data agar data bertahan saat redeploy.
+DATA_DIR = Path(os.getenv("APP_DATA_DIR", "/data" if os.path.isdir("/data") else str(Path(__file__).resolve().parent / "instance")))
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+ARCHIVE_DIR = DATA_DIR / "reports"
+ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
+DB_PATH = DATA_DIR / "curug_history.sqlite3"
+
+# Tetap mempertahankan nama variabel lama untuk kompatibilitas template.
 HISTORY_LAPORAN_DB = []
+
+def db_connect():
+    conn = sqlite3.connect(str(DB_PATH), timeout=20)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_history_db():
+    with db_connect() as conn:
+        conn.execute("""CREATE TABLE IF NOT EXISTS reports (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            jenis TEXT NOT NULL,
+            tanggal TEXT NOT NULL DEFAULT '',
+            waktu TEXT NOT NULL DEFAULT '',
+            kronologi TEXT NOT NULL DEFAULT '',
+            pdf_name TEXT NOT NULL UNIQUE,
+            created_at TEXT NOT NULL,
+            report_type TEXT NOT NULL DEFAULT 'gangguan'
+        )""")
+        conn.commit()
+
+def load_history():
+    with db_connect() as conn:
+        rows = conn.execute("SELECT jenis, tanggal, waktu, kronologi, pdf_name FROM reports WHERE report_type = 'gangguan' ORDER BY id DESC").fetchall()
+    return [dict(row) for row in rows]
+
+init_history_db()
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -254,7 +291,60 @@ HTML_TEMPLATE = """
         .bg-switcher-badge:hover {
             background-color: #1d4ed8 !important;
         }
-    </style>
+    
+/* Perbaikan struktur layout utama: sidebar dan area konten harus menjadi dua kolom sejajar */
+.enterprise-wrapper { width: min(100% - 32px, 1600px) !important; max-width: 1600px !important; }
+.enterprise-wrapper > .row.g-4 { align-items: flex-start; }
+.enterprise-wrapper > .row.g-4 > .col-lg-3 { flex: 0 0 25%; max-width: 25%; min-width: 0; }
+.enterprise-wrapper > .row.g-4 > .col-lg-9 { flex: 0 0 75%; max-width: 75%; min-width: 0; }
+.enterprise-wrapper .content-card, .enterprise-wrapper .content-card .card-body,
+.enterprise-wrapper .content-card form { width: 100%; max-width: 100%; min-width: 0; }
+.enterprise-wrapper .content-card .form-control,
+.enterprise-wrapper .content-card .form-select,
+.enterprise-wrapper .content-card textarea { width: 100%; min-width: 0; }
+@media (max-width: 991.98px) {
+  .enterprise-wrapper > .row.g-4 > .col-lg-3,
+  .enterprise-wrapper > .row.g-4 > .col-lg-9 { flex: 0 0 100%; max-width: 100%; }
+}
+
+/* Perbaikan responsif untuk seluruh menu, formulir, dan tabel aplikasi utama */
+.enterprise-wrapper { width: min(100% - 24px, 1600px) !important; max-width: 1600px !important; }
+.enterprise-wrapper > .row { --bs-gutter-x: 1.5rem; }
+.enterprise-wrapper .content-card { width: 100%; min-width: 0; }
+.enterprise-wrapper .content-card .card-body { min-width: 0; }
+.enterprise-wrapper .content-card form { width: 100%; max-width: 100%; }
+.enterprise-wrapper .content-card .form-control,
+.enterprise-wrapper .content-card .form-select,
+.enterprise-wrapper .content-card textarea,
+.enterprise-wrapper .content-card input:not([type="checkbox"]):not([type="radio"]),
+.enterprise-wrapper .content-card select { width: 100%; max-width: 100%; min-width: 0; }
+.enterprise-wrapper .content-card .row { --bs-gutter-x: 1rem; }
+.enterprise-wrapper .table-responsive { width: 100%; max-width: 100%; }
+.enterprise-wrapper .table-responsive table { min-width: 720px; }
+.enterprise-wrapper .menu-sidebar { width: 100%; }
+.enterprise-wrapper .menu-btn, .enterprise-wrapper .submenu-btn { white-space: normal; line-height: 1.45; }
+@media (min-width: 992px) {
+  .enterprise-wrapper .menu-sidebar { max-height: calc(100vh - 36px); overflow-y: auto; }
+}
+@media (max-width: 991.98px) {
+  .enterprise-wrapper { width: 100% !important; }
+  .enterprise-wrapper .menu-sidebar { position: static !important; margin-bottom: 1rem; }
+  .enterprise-wrapper .content-card .card-body { padding: 1.25rem !important; }
+}
+
+
+/* Finishing pass: enterprise responsive layout and legible controls */
+.enterprise-wrapper{width:min(100% - 24px,1600px)!important;max-width:1600px!important}
+.enterprise-wrapper>.row.g-4{align-items:flex-start}
+.enterprise-wrapper>.row.g-4>.col-lg-3{flex:0 0 25%;max-width:25%;min-width:0}
+.enterprise-wrapper>.row.g-4>.col-lg-9{flex:0 0 75%;max-width:75%;min-width:0}
+.enterprise-wrapper .content-card,.enterprise-wrapper .content-card .card-body,.enterprise-wrapper .content-card form{width:100%;max-width:100%;min-width:0}
+.enterprise-wrapper .content-card input:not([type=checkbox]):not([type=radio]),.enterprise-wrapper .content-card select,.enterprise-wrapper .content-card textarea{width:100%;max-width:100%;min-width:0}
+.enterprise-wrapper .table-responsive{width:100%;max-width:100%}
+.enterprise-wrapper .table-responsive table{min-width:720px}
+.enterprise-wrapper .menu-btn,.enterprise-wrapper .submenu-btn{white-space:normal;line-height:1.45}
+@media(max-width:991.98px){.enterprise-wrapper{width:100%!important}.enterprise-wrapper>.row.g-4>.col-lg-3,.enterprise-wrapper>.row.g-4>.col-lg-9{flex:0 0 100%;max-width:100%}.enterprise-wrapper .menu-sidebar{position:static!important;margin-bottom:1rem}.enterprise-wrapper .content-card .card-body{padding:1.25rem!important}}
+</style>
 </head>
 <body>
     <div class="container mt-4 mb-5 enterprise-wrapper">
@@ -318,20 +408,25 @@ HTML_TEMPLATE = """
                             <i class="fa-solid fa-sitemap fa-fw"></i> Struktural Pegawai
                         </button>
 
-                        <!-- ASISTEN AI OPERASIONAL - OPENAI -->
-                        <a href="/ai-chat" class="btn menu-btn text-decoration-none" id="btnMenuAI">
-                            <i class="fa-solid fa-robot fa-fw text-info"></i> Asisten AI Operasional
-                        </a>
-                    </div>
-                    
-                    <div class="p-3 bg-light rounded-4 border border-light">
-                        <small class="text-muted d-block fw-semibold mb-1">Status Sistem:</small>
-                        <span class="d-flex align-items-center text-success fw-bold small">
-                            <span class="spinner-grow spinner-grow-sm me-2 text-success" role="status"></span> Server Aktif & Aman
-                        </span>
-                    </div>
-                </div>
-            </div>
+                       <!-- ASISTEN AI OPERASIONAL - OPENAI -->
+<a href="/ai-chat" class="btn menu-btn text-decoration-none" id="btnMenuAI">
+    <i class="fa-solid fa-robot fa-fw text-info"></i> Asisten AI Operasional
+</a>
+
+<!-- EDUKASI KELISTRIKAN -->
+<a href="/edukasi-kelistrikan" class="btn menu-btn text-decoration-none" id="btnMenuEdukasi">
+    <i class="fa-solid fa-bolt fa-fw text-warning"></i> Edukasi Kelistrikan
+</a>
+
+<div class="p-3 bg-light rounded-4 border border-light">
+    <small class="text-muted d-block fw-semibold mb-1">Status Sistem:</small>
+    <span class="d-flex align-items-center text-success fw-bold small">
+        <span class="spinner-grow spinner-grow-sm me-2 text-success" role="status"></span>
+        Server Aktif & Aman
+    </span>
+</div>
+                </div><!-- /.menu-sidebar -->
+            </div><!-- /.col-lg-3 sidebar -->
 
             <!-- AREA KONTEN -->
             <div class="col-lg-9">
@@ -1393,6 +1488,75 @@ HTML_TEMPLATE = """
             }
         }
     </script>
+   
+<!-- VIDEO MODAL -->
+<div class="modal fade" id="videoModal" tabindex="-1"
+     aria-labelledby="videoModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 overflow-hidden">
+
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title fw-bold" id="videoModalLabel">
+                    Video Pembelajaran
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Tutup">
+                </button>
+            </div>
+
+            <div class="modal-body bg-dark p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe id="youtubePlayer"
+                            src=""
+                            title="Video Pembelajaran Kelistrikan"
+                            allow="autoplay; encrypted-media; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS harus dimuat sebelum script pemutar video -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const videoModalElement = document.getElementById('videoModal');
+    const youtubePlayer = document.getElementById('youtubePlayer');
+    const videoModalLabel = document.getElementById('videoModalLabel');
+
+    document.querySelectorAll('.video-button').forEach(function (button) {
+        button.addEventListener('click', function () {
+            const videoId = this.dataset.videoId;
+            const videoTitle = this.dataset.videoTitle;
+
+            if (!videoId) {
+                alert('ID video YouTube belum diisi.');
+                return;
+            }
+
+            videoModalLabel.textContent = videoTitle || 'Video Pembelajaran';
+            youtubePlayer.src =
+                'https://www.youtube-nocookie.com/embed/' +
+                encodeURIComponent(videoId) + '?autoplay=1';
+
+            bootstrap.Modal.getOrCreateInstance(videoModalElement).show();
+        });
+    });
+
+    videoModalElement.addEventListener('hidden.bs.modal', function () {
+        youtubePlayer.src = '';
+    });
+});
+</script>
+
 </body>
 </html>
 """
@@ -1535,26 +1699,187 @@ AI_CHAT_TEMPLATE = """
 </html>
 """
 
+EDUKASI_KELISTRIKAN_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edukasi Kelistrikan - Sistem Manajemen PLTA Curug</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<style>
+:root{--blue:#1769aa;--blue-dark:#123b60;--bg:#f3f7fc;--border:#e2eaf3;--text:#203449}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif}
+.page-wrap{max-width:1600px;margin:auto;padding:28px 22px 44px}.page-header{background:linear-gradient(120deg,#10375a,#1976b9);color:#fff;border-radius:22px;padding:26px 30px;box-shadow:0 12px 32px #153e5d20}
+.brand-icon{width:54px;height:54px;display:grid;place-items:center;border-radius:16px;background:#ffffff20;color:#ffd54f;font-size:25px;flex-shrink:0}.page-header h1{font-size:clamp(24px,3vw,34px);font-weight:800;margin:0 0 6px}.page-header p{margin:0;color:#e2eef9;line-height:1.55}.back-link{color:white;text-decoration:none;border:1px solid #ffffff70;padding:9px 15px;border-radius:30px;white-space:nowrap}.back-link:hover{background:#ffffff18;color:white}
+.intro{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin:22px 0}.intro i{font-size:25px;color:var(--blue);margin-top:3px}.intro h2{font-size:17px;font-weight:800;margin:0 0 5px}.intro p{font-size:14px;color:#687b8e;margin:0;line-height:1.6}
+.main-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:24px;align-items:start}.topics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.category-card{background:#fff;border:1px solid var(--border);border-radius:17px;overflow:hidden;box-shadow:0 5px 18px #173c5b08}.category-header{display:flex;align-items:center;gap:13px;padding:17px 18px;background:#f9fbfe;border-bottom:1px solid var(--border)}.category-icon{width:43px;height:43px;display:grid;place-items:center;flex-shrink:0;border-radius:13px;background:#e6f3ff;color:var(--blue);font-size:19px}.category-header h2{font-size:16px;font-weight:800;margin:0 0 4px}.category-header p{font-size:12px;color:#748397;margin:0}.topic-list{padding:10px}.topic-item{width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:12px 11px;margin:2px 0;border:1px solid transparent;border-radius:11px;background:#fff;color:#2c4054;font:inherit;cursor:pointer;transition:.18s}.topic-item:hover,.topic-item:focus-visible{background:#eff7ff;border-color:#cce4f8;outline:none}.topic-item.active{background:#e5f3ff;border-color:#92c9f4;color:#105b93}.topic-icon{width:18px;text-align:center;color:var(--blue)}.video-badge{margin-left:auto;border-radius:30px;background:#e7f3ff;color:#1769aa;font-size:10px;font-weight:800;letter-spacing:.4px;padding:4px 8px}
+.player-column{position:sticky;top:18px;min-width:0}.player-card{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 9px 28px #153e5d12}.player-head{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--border)}.player-head-icon{display:grid;place-items:center;width:45px;height:45px;flex-shrink:0;border-radius:13px;background:#e5f3ff;color:var(--blue);font-size:21px}.player-head h2{font-size:17px;font-weight:800;margin:0 0 4px;overflow-wrap:anywhere}.player-head p{font-size:12px;color:#758598;margin:0;line-height:1.5}.video-stage{aspect-ratio:16/9;position:relative;background:radial-gradient(circle at top,#1c466a,#091725 75%);color:#fff;display:grid;place-items:center;padding:22px}.video-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#091725}.video-stage iframe[hidden]{display:none!important}.empty-state{text-align:center;max-width:390px}.empty-icon{width:58px;height:58px;margin:0 auto 14px;display:grid;place-items:center;border-radius:50%;background:#ffffff1c;font-size:22px}.empty-state h3{font-size:18px;font-weight:800;margin:0 0 8px}.empty-state p{font-size:13px;color:#c4d4e3;line-height:1.6;margin:0}.search-video{display:inline-block;margin-top:14px;text-decoration:none;background:#1769aa;color:white;border-radius:30px;padding:9px 16px;font-size:13px;font-weight:700}.search-video:hover{background:#0e548d;color:white}.player-foot{padding:13px 18px;background:#fbfdff;color:#6b7c8e;font-size:12px;line-height:1.5}.footer-note{margin-top:22px;padding:15px 18px;border-radius:14px;background:#eaf4fd;color:#526a80;font-size:13px;line-height:1.6}
+@media(max-width:1050px){.main-grid{grid-template-columns:1fr}.player-column{position:static;grid-row:1}.topics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.page-wrap{padding:12px 10px 26px}.page-header{padding:20px 17px}.page-header-inner{align-items:flex-start!important;flex-direction:column}.topics-grid{grid-template-columns:1fr}.main-grid{gap:17px}.intro{padding:15px}.player-head{padding:15px}}
+.player-controls .btn{font-weight:700;border-radius:10px}.player-controls .btn:disabled{opacity:.45}.video-stage{min-height:260px}@media(min-width:1200px){.main-grid{grid-template-columns:minmax(0,1.1fr) minmax(440px,.9fr);gap:26px}.topics-grid{gap:18px}}@media(max-width:767px){.page-wrap{padding:16px 12px 28px}.main-grid{grid-template-columns:minmax(0,1fr)}.topics-grid{grid-template-columns:minmax(0,1fr)}.player-column{position:static}.player-controls{gap:8px!important}}
+</style>
+</head><body>
+<div class="page-wrap">
+<header class="page-header"><div class="page-header-inner d-flex justify-content-between align-items-center gap-3"><div class="d-flex align-items-center gap-3"><div class="brand-icon"><i class="fa-solid fa-bolt"></i></div><div><h1>Edukasi Kelistrikan</h1><p>Materi dasar dan teknis kelistrikan untuk mendukung pemahaman operasional PLTA dan sistem tenaga listrik.</p></div></div><a class="back-link" href="/"><i class="fa-solid fa-arrow-left me-1"></i> Kembali</a></div></header>
+<div class="intro"><i class="fa-solid fa-graduation-cap"></i><div><h2>Pusat Pembelajaran Kelistrikan</h2><p>Pelajari konsep kelistrikan mulai dari dasar, sistem tenaga listrik, proteksi, PLTA/PLTMH, hingga keselamatan kerja listrik. Pilih materi di sebelah kiri untuk menampilkan pemutar video di panel sebelah kanan.</p></div></div>
+<div class="main-grid"><main class="topics-grid"><section class="category-card">
+        <div class="category-header"><div class="category-icon"><i class="fa-solid fa-plug"></i></div><div><h2>Dasar Kelistrikan</h2><p>Konsep dasar listrik</p></div></div>
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="Tegangan, Arus, Resistansi" data-video-id="fox9g5u6NQE">
+            <i class="fa-solid fa-play topic-icon"></i><span>Tegangan, Arus, Resistansi</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Hukum Ohm" data-video-id="fox9g5u6NQE">
+            <i class="fa-solid fa-play topic-icon"></i><span>Hukum Ohm</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Daya Listrik" data-video-id="eTxugCIQRDo">
+            <i class="fa-solid fa-play topic-icon"></i><span>Daya Listrik</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Sistem 1 Fasa & 3 Fasa">
+            <i class="fa-solid fa-play topic-icon"></i><span>Sistem 1 Fasa & 3 Fasa</span><span class="video-badge">VIDEO</span>
+        </button></div>
+    </section><section class="category-card">
+        <div class="category-header"><div class="category-icon"><i class="fa-solid fa-tower-broadcast"></i></div><div><h2>Sistem Tenaga Listrik</h2><p>Pembangkitan dan jaringan</p></div></div>
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="Sistem Pembangkitan">
+            <i class="fa-solid fa-play topic-icon"></i><span>Sistem Pembangkitan</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Generator">
+            <i class="fa-solid fa-play topic-icon"></i><span>Generator</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Transformator">
+            <i class="fa-solid fa-play topic-icon"></i><span>Transformator</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Jaringan 20 kV">
+            <i class="fa-solid fa-play topic-icon"></i><span>Jaringan 20 kV</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Gardu Induk">
+            <i class="fa-solid fa-play topic-icon"></i><span>Gardu Induk</span><span class="video-badge">VIDEO</span>
+        </button></div>
+    </section><section class="category-card">
+        <div class="category-header"><div class="category-icon"><i class="fa-solid fa-shield-halved"></i></div><div><h2>Proteksi</h2><p>Sistem perlindungan tenaga listrik</p></div></div>
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="CT & PT">
+            <i class="fa-solid fa-play topic-icon"></i><span>CT & PT</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="PMT & PMS">
+            <i class="fa-solid fa-play topic-icon"></i><span>PMT & PMS</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="OCR">
+            <i class="fa-solid fa-play topic-icon"></i><span>OCR</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="GFR">
+            <i class="fa-solid fa-play topic-icon"></i><span>GFR</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Differential Protection">
+            <i class="fa-solid fa-play topic-icon"></i><span>Differential Protection</span><span class="video-badge">VIDEO</span>
+        </button></div>
+    </section><section class="category-card">
+        <div class="category-header"><div class="category-icon"><i class="fa-solid fa-water"></i></div><div><h2>PLTA / PLTMH</h2><p>Pembangkit tenaga air</p></div></div>
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="Prinsip Kerja PLTA" data-video-id="qqEqusrz5Y0">
+            <i class="fa-solid fa-play topic-icon"></i><span>Prinsip Kerja PLTA</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Turbin">
+            <i class="fa-solid fa-play topic-icon"></i><span>Turbin</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Generator PLTA">
+            <i class="fa-solid fa-play topic-icon"></i><span>Generator PLTA</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Sistem Hidrolis">
+            <i class="fa-solid fa-play topic-icon"></i><span>Sistem Hidrolis</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Sistem Eksitasi">
+            <i class="fa-solid fa-play topic-icon"></i><span>Sistem Eksitasi</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Governor">
+            <i class="fa-solid fa-play topic-icon"></i><span>Governor</span><span class="video-badge">VIDEO</span>
+        </button></div>
+    </section><section class="category-card">
+        <div class="category-header"><div class="category-icon"><i class="fa-solid fa-helmet-safety"></i></div><div><h2>K3 Listrik</h2><p>Keselamatan kerja kelistrikan</p></div></div>
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="LOTO">
+            <i class="fa-solid fa-play topic-icon"></i><span>LOTO</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="APD Listrik">
+            <i class="fa-solid fa-play topic-icon"></i><span>APD Listrik</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Bahaya Arc Flash">
+            <i class="fa-solid fa-play topic-icon"></i><span>Bahaya Arc Flash</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Prosedur Keselamatan Kerja">
+            <i class="fa-solid fa-play topic-icon"></i><span>Prosedur Keselamatan Kerja</span><span class="video-badge">VIDEO</span>
+        </button></div>
+    </section>
+</main>
+<aside class="player-column"><section class="player-card"><div class="player-head"><div class="player-head-icon"><i class="fa-solid fa-circle-play"></i></div><div><h2 id="playerTitle">Video Pembelajaran</h2><p id="playerSubtitle">Pilih materi di sebelah kiri untuk mulai belajar.</p></div></div><div class="video-stage"><div id="emptyState" class="empty-state"><div class="empty-icon"><i class="fa-solid fa-play"></i></div><h3>Siap untuk belajar?</h3><p>Video akan tampil di panel ini setelah Anda memilih materi.</p></div><iframe id="videoPlayer" title="Video Pembelajaran Kelistrikan" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen hidden></iframe></div><div class="player-controls d-flex flex-wrap gap-2 p-3 border-top bg-white">
+<button type="button" class="btn btn-outline-primary" id="previousVideo" disabled><i class="fa-solid fa-backward-step me-2"></i>Sebelumnya</button>
+<button type="button" class="btn btn-primary" id="nextVideo"><i class="fa-solid fa-forward-step me-2"></i>Video Berikutnya</button>
+<span class="small text-muted align-self-center ms-auto" id="videoPosition">Pilih materi untuk mulai</span>
+</div><div class="player-foot"><i class="fa-solid fa-circle-info me-1"></i> Gunakan tombol Video Berikutnya untuk berpindah materi. Pemutaran memakai YouTube gratis tanpa API key. Materi yang ID videonya belum diverifikasi menyediakan pencarian YouTube.</div></section></aside></div>
+<div class="footer-note"><i class="fa-solid fa-shield-halved me-2"></i>Materi edukasi ditujukan untuk pembelajaran. Untuk pekerjaan operasional, tetap ikuti SOP, izin kerja, dan prosedur K3 yang berlaku.</div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+ const iframe = document.getElementById('videoPlayer');
+ const empty = document.getElementById('emptyState');
+ const title = document.getElementById('playerTitle');
+ const subtitle = document.getElementById('playerSubtitle');
+ const items = Array.from(document.querySelectorAll('.topic-item'));
+ const previous = document.getElementById('previousVideo');
+ const next = document.getElementById('nextVideo');
+ const position = document.getElementById('videoPosition');
+ let currentIndex = -1;
+ let ytPlayer = null;
+ let apiReady = false;
+ function topicId(item) { return (item.dataset.videoId || '').trim(); }
+ function openTopic(index, autoplay = true) {
+   if (!items.length) return;
+   currentIndex = Math.max(0, Math.min(index, items.length - 1));
+   const item = items[currentIndex];
+   const topic = item.dataset.topic || item.innerText.trim() || 'Materi Kelistrikan';
+   const id = topicId(item);
+   title.textContent = topic;
+   subtitle.textContent = 'Materi ' + (currentIndex + 1) + ' dari ' + items.length + ': ' + topic;
+   position.textContent = 'Materi ' + (currentIndex + 1) + ' / ' + items.length;
+   previous.disabled = currentIndex === 0;
+   next.disabled = currentIndex === items.length - 1;
+   items.forEach(el => el.classList.toggle('active', el === item));
+   if (id && !id.startsWith('ID_VIDEO_')) {
+     empty.hidden = true; iframe.hidden = false;
+     if (apiReady && ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+       if (autoplay) ytPlayer.loadVideoById(id); else ytPlayer.cueVideoById(id);
+     } else {
+       iframe.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?enablejsapi=1&autoplay=' + (autoplay ? '1' : '0') + '&rel=0';
+     }
+     return;
+   }
+   if (ytPlayer && typeof ytPlayer.stopVideo === 'function') ytPlayer.stopVideo();
+   iframe.hidden = true; iframe.removeAttribute('src'); empty.hidden = false;
+   empty.innerHTML = '<div class="empty-icon"><i class="fa-brands fa-youtube"></i></div><h3>Video perlu dipilih</h3><p>Untuk menghindari tautan video yang salah, pilih video relevan dari pencarian YouTube. Setelah ID video resmi ditetapkan, materi ini dapat diputar langsung di panel ini.</p><a class="search-video" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube me-2"></i>Cari video materi</a>';
+   empty.querySelector('a').href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(topic + ' kelistrikan K3 pembelajaran');
+ }
+ items.forEach((item, index) => item.addEventListener('click', () => openTopic(index, true)));
+ previous.addEventListener('click', () => { if (currentIndex > 0) openTopic(currentIndex - 1, true); });
+ next.addEventListener('click', () => { if (currentIndex < items.length - 1) openTopic(currentIndex + 1, true); });
+ window.onYouTubeIframeAPIReady = function () {
+   apiReady = true;
+   try {
+     ytPlayer = new YT.Player('videoPlayer', { events: { onReady: function () {
+       if (currentIndex >= 0 && topicId(items[currentIndex])) ytPlayer.loadVideoById(topicId(items[currentIndex]));
+     }, onStateChange: function (event) {
+       if (window.YT && event.data === YT.PlayerState.ENDED && currentIndex >= 0 && currentIndex < items.length - 1) openTopic(currentIndex + 1, true);
+     } } });
+   } catch (err) { /* tombol Next tetap bekerja jika API player tidak tersedia */ }
+ };
+ const api = document.createElement('script'); api.src = 'https://www.youtube.com/iframe_api'; api.async = true; document.head.appendChild(api);
+});
+</script></body></html>
+
+"""
+
 @app.route("/")
 def index():
-    # Mengambil daftar file PDF tersimpan di folder static untuk riwayat
+    # Daftar PDF lama (static) tetap ditampilkan, ditambah arsip persisten di DATA_DIR/reports.
     pdf_files = []
-    if os.path.exists(PDF_FOLDER):
-        for f in os.listdir(PDF_FOLDER):
-            if f.endswith(".pdf"):
-                file_path = os.path.join(PDF_FOLDER, f)
-                mod_time = os.path.getmtime(file_path)
-                date_str = datetime.fromtimestamp(mod_time).strftime('%Y-%m-%d %H:%M:%S')
-                pdf_files.append({"name": f, "date": date_str})
-    
-    # Urutkan berdasarkan waktu terbaru
-    pdf_files = sorted(pdf_files, key=lambda x: x['date'], reverse=True)
-    return render_template_string(HTML_TEMPLATE, pdf_files=pdf_files, history_laporan_baru=HISTORY_LAPORAN_DB)
+    seen = set()
+    for folder in (Path(PDF_FOLDER), ARCHIVE_DIR):
+        if folder.exists():
+            for file_path in folder.glob("*.pdf"):
+                if file_path.name in seen:
+                    continue
+                seen.add(file_path.name)
+                date_str = datetime.fromtimestamp(file_path.stat().st_mtime).strftime('%Y-%m-%d %H:%M:%S')
+                pdf_files.append({"name": file_path.name, "date": date_str})
+    pdf_files.sort(key=lambda x: x['date'], reverse=True)
+    history = load_history()
+    return render_template_string(HTML_TEMPLATE, pdf_files=pdf_files, history_laporan_baru=history)
 
 @app.route("/ai-chat", methods=["GET"])
 def ai_chat_page():
     """Halaman antarmuka Asisten AI Q&A."""
     return render_template_string(AI_CHAT_TEMPLATE)
+
+@app.route("/edukasi-kelistrikan", methods=["GET"])
+def edukasi_kelistrikan_page():
+    """Halaman Edukasi Kelistrikan."""
+    return render_template_string(EDUKASI_KELISTRIKAN_TEMPLATE)
 
 
 @app.route("/api/ask-ai", methods=["POST"])
@@ -1623,69 +1948,105 @@ def ask_ai():
         return jsonify({"success": False, "error": msg}), 500
 
 
+def _safe_pdf_text(value):
+    """Escape user-supplied text for ReportLab Paragraph markup."""
+    return html.escape(str(value or "")).replace("\n", "<br/>")
+
+def _build_report_pdf(pdf_path, title, fields, extra_rows=None):
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle('CurugReportTitle', parent=styles['Heading1'], fontSize=15,
+        leading=19, alignment=1, textColor=colors.HexColor('#123b60'), spaceAfter=6)
+    sub_style = ParagraphStyle('CurugReportSub', parent=styles['Normal'], fontSize=9,
+        textColor=colors.HexColor('#60758a'), alignment=1, spaceAfter=14)
+    body_style = ParagraphStyle('CurugReportBody', parent=styles['BodyText'], fontSize=9,
+        leading=13, wordWrap='CJK')
+    story = [Paragraph('PERUM JASA TIRTA II', title_style), Paragraph(_safe_pdf_text(title), sub_style)]
+    rows = [[Paragraph('<b>Parameter</b>', body_style), Paragraph('<b>Detail</b>', body_style)]]
+    for key, value in fields:
+        rows.append([Paragraph(_safe_pdf_text(key), body_style), Paragraph(_safe_pdf_text(value) or '-', body_style)])
+    if extra_rows:
+        for key, value in extra_rows:
+            rows.append([Paragraph(_safe_pdf_text(key), body_style), Paragraph(_safe_pdf_text(value) or '-', body_style)])
+    table = Table(rows, colWidths=[150, 370], repeatRows=1, hAlign='LEFT')
+    table.setStyle(TableStyle([
+        ('BACKGROUND',(0,0),(-1,0),colors.HexColor('#e8f1fb')),
+        ('TEXTCOLOR',(0,0),(-1,0),colors.HexColor('#123b60')),
+        ('GRID',(0,0),(-1,-1),0.45,colors.HexColor('#d5e0eb')),
+        ('VALIGN',(0,0),(-1,-1),'TOP'), ('LEFTPADDING',(0,0),(-1,-1),8),
+        ('RIGHTPADDING',(0,0),(-1,-1),8), ('TOPPADDING',(0,0),(-1,-1),7),
+        ('BOTTOMPADDING',(0,0),(-1,-1),7),
+        ('ROWBACKGROUNDS',(0,1),(-1,-1),[colors.white,colors.HexColor('#f8fbfe')])
+    ]))
+    story.extend([table, Spacer(1, 16), Paragraph('Dokumen dibuat otomatis oleh Sistem Manajemen PLTA Curug.', styles['Italic'])])
+    doc = SimpleDocTemplate(str(pdf_path), pagesize=letter, rightMargin=42, leftMargin=42, topMargin=40, bottomMargin=40)
+    doc.build(story)
+
 @app.route("/generate-laporan-baru", methods=["POST"])
 def generate_laporan_baru():
-    jenis = request.form.get("baru_jenis_gangguan")
-    waktu = request.form.get("baru_waktu")
-    tanggal = request.form.get("baru_tanggal_lengkap")
-    kronologi = request.form.get("baru_kronologi")
-    
-    timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-    pdf_name = f"Laporan_Gangguan_Baru_{timestamp_str}.pdf"
-    pdf_path = os.path.join(PDF_FOLDER, pdf_name)
-    
-    doc = SimpleDocTemplate(pdf_path, pagesize=letter, rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36)
-    styles = getSampleStyleSheet()
-    story = []
-    
-    title_style = ParagraphStyle(
-        'TitleStyle',
-        parent=styles['Heading1'],
-        fontSize=14,
-        leading=18,
-        alignment=1,
-        textColor=colors.HexColor('#0f172a')
-    )
-    
-    story.append(Paragraph("<b>PERUM JASA TIRTA II</b>", title_style))
-    story.append(Paragraph("<b>LAPORAN GANGGUAN OPERASIONAL & KRONOLOGI</b>", title_style))
-    story.append(Spacer(1, 15))
-    
-    data_info = [
-        [Paragraph("<b>Jenis Gangguan:</b>", styles['Normal']), Paragraph(jenis, styles['Normal'])],
-        [Paragraph("<b>Tanggal Kejadian:</b>", styles['Normal']), Paragraph(tanggal, styles['Normal'])],
-        [Paragraph("<b>Waktu (Jam):</b>", styles['Normal']), Paragraph(waktu, styles['Normal'])],
-    ]
-    t_info = Table(data_info, colWidths=[120, 420])
-    t_info.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#f8fafc')),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#cbd5e1')),
-        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#e2e8f0')),
-        ('VALIGN', (0,0), (-1,-1), 'TOP'),
-        ('PADDING', (0,0), (-1,-1), 6),
-    ]))
-    story.append(t_info)
-    story.append(Spacer(1, 15))
-    
-    story.append(Paragraph("<b>Kronologi Kejadian:</b>", styles['Heading3']))
-    story.append(Spacer(1, 5))
-    story.append(Paragraph(kronologi.replace('\n', '<br/>'), styles['Normal']))
-    
-    doc.build(story)
-    
-    HISTORY_LAPORAN_DB.append({
-        "jenis": jenis,
-        "tanggal": tanggal,
-        "waktu": waktu,
-        "kronologi": kronologi,
-        "pdf_name": pdf_name
-    })
-    
+    jenis = request.form.get("baru_jenis_gangguan", "").strip()
+    waktu = request.form.get("baru_waktu", "").strip()
+    tanggal = request.form.get("baru_tanggal_lengkap", "").strip()
+    kronologi = request.form.get("baru_kronologi", "").strip()
+    if not all([jenis, waktu, tanggal, kronologi]):
+        return "Semua kolom laporan gangguan wajib diisi.", 400
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    pdf_name = f"Laporan_Gangguan_Baru_{stamp}.pdf"
+    pdf_path = ARCHIVE_DIR / pdf_name
+    _build_report_pdf(pdf_path, "LAPORAN GANGGUAN OPERASIONAL & KRONOLOGI", [
+        ("Jenis Gangguan", jenis), ("Tanggal Kejadian", tanggal), ("Waktu (Jam)", waktu),
+        ("Kronologi Kejadian", kronologi), ("Waktu Pembuatan", datetime.now().strftime("%d-%m-%Y %H:%M:%S"))
+    ])
+    with db_connect() as conn:
+        conn.execute("INSERT INTO reports(jenis,tanggal,waktu,kronologi,pdf_name,created_at,report_type) VALUES(?,?,?,?,?,?,?)",
+            (jenis, tanggal, waktu, kronologi, pdf_name, datetime.now().isoformat(timespec="seconds"), "gangguan"))
+        conn.commit()
     return redirect(url_for('index'))
 
-@app.route("/download/<filename>")
+@app.route("/generate", methods=["POST"])
+def generate_checklist_pdf():
+    """Menyimpan seluruh nilai form normalisasi/checklist ke PDF tanpa membuang isian form."""
+    form = request.form
+    kategori = form.get("kategori", "Tidak ditentukan").strip()
+    mode = form.get("mode_pencatatan", "manual").strip()
+    jenis = (form.get("jenis_gangguan_manual") or form.get("jenis_gangguan_otomatis") or "Laporan Normalisasi & Checklist").strip()
+    waktu = form.get("waktu", "").strip()
+    if not waktu:
+        return "Tanggal dan jam kejadian wajib diisi.", 400
+    fields = [("Kategori / Lokasi", kategori), ("Mode Pencatatan", mode), ("Jenis Gangguan / Checklist", jenis),
+              ("Tanggal & Jam Kejadian", waktu), ("Waktu Pembuatan", datetime.now().strftime("%d-%m-%Y %H:%M:%S"))]
+    rows = []
+    # Semua input yang dikirim dari formulir dicatat, termasuk checkbox, jam, posisi, dan penanganan manual.
+    for key in form.keys():
+        if key in {"kategori", "mode_pencatatan", "jenis_gangguan_manual", "jenis_gangguan_otomatis", "waktu"}:
+            continue
+        values = form.getlist(key)
+        if key.endswith("[]"):
+            label = key[:-2]
+        else:
+            label = key
+        for value in values:
+            rows.append((label, value if value != "on" else "Dipilih"))
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    pdf_name = f"Laporan_Normalisasi_Checklist_{stamp}.pdf"
+    pdf_path = ARCHIVE_DIR / pdf_name
+    _build_report_pdf(pdf_path, "LAPORAN NORMALISASI & CHECKLIST", fields, rows)
+    with db_connect() as conn:
+        conn.execute("INSERT INTO reports(jenis,tanggal,waktu,kronologi,pdf_name,created_at,report_type) VALUES(?,?,?,?,?,?,?)",
+            (jenis, datetime.now().strftime("%Y-%m-%d"), waktu, "PDF mencakup seluruh isian form normalisasi/checklist.", pdf_name,
+             datetime.now().isoformat(timespec="seconds"), "checklist"))
+        conn.commit()
+    return send_file(str(pdf_path), as_attachment=True, download_name=pdf_name, mimetype="application/pdf")
+
+@app.route("/download/<path:filename>")
 def download_file(filename):
-    return send_file(os.path.join(PDF_FOLDER, filename), as_attachment=True)
+    # Hanya nama file, tidak menerima traversal folder.
+    if Path(filename).name != filename or not filename.lower().endswith(".pdf"):
+        return "File tidak ditemukan.", 404
+    for folder in (ARCHIVE_DIR, Path(PDF_FOLDER)):
+        candidate = folder / filename
+        if candidate.is_file():
+            return send_file(str(candidate), as_attachment=True, download_name=filename, mimetype="application/pdf")
+    return "File tidak ditemukan.", 404
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
