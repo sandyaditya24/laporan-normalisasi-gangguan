@@ -1708,7 +1708,6 @@ EDUKASI_KELISTRIKAN_TEMPLATE = """
 
 <div
     class="topic-item video-button"
-    data-video-id="dQw4w9WgXcQ"
     data-video-title="Tegangan, Arus, Resistansi"
     role="button"
     tabindex="0">
@@ -1720,8 +1719,7 @@ EDUKASI_KELISTRIKAN_TEMPLATE = """
 
 <div
     class="topic-item video-button"
-    data-video-id="ID_VIDEO_YOUTUBE_HUKUM_OHM"
-    data-video-title="Hukum Ohm"
+        data-video-title="Hukum Ohm"
     role="button"
     tabindex="0">
 
@@ -2064,24 +2062,52 @@ document.addEventListener('DOMContentLoaded', function () {
     const player = document.getElementById('youtubePlayer');
     const title = document.getElementById('videoModalLabel');
 
-    document.querySelectorAll('.video-button').forEach(function (button) {
-        button.addEventListener('click', function () {
-            const id = this.dataset.videoId;
-            if (!id) return;
+    // Semua topik dibuat bisa diklik. Topik yang belum memiliki ID video
+    // akan membuka hasil pencarian YouTube sesuai nama materinya.
+    document.querySelectorAll('.topic-item').forEach(function (item) {
+        const titleElement = item.querySelector('span:not(.video-badge)');
+        const topicTitle = (item.dataset.videoTitle ||
+            (titleElement ? titleElement.textContent : '')).trim();
 
-            title.textContent =
-                this.dataset.videoTitle || 'Video Pembelajaran';
+        item.style.cursor = 'pointer';
+        item.setAttribute('role', 'button');
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('aria-label', 'Buka video: ' + topicTitle);
 
-            player.src = 'https://www.youtube.com/embed/' +
-                encodeURIComponent(id) + '?autoplay=1';
+        function openTopicVideo() {
+            const id = (item.dataset.videoId || '').trim();
 
-            bootstrap.Modal.getOrCreateInstance(modalElement).show();
+            if (id && !id.startsWith('ID_VIDEO_')) {
+                title.textContent = topicTitle || 'Video Pembelajaran';
+                player.src = 'https://www.youtube.com/embed/' +
+                    encodeURIComponent(id) + '?autoplay=1';
+                bootstrap.Modal.getOrCreateInstance(modalElement).show();
+                return;
+            }
+
+            // Tidak membutuhkan YouTube API atau ID video yang ditebak.
+            const query = encodeURIComponent(topicTitle + ' kelistrikan');
+            window.open(
+                'https://www.youtube.com/results?search_query=' + query,
+                '_blank',
+                'noopener,noreferrer'
+            );
+        }
+
+        item.addEventListener('click', openTopicVideo);
+        item.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openTopicVideo();
+            }
         });
     });
 
-    modalElement.addEventListener('hidden.bs.modal', function () {
-        player.src = '';
-    });
+    if (modalElement && player) {
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            player.src = '';
+        });
+    }
 });
 </script>
 </body>
