@@ -292,19 +292,60 @@ HTML_TEMPLATE = """
             background-color: #1d4ed8 !important;
         }
     
-/* Perbaikan struktur layout utama: sidebar dan area konten harus menjadi dua kolom sejajar */
-.enterprise-wrapper { width: min(100% - 32px, 1600px) !important; max-width: 1600px !important; }
-.enterprise-wrapper > .row.g-4 { align-items: flex-start; }
-.enterprise-wrapper > .row.g-4 > .col-lg-3 { flex: 0 0 25%; max-width: 25%; min-width: 0; }
-.enterprise-wrapper > .row.g-4 > .col-lg-9 { flex: 0 0 75%; max-width: 75%; min-width: 0; }
-.enterprise-wrapper .content-card, .enterprise-wrapper .content-card .card-body,
-.enterprise-wrapper .content-card form { width: 100%; max-width: 100%; min-width: 0; }
+/* FIX: lebar konten dan form pada menu navigasi */
+.enterprise-wrapper {
+    width: min(100% - 24px, 1600px) !important;
+    max-width: 1600px !important;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.enterprise-wrapper > .row.g-4 {
+    display: flex;
+    align-items: flex-start;
+}
+
+.enterprise-wrapper > .row.g-4 > .col-lg-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+    min-width: 0;
+}
+
+.enterprise-wrapper > .row.g-4 > .col-lg-9 {
+    flex: 0 0 75%;
+    max-width: 75%;
+    min-width: 0;
+}
+
+.enterprise-wrapper .content-card,
+.enterprise-wrapper .content-card .card-body,
+.enterprise-wrapper .content-card form {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.enterprise-wrapper .content-card .row {
+    width: 100%;
+}
+
 .enterprise-wrapper .content-card .form-control,
 .enterprise-wrapper .content-card .form-select,
-.enterprise-wrapper .content-card textarea { width: 100%; min-width: 0; }
+.enterprise-wrapper .content-card input:not([type="checkbox"]):not([type="radio"]),
+.enterprise-wrapper .content-card select,
+.enterprise-wrapper .content-card textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
 @media (max-width: 991.98px) {
-  .enterprise-wrapper > .row.g-4 > .col-lg-3,
-  .enterprise-wrapper > .row.g-4 > .col-lg-9 { flex: 0 0 100%; max-width: 100%; }
+    .enterprise-wrapper > .row.g-4 > .col-lg-3,
+    .enterprise-wrapper > .row.g-4 > .col-lg-9 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }
 
 /* Perbaikan responsif untuk seluruh menu, formulir, dan tabel aplikasi utama */
