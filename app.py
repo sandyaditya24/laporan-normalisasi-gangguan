@@ -1396,97 +1396,75 @@ HTML_TEMPLATE = """
             }
         }
     </script>
-    <!-- VIDEO MODAL -->
-<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+   
+<!-- VIDEO MODAL -->
+<div class="modal fade" id="videoModal" tabindex="-1"
+     aria-labelledby="videoModalLabel" aria-hidden="true">
+
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 overflow-hidden">
 
-            <div class="modal-header bg-dark text-white border-0">
+            <div class="modal-header bg-dark text-white">
                 <h5 class="modal-title fw-bold" id="videoModalLabel">
                     Video Pembelajaran
                 </h5>
 
-                <button
-                    type="button"
-                    class="btn-close btn-close-white"
-                    data-bs-dismiss="modal"
-                    aria-label="Close">
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Tutup">
                 </button>
             </div>
 
             <div class="modal-body bg-dark p-0">
-
                 <div class="ratio ratio-16x9">
-                    <iframe
-                        id="youtubePlayer"
-                        src=""
-                        title="Video Pembelajaran Kelistrikan"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
+                    <iframe id="youtubePlayer"
+                            src=""
+                            title="Video Pembelajaran Kelistrikan"
+                            allow="autoplay; encrypted-media; picture-in-picture"
+                            allowfullscreen>
                     </iframe>
                 </div>
-
             </div>
 
         </div>
     </div>
 </div>
+
+<!-- Bootstrap JS harus dimuat sebelum script pemutar video -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-    const videoModal = document.getElementById('videoModal');
+document.addEventListener('DOMContentLoaded', function () {
+    const videoModalElement = document.getElementById('videoModal');
     const youtubePlayer = document.getElementById('youtubePlayer');
     const videoModalLabel = document.getElementById('videoModalLabel');
 
-    document.querySelectorAll('.video-button').forEach(button => {
-
+    document.querySelectorAll('.video-button').forEach(function (button) {
         button.addEventListener('click', function () {
-
             const videoId = this.dataset.videoId;
             const videoTitle = this.dataset.videoTitle;
 
-            videoModalLabel.textContent = videoTitle;
+            if (!videoId) {
+                alert('ID video YouTube belum diisi.');
+                return;
+            }
 
+            videoModalLabel.textContent = videoTitle || 'Video Pembelajaran';
             youtubePlayer.src =
-                `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+                'https://www.youtube-nocookie.com/embed/' +
+                encodeURIComponent(videoId) + '?autoplay=1';
 
-            const modal = new bootstrap.Modal(videoModal);
-            modal.show();
-
-        });
-
-    });
-
-    videoModal.addEventListener('hidden.bs.modal', function () {
-        youtubePlayer.src = '';
-    });
-</script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-    const videoModal = document.getElementById('videoModal');
-    const youtubePlayer = document.getElementById('youtubePlayer');
-    const videoModalLabel = document.getElementById('videoModalLabel');
-
-    document.querySelectorAll('.video-button').forEach(button => {
-        button.addEventListener('click', function () {
-
-            const videoId = this.getAttribute('data-video-id');
-            const videoTitle = this.getAttribute('data-video-title');
-
-            videoModalLabel.textContent = videoTitle;
-
-            youtubePlayer.src =
-                'https://www.youtube.com/embed/' +
-                videoId +
-                '?autoplay=1&rel=0';
-
-            const modal = new bootstrap.Modal(videoModal);
-            modal.show();
+            bootstrap.Modal.getOrCreateInstance(videoModalElement).show();
         });
     });
 
-    videoModal.addEventListener('hidden.bs.modal', function () {
+    videoModalElement.addEventListener('hidden.bs.modal', function () {
         youtubePlayer.src = '';
     });
+});
 </script>
+
 </body>
 </html>
 """
