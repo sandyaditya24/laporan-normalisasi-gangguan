@@ -1608,510 +1608,111 @@ AI_CHAT_TEMPLATE = """
 """
 
 EDUKASI_KELISTRIKAN_TEMPLATE = """
-
-
-<div class="container education-wrapper">
-
-    <div class="education-card">
-
-        <!-- HEADER -->
-        <div class="education-header">
-            <div class="d-flex justify-content-between align-items-center gap-3">
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <div class="education-icon">
-                        <i class="fa-solid fa-bolt text-warning"></i>
-                    </div>
-
-                    <div>
-                        <h1 class="mb-1 fw-bold fs-3">
-                            Edukasi Kelistrikan
-                        </h1>
-
-                        <p class="mb-0 text-white-50">
-                            Materi dasar dan teknis kelistrikan untuk mendukung
-                            pemahaman operasional PLTA dan sistem tenaga listrik.
-                        </p>
-                    </div>
-
-                </div>
-
-                <a href="/"
-                   class="btn btn-outline-light btn-sm px-3 rounded-pill fw-semibold">
-                    <i class="fa-solid fa-arrow-left me-1"></i>
-                    Kembali
-                </a>
-
-            </div>
-        </div>
-
-
-        <!-- CONTENT -->
-        <div class="p-3 p-md-4">
-
-            <div class="intro-box mb-4">
-
-                <div class="d-flex align-items-start gap-3">
-
-                    <i class="fa-solid fa-graduation-cap text-primary fs-4 mt-1"></i>
-
-                    <div>
-                        <h5 class="fw-bold mb-1">
-                            Pusat Pembelajaran Kelistrikan
-                        </h5>
-
-                        <p class="mb-0 text-muted small">
-                            Pelajari konsep kelistrikan mulai dari dasar,
-                            sistem tenaga listrik, proteksi, PLTA/PLTMH,
-                            hingga keselamatan kerja listrik.
-                        </p>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- 5 KATEGORI -->
-            <div class="row g-4">
-
-
-                <!-- 1. DASAR KELISTRIKAN -->
-                <div class="col-lg-6">
-
-                    <div class="category-card">
-
-                        <div class="category-header">
-
-                            <div class="d-flex align-items-center gap-3">
-
-                                <div class="category-icon">
-                                    <i class="fa-solid fa-plug"></i>
-                                </div>
-
-                                <div>
-                                    <h5 class="fw-bold mb-1">
-                                        Dasar Kelistrikan
-                                    </h5>
-
-                                    <small class="text-muted">
-                                        Konsep dasar listrik
-                                    </small>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="topic-list">
-
-<div
-    class="topic-item video-button"
-    data-video-title="Tegangan, Arus, Resistansi"
-    role="button"
-    tabindex="0">
-
-    <i class="fa-solid fa-play topic-icon"></i>
-    <span>Tegangan, Arus, Resistansi</span>
-    <span class="video-badge">VIDEO</span>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edukasi Kelistrikan - Sistem Manajemen PLTA Curug</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<style>
+:root{--blue:#1769aa;--blue-dark:#123b60;--bg:#f3f7fc;--border:#e2eaf3;--text:#203449}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif}
+.page-wrap{max-width:1600px;margin:auto;padding:28px 22px 44px}.page-header{background:linear-gradient(120deg,#10375a,#1976b9);color:#fff;border-radius:22px;padding:26px 30px;box-shadow:0 12px 32px #153e5d20}
+.brand-icon{width:54px;height:54px;display:grid;place-items:center;border-radius:16px;background:#ffffff20;color:#ffd54f;font-size:25px;flex-shrink:0}.page-header h1{font-size:clamp(24px,3vw,34px);font-weight:800;margin:0 0 6px}.page-header p{margin:0;color:#e2eef9;line-height:1.55}.back-link{color:white;text-decoration:none;border:1px solid #ffffff70;padding:9px 15px;border-radius:30px;white-space:nowrap}.back-link:hover{background:#ffffff18;color:white}
+.intro{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin:22px 0}.intro i{font-size:25px;color:var(--blue);margin-top:3px}.intro h2{font-size:17px;font-weight:800;margin:0 0 5px}.intro p{font-size:14px;color:#687b8e;margin:0;line-height:1.6}
+.main-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:24px;align-items:start}.topics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.category-card{background:#fff;border:1px solid var(--border);border-radius:17px;overflow:hidden;box-shadow:0 5px 18px #173c5b08}.category-header{display:flex;align-items:center;gap:13px;padding:17px 18px;background:#f9fbfe;border-bottom:1px solid var(--border)}.category-icon{width:43px;height:43px;display:grid;place-items:center;flex-shrink:0;border-radius:13px;background:#e6f3ff;color:var(--blue);font-size:19px}.category-header h2{font-size:16px;font-weight:800;margin:0 0 4px}.category-header p{font-size:12px;color:#748397;margin:0}.topic-list{padding:10px}.topic-item{width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:12px 11px;margin:2px 0;border:1px solid transparent;border-radius:11px;background:#fff;color:#2c4054;font:inherit;cursor:pointer;transition:.18s}.topic-item:hover,.topic-item:focus-visible{background:#eff7ff;border-color:#cce4f8;outline:none}.topic-item.active{background:#e5f3ff;border-color:#92c9f4;color:#105b93}.topic-icon{width:18px;text-align:center;color:var(--blue)}.video-badge{margin-left:auto;border-radius:30px;background:#e7f3ff;color:#1769aa;font-size:10px;font-weight:800;letter-spacing:.4px;padding:4px 8px}
+.player-column{position:sticky;top:18px;min-width:0}.player-card{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 9px 28px #153e5d12}.player-head{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--border)}.player-head-icon{display:grid;place-items:center;width:45px;height:45px;flex-shrink:0;border-radius:13px;background:#e5f3ff;color:var(--blue);font-size:21px}.player-head h2{font-size:17px;font-weight:800;margin:0 0 4px;overflow-wrap:anywhere}.player-head p{font-size:12px;color:#758598;margin:0;line-height:1.5}.video-stage{aspect-ratio:16/9;position:relative;background:radial-gradient(circle at top,#1c466a,#091725 75%);color:#fff;display:grid;place-items:center;padding:22px}.video-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.empty-state{text-align:center;max-width:390px}.empty-icon{width:58px;height:58px;margin:0 auto 14px;display:grid;place-items:center;border-radius:50%;background:#ffffff1c;font-size:22px}.empty-state h3{font-size:18px;font-weight:800;margin:0 0 8px}.empty-state p{font-size:13px;color:#c4d4e3;line-height:1.6;margin:0}.search-video{display:inline-block;margin-top:14px;text-decoration:none;background:#1769aa;color:white;border-radius:30px;padding:9px 16px;font-size:13px;font-weight:700}.search-video:hover{background:#0e548d;color:white}.player-foot{padding:13px 18px;background:#fbfdff;color:#6b7c8e;font-size:12px;line-height:1.5}.footer-note{margin-top:22px;padding:15px 18px;border-radius:14px;background:#eaf4fd;color:#526a80;font-size:13px;line-height:1.6}
+@media(max-width:1050px){.main-grid{grid-template-columns:1fr}.player-column{position:static;grid-row:1}.topics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.page-wrap{padding:12px 10px 26px}.page-header{padding:20px 17px}.page-header-inner{align-items:flex-start!important;flex-direction:column}.topics-grid{grid-template-columns:1fr}.main-grid{gap:17px}.intro{padding:15px}.player-head{padding:15px}}
+</style>
+</head><body>
+<div class="page-wrap">
+<header class="page-header"><div class="page-header-inner d-flex justify-content-between align-items-center gap-3"><div class="d-flex align-items-center gap-3"><div class="brand-icon"><i class="fa-solid fa-bolt"></i></div><div><h1>Edukasi Kelistrikan</h1><p>Materi dasar dan teknis kelistrikan untuk mendukung pemahaman operasional PLTA dan sistem tenaga listrik.</p></div></div><a class="back-link" href="/"><i class="fa-solid fa-arrow-left me-1"></i> Kembali</a></div></header>
+<div class="intro"><i class="fa-solid fa-graduation-cap"></i><div><h2>Pusat Pembelajaran Kelistrikan</h2><p>Pelajari konsep kelistrikan mulai dari dasar, sistem tenaga listrik, proteksi, PLTA/PLTMH, hingga keselamatan kerja listrik. Pilih materi di sebelah kiri untuk menampilkan pemutar video di panel sebelah kanan.</p></div></div>
+<div class="main-grid"><main class="topics-grid"><section class="category-card">
+        <div class="category-header"><div class="category-icon"><i class="fa-solid fa-plug"></i></div><div><h2>Dasar Kelistrikan</h2><p>Konsep dasar listrik</p></div></div>
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="Tegangan, Arus, Resistansi">
+            <i class="fa-solid fa-play topic-icon"></i><span>Tegangan, Arus, Resistansi</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Hukum Ohm">
+            <i class="fa-solid fa-play topic-icon"></i><span>Hukum Ohm</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Daya Listrik">
+            <i class="fa-solid fa-play topic-icon"></i><span>Daya Listrik</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Sistem 1 Fasa & 3 Fasa">
+            <i class="fa-solid fa-play topic-icon"></i><span>Sistem 1 Fasa & 3 Fasa</span><span class="video-badge">VIDEO</span>
+        </button></div>
+    </section><section class="category-card">
+        <div class="category-header"><div class="category-icon"><i class="fa-solid fa-tower-broadcast"></i></div><div><h2>Sistem Tenaga Listrik</h2><p>Pembangkitan dan jaringan</p></div></div>
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="Sistem Pembangkitan">
+            <i class="fa-solid fa-play topic-icon"></i><span>Sistem Pembangkitan</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Generator">
+            <i class="fa-solid fa-play topic-icon"></i><span>Generator</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Transformator">
+            <i class="fa-solid fa-play topic-icon"></i><span>Transformator</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Jaringan 20 kV">
+            <i class="fa-solid fa-play topic-icon"></i><span>Jaringan 20 kV</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Gardu Induk">
+            <i class="fa-solid fa-play topic-icon"></i><span>Gardu Induk</span><span class="video-badge">VIDEO</span>
+        </button></div>
+    </section><section class="category-card">
+        <div class="category-header"><div class="category-icon"><i class="fa-solid fa-shield-halved"></i></div><div><h2>Proteksi</h2><p>Sistem perlindungan tenaga listrik</p></div></div>
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="CT & PT">
+            <i class="fa-solid fa-play topic-icon"></i><span>CT & PT</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="PMT & PMS">
+            <i class="fa-solid fa-play topic-icon"></i><span>PMT & PMS</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="OCR">
+            <i class="fa-solid fa-play topic-icon"></i><span>OCR</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="GFR">
+            <i class="fa-solid fa-play topic-icon"></i><span>GFR</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Differential Protection">
+            <i class="fa-solid fa-play topic-icon"></i><span>Differential Protection</span><span class="video-badge">VIDEO</span>
+        </button></div>
+    </section><section class="category-card">
+        <div class="category-header"><div class="category-icon"><i class="fa-solid fa-water"></i></div><div><h2>PLTA / PLTMH</h2><p>Pembangkit tenaga air</p></div></div>
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="Prinsip Kerja PLTA">
+            <i class="fa-solid fa-play topic-icon"></i><span>Prinsip Kerja PLTA</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Turbin">
+            <i class="fa-solid fa-play topic-icon"></i><span>Turbin</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Generator PLTA">
+            <i class="fa-solid fa-play topic-icon"></i><span>Generator PLTA</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Sistem Hidrolis">
+            <i class="fa-solid fa-play topic-icon"></i><span>Sistem Hidrolis</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Sistem Eksitasi">
+            <i class="fa-solid fa-play topic-icon"></i><span>Sistem Eksitasi</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Governor">
+            <i class="fa-solid fa-play topic-icon"></i><span>Governor</span><span class="video-badge">VIDEO</span>
+        </button></div>
+    </section><section class="category-card">
+        <div class="category-header"><div class="category-icon"><i class="fa-solid fa-helmet-safety"></i></div><div><h2>K3 Listrik</h2><p>Keselamatan kerja kelistrikan</p></div></div>
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="LOTO">
+            <i class="fa-solid fa-play topic-icon"></i><span>LOTO</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="APD Listrik">
+            <i class="fa-solid fa-play topic-icon"></i><span>APD Listrik</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Bahaya Arc Flash">
+            <i class="fa-solid fa-play topic-icon"></i><span>Bahaya Arc Flash</span><span class="video-badge">VIDEO</span>
+        </button><button type="button" class="topic-item" data-topic="Prosedur Keselamatan Kerja">
+            <i class="fa-solid fa-play topic-icon"></i><span>Prosedur Keselamatan Kerja</span><span class="video-badge">VIDEO</span>
+        </button></div>
+    </section>
+</main>
+<aside class="player-column"><section class="player-card"><div class="player-head"><div class="player-head-icon"><i class="fa-solid fa-circle-play"></i></div><div><h2 id="playerTitle">Video Pembelajaran</h2><p id="playerSubtitle">Pilih materi di sebelah kiri untuk mulai belajar.</p></div></div><div class="video-stage"><div id="emptyState" class="empty-state"><div class="empty-icon"><i class="fa-solid fa-play"></i></div><h3>Siap untuk belajar?</h3><p>Video akan tampil di panel ini setelah Anda memilih materi.</p></div><iframe id="videoPlayer" title="Video Pembelajaran Kelistrikan" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen hidden></iframe></div><div class="player-foot"><i class="fa-solid fa-circle-info me-1"></i> Materi yang belum memiliki tautan video akan menyediakan pencarian YouTube berdasarkan judul materi.</div></section></aside></div>
+<div class="footer-note"><i class="fa-solid fa-shield-halved me-2"></i>Materi edukasi ditujukan untuk pembelajaran. Untuk pekerjaan operasional, tetap ikuti SOP, izin kerja, dan prosedur K3 yang berlaku.</div>
 </div>
-
-<div
-    class="topic-item video-button"
-        data-video-title="Hukum Ohm"
-    role="button"
-    tabindex="0">
-
-    <i class="fa-solid fa-play topic-icon"></i>
-    <span>Hukum Ohm</span>
-    <span class="video-badge">VIDEO</span>
-</div>
-
-<div class="topic-item">
-    <i class="fa-solid fa-play topic-icon"></i>
-    <span>Daya Listrik</span>
-    <span class="video-badge">VIDEO</span>
-</div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Sistem 1 Fasa &amp; 3 Fasa</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- 2. SISTEM TENAGA LISTRIK -->
-                <div class="col-lg-6">
-
-                    <div class="category-card">
-
-                        <div class="category-header">
-
-                            <div class="d-flex align-items-center gap-3">
-
-                                <div class="category-icon">
-                                    <i class="fa-solid fa-tower-broadcast"></i>
-                                </div>
-
-                                <div>
-                                    <h5 class="fw-bold mb-1">
-                                        Sistem Tenaga Listrik
-                                    </h5>
-
-                                    <small class="text-muted">
-                                        Pembangkitan dan jaringan
-                                    </small>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="topic-list">
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Sistem Pembangkitan</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Generator</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Transformator</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Jaringan 20 kV</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Gardu Induk</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- 3. PROTEKSI -->
-                <div class="col-lg-6">
-
-                    <div class="category-card">
-
-                        <div class="category-header">
-
-                            <div class="d-flex align-items-center gap-3">
-
-                                <div class="category-icon">
-                                    <i class="fa-solid fa-shield-halved"></i>
-                                </div>
-
-                                <div>
-                                    <h5 class="fw-bold mb-1">
-                                        Proteksi
-                                    </h5>
-
-                                    <small class="text-muted">
-                                        Sistem perlindungan tenaga listrik
-                                    </small>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="topic-list">
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>CT &amp; PT</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>PMT &amp; PMS</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>OCR</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>GFR</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Differential Protection</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- 4. PLTA / PLTMH -->
-                <div class="col-lg-6">
-
-                    <div class="category-card">
-
-                        <div class="category-header">
-
-                            <div class="d-flex align-items-center gap-3">
-
-                                <div class="category-icon">
-                                    <i class="fa-solid fa-water"></i>
-                                </div>
-
-                                <div>
-                                    <h5 class="fw-bold mb-1">
-                                        PLTA / PLTMH
-                                    </h5>
-
-                                    <small class="text-muted">
-                                        Sistem pembangkit tenaga air
-                                    </small>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="topic-list">
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Prinsip Kerja PLTA</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Turbin</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Generator PLTA</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Sistem Hidrolis</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Sistem Eksitasi</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Governor</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- 5. K3 LISTRIK -->
-                <div class="col-lg-6">
-
-                    <div class="category-card">
-
-                        <div class="category-header">
-
-                            <div class="d-flex align-items-center gap-3">
-
-                                <div class="category-icon">
-                                    <i class="fa-solid fa-helmet-safety"></i>
-                                </div>
-
-                                <div>
-                                    <h5 class="fw-bold mb-1">
-                                        K3 Listrik
-                                    </h5>
-
-                                    <small class="text-muted">
-                                        Keselamatan kerja kelistrikan
-                                    </small>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="topic-list">
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>LOTO</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>APD Listrik</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Bahaya Arc Flash</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                            <div class="topic-item">
-                                <i class="fa-solid fa-play topic-icon"></i>
-                                <span>Prosedur Keselamatan Kerja</span>
-                                <span class="video-badge">VIDEO</span>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="text-center mt-4 pt-3 border-top">
-                <div class="footer-note">
-                    <i class="fa-solid fa-circle-info me-1"></i>
-                    Materi edukasi ditujukan untuk pembelajaran dan peningkatan
-                    pemahaman kelistrikan. Untuk pekerjaan operasional,
-                    tetap ikuti SOP, izin kerja, dan prosedur K3 yang berlaku.
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- VIDEO MODAL -->
-<div class="modal fade" id="videoModal" tabindex="-1"
-     aria-labelledby="videoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content rounded-4 overflow-hidden">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="videoModalLabel">
-                    Video Pembelajaran
-                </h5>
-                <button type="button"
-                        class="btn-close btn-close-white"
-                        data-bs-dismiss="modal"
-                        aria-label="Tutup"></button>
-            </div>
-            <div class="modal-body bg-dark p-0">
-                <div class="ratio ratio-16x9">
-                    <iframe id="youtubePlayer"
-                            src=""
-                            title="Video Pembelajaran Kelistrikan"
-                            allow="autoplay; encrypted-media; picture-in-picture"
-                            allowfullscreen></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const modalElement = document.getElementById('videoModal');
-    const player = document.getElementById('youtubePlayer');
-    const title = document.getElementById('videoModalLabel');
-
-    // Semua topik dibuat bisa diklik. Topik yang belum memiliki ID video
-    // akan membuka hasil pencarian YouTube sesuai nama materinya.
-    document.querySelectorAll('.topic-item').forEach(function (item) {
-        const titleElement = item.querySelector('span:not(.video-badge)');
-        const topicTitle = (item.dataset.videoTitle ||
-            (titleElement ? titleElement.textContent : '')).trim();
-
-        item.style.cursor = 'pointer';
-        item.setAttribute('role', 'button');
-        item.setAttribute('tabindex', '0');
-        item.setAttribute('aria-label', 'Buka video: ' + topicTitle);
-
-        function openTopicVideo() {
-            const id = (item.dataset.videoId || '').trim();
-
-            if (id && !id.startsWith('ID_VIDEO_')) {
-                title.textContent = topicTitle || 'Video Pembelajaran';
-                player.src = 'https://www.youtube.com/embed/' +
-                    encodeURIComponent(id) + '?autoplay=1';
-                bootstrap.Modal.getOrCreateInstance(modalElement).show();
-                return;
-            }
-
-            // Tidak membutuhkan YouTube API atau ID video yang ditebak.
-            const query = encodeURIComponent(topicTitle + ' kelistrikan');
-            window.open(
-                'https://www.youtube.com/results?search_query=' + query,
-                '_blank',
-                'noopener,noreferrer'
-            );
-        }
-
-        item.addEventListener('click', openTopicVideo);
-        item.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                openTopicVideo();
-            }
-        });
-    });
-
-    if (modalElement && player) {
-        modalElement.addEventListener('hidden.bs.modal', function () {
-            player.src = '';
-        });
-    }
+document.addEventListener('DOMContentLoaded',function(){
+ const player=document.getElementById('videoPlayer'),empty=document.getElementById('emptyState'),title=document.getElementById('playerTitle'),subtitle=document.getElementById('playerSubtitle');
+ document.querySelectorAll('.topic-item').forEach(function(item){item.addEventListener('click',function(){
+  const topic=item.dataset.topic; title.textContent=topic; subtitle.textContent='Materi pembelajaran: '+topic;
+  document.querySelectorAll('.topic-item').forEach(x=>x.classList.remove('active'));item.classList.add('active');
+  const id=(item.dataset.videoId||'').trim();
+  if(id && !id.startsWith('ID_VIDEO_')){player.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?autoplay=1&rel=0';player.hidden=false;empty.hidden=true;return;}
+  player.src='';player.hidden=true;empty.hidden=false;
+  empty.innerHTML='<div class="empty-icon"><i class="fa-brands fa-youtube"></i></div><h3>Video belum ditautkan</h3><p>Belum ada ID video khusus untuk materi ini. Anda bisa mencari video yang relevan melalui YouTube.</p><a class="search-video" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube me-2"></i>Cari video materi</a>';
+  empty.querySelector('a').href='https://www.youtube.com/results?search_query='+encodeURIComponent(topic+' kelistrikan');
+ });});
 });
-</script>
-</body>
-</html>
+</script></body></html>
+
 """
 
 @app.route("/")
