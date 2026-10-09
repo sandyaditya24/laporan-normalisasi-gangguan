@@ -254,7 +254,33 @@ HTML_TEMPLATE = """
         .bg-switcher-badge:hover {
             background-color: #1d4ed8 !important;
         }
-    </style>
+    
+/* Perbaikan responsif untuk seluruh menu, formulir, dan tabel aplikasi utama */
+.enterprise-wrapper { width: min(100% - 24px, 1600px) !important; max-width: 1600px !important; }
+.enterprise-wrapper > .row { --bs-gutter-x: 1.5rem; }
+.enterprise-wrapper .content-card { width: 100%; min-width: 0; }
+.enterprise-wrapper .content-card .card-body { min-width: 0; }
+.enterprise-wrapper .content-card form { width: 100%; max-width: 100%; }
+.enterprise-wrapper .content-card .form-control,
+.enterprise-wrapper .content-card .form-select,
+.enterprise-wrapper .content-card textarea,
+.enterprise-wrapper .content-card input:not([type="checkbox"]):not([type="radio"]),
+.enterprise-wrapper .content-card select { width: 100%; max-width: 100%; min-width: 0; }
+.enterprise-wrapper .content-card .row { --bs-gutter-x: 1rem; }
+.enterprise-wrapper .table-responsive { width: 100%; max-width: 100%; }
+.enterprise-wrapper .table-responsive table { min-width: 720px; }
+.enterprise-wrapper .menu-sidebar { width: 100%; }
+.enterprise-wrapper .menu-btn, .enterprise-wrapper .submenu-btn { white-space: normal; line-height: 1.45; }
+@media (min-width: 992px) {
+  .enterprise-wrapper .menu-sidebar { max-height: calc(100vh - 36px); overflow-y: auto; }
+}
+@media (max-width: 991.98px) {
+  .enterprise-wrapper { width: 100% !important; }
+  .enterprise-wrapper .menu-sidebar { position: static !important; margin-bottom: 1rem; }
+  .enterprise-wrapper .content-card .card-body { padding: 1.25rem !important; }
+}
+
+</style>
 </head>
 <body>
     <div class="container mt-4 mb-5 enterprise-wrapper">
@@ -1622,7 +1648,7 @@ EDUKASI_KELISTRIKAN_TEMPLATE = """
 .brand-icon{width:54px;height:54px;display:grid;place-items:center;border-radius:16px;background:#ffffff20;color:#ffd54f;font-size:25px;flex-shrink:0}.page-header h1{font-size:clamp(24px,3vw,34px);font-weight:800;margin:0 0 6px}.page-header p{margin:0;color:#e2eef9;line-height:1.55}.back-link{color:white;text-decoration:none;border:1px solid #ffffff70;padding:9px 15px;border-radius:30px;white-space:nowrap}.back-link:hover{background:#ffffff18;color:white}
 .intro{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin:22px 0}.intro i{font-size:25px;color:var(--blue);margin-top:3px}.intro h2{font-size:17px;font-weight:800;margin:0 0 5px}.intro p{font-size:14px;color:#687b8e;margin:0;line-height:1.6}
 .main-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:24px;align-items:start}.topics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.category-card{background:#fff;border:1px solid var(--border);border-radius:17px;overflow:hidden;box-shadow:0 5px 18px #173c5b08}.category-header{display:flex;align-items:center;gap:13px;padding:17px 18px;background:#f9fbfe;border-bottom:1px solid var(--border)}.category-icon{width:43px;height:43px;display:grid;place-items:center;flex-shrink:0;border-radius:13px;background:#e6f3ff;color:var(--blue);font-size:19px}.category-header h2{font-size:16px;font-weight:800;margin:0 0 4px}.category-header p{font-size:12px;color:#748397;margin:0}.topic-list{padding:10px}.topic-item{width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:12px 11px;margin:2px 0;border:1px solid transparent;border-radius:11px;background:#fff;color:#2c4054;font:inherit;cursor:pointer;transition:.18s}.topic-item:hover,.topic-item:focus-visible{background:#eff7ff;border-color:#cce4f8;outline:none}.topic-item.active{background:#e5f3ff;border-color:#92c9f4;color:#105b93}.topic-icon{width:18px;text-align:center;color:var(--blue)}.video-badge{margin-left:auto;border-radius:30px;background:#e7f3ff;color:#1769aa;font-size:10px;font-weight:800;letter-spacing:.4px;padding:4px 8px}
-.player-column{position:sticky;top:18px;min-width:0}.player-card{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 9px 28px #153e5d12}.player-head{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--border)}.player-head-icon{display:grid;place-items:center;width:45px;height:45px;flex-shrink:0;border-radius:13px;background:#e5f3ff;color:var(--blue);font-size:21px}.player-head h2{font-size:17px;font-weight:800;margin:0 0 4px;overflow-wrap:anywhere}.player-head p{font-size:12px;color:#758598;margin:0;line-height:1.5}.video-stage{aspect-ratio:16/9;position:relative;background:radial-gradient(circle at top,#1c466a,#091725 75%);color:#fff;display:grid;place-items:center;padding:22px}.video-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.empty-state{text-align:center;max-width:390px}.empty-icon{width:58px;height:58px;margin:0 auto 14px;display:grid;place-items:center;border-radius:50%;background:#ffffff1c;font-size:22px}.empty-state h3{font-size:18px;font-weight:800;margin:0 0 8px}.empty-state p{font-size:13px;color:#c4d4e3;line-height:1.6;margin:0}.search-video{display:inline-block;margin-top:14px;text-decoration:none;background:#1769aa;color:white;border-radius:30px;padding:9px 16px;font-size:13px;font-weight:700}.search-video:hover{background:#0e548d;color:white}.player-foot{padding:13px 18px;background:#fbfdff;color:#6b7c8e;font-size:12px;line-height:1.5}.footer-note{margin-top:22px;padding:15px 18px;border-radius:14px;background:#eaf4fd;color:#526a80;font-size:13px;line-height:1.6}
+.player-column{position:sticky;top:18px;min-width:0}.player-card{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 9px 28px #153e5d12}.player-head{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--border)}.player-head-icon{display:grid;place-items:center;width:45px;height:45px;flex-shrink:0;border-radius:13px;background:#e5f3ff;color:var(--blue);font-size:21px}.player-head h2{font-size:17px;font-weight:800;margin:0 0 4px;overflow-wrap:anywhere}.player-head p{font-size:12px;color:#758598;margin:0;line-height:1.5}.video-stage{aspect-ratio:16/9;position:relative;background:radial-gradient(circle at top,#1c466a,#091725 75%);color:#fff;display:grid;place-items:center;padding:22px}.video-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#091725}.empty-state{text-align:center;max-width:390px}.empty-icon{width:58px;height:58px;margin:0 auto 14px;display:grid;place-items:center;border-radius:50%;background:#ffffff1c;font-size:22px}.empty-state h3{font-size:18px;font-weight:800;margin:0 0 8px}.empty-state p{font-size:13px;color:#c4d4e3;line-height:1.6;margin:0}.search-video{display:inline-block;margin-top:14px;text-decoration:none;background:#1769aa;color:white;border-radius:30px;padding:9px 16px;font-size:13px;font-weight:700}.search-video:hover{background:#0e548d;color:white}.player-foot{padding:13px 18px;background:#fbfdff;color:#6b7c8e;font-size:12px;line-height:1.5}.footer-note{margin-top:22px;padding:15px 18px;border-radius:14px;background:#eaf4fd;color:#526a80;font-size:13px;line-height:1.6}
 @media(max-width:1050px){.main-grid{grid-template-columns:1fr}.player-column{position:static;grid-row:1}.topics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.page-wrap{padding:12px 10px 26px}.page-header{padding:20px 17px}.page-header-inner{align-items:flex-start!important;flex-direction:column}.topics-grid{grid-template-columns:1fr}.main-grid{gap:17px}.intro{padding:15px}.player-head{padding:15px}}
 </style>
@@ -1632,11 +1658,11 @@ EDUKASI_KELISTRIKAN_TEMPLATE = """
 <div class="intro"><i class="fa-solid fa-graduation-cap"></i><div><h2>Pusat Pembelajaran Kelistrikan</h2><p>Pelajari konsep kelistrikan mulai dari dasar, sistem tenaga listrik, proteksi, PLTA/PLTMH, hingga keselamatan kerja listrik. Pilih materi di sebelah kiri untuk menampilkan pemutar video di panel sebelah kanan.</p></div></div>
 <div class="main-grid"><main class="topics-grid"><section class="category-card">
         <div class="category-header"><div class="category-icon"><i class="fa-solid fa-plug"></i></div><div><h2>Dasar Kelistrikan</h2><p>Konsep dasar listrik</p></div></div>
-        <div class="topic-list"><button type="button" class="topic-item" data-topic="Tegangan, Arus, Resistansi">
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="Tegangan, Arus, Resistansi" data-video-id="fox9g5u6NQE">
             <i class="fa-solid fa-play topic-icon"></i><span>Tegangan, Arus, Resistansi</span><span class="video-badge">VIDEO</span>
-        </button><button type="button" class="topic-item" data-topic="Hukum Ohm">
+        </button><button type="button" class="topic-item" data-topic="Hukum Ohm" data-video-id="fox9g5u6NQE">
             <i class="fa-solid fa-play topic-icon"></i><span>Hukum Ohm</span><span class="video-badge">VIDEO</span>
-        </button><button type="button" class="topic-item" data-topic="Daya Listrik">
+        </button><button type="button" class="topic-item" data-topic="Daya Listrik" data-video-id="eTxugCIQRDo">
             <i class="fa-solid fa-play topic-icon"></i><span>Daya Listrik</span><span class="video-badge">VIDEO</span>
         </button><button type="button" class="topic-item" data-topic="Sistem 1 Fasa & 3 Fasa">
             <i class="fa-solid fa-play topic-icon"></i><span>Sistem 1 Fasa & 3 Fasa</span><span class="video-badge">VIDEO</span>
@@ -1669,7 +1695,7 @@ EDUKASI_KELISTRIKAN_TEMPLATE = """
         </button></div>
     </section><section class="category-card">
         <div class="category-header"><div class="category-icon"><i class="fa-solid fa-water"></i></div><div><h2>PLTA / PLTMH</h2><p>Pembangkit tenaga air</p></div></div>
-        <div class="topic-list"><button type="button" class="topic-item" data-topic="Prinsip Kerja PLTA">
+        <div class="topic-list"><button type="button" class="topic-item" data-topic="Prinsip Kerja PLTA" data-video-id="qqEqusrz5Y0">
             <i class="fa-solid fa-play topic-icon"></i><span>Prinsip Kerja PLTA</span><span class="video-badge">VIDEO</span>
         </button><button type="button" class="topic-item" data-topic="Turbin">
             <i class="fa-solid fa-play topic-icon"></i><span>Turbin</span><span class="video-badge">VIDEO</span>
