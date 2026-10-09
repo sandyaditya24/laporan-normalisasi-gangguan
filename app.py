@@ -255,6 +255,21 @@ HTML_TEMPLATE = """
             background-color: #1d4ed8 !important;
         }
     
+/* Perbaikan struktur layout utama: sidebar dan area konten harus menjadi dua kolom sejajar */
+.enterprise-wrapper { width: min(100% - 32px, 1600px) !important; max-width: 1600px !important; }
+.enterprise-wrapper > .row.g-4 { align-items: flex-start; }
+.enterprise-wrapper > .row.g-4 > .col-lg-3 { flex: 0 0 25%; max-width: 25%; min-width: 0; }
+.enterprise-wrapper > .row.g-4 > .col-lg-9 { flex: 0 0 75%; max-width: 75%; min-width: 0; }
+.enterprise-wrapper .content-card, .enterprise-wrapper .content-card .card-body,
+.enterprise-wrapper .content-card form { width: 100%; max-width: 100%; min-width: 0; }
+.enterprise-wrapper .content-card .form-control,
+.enterprise-wrapper .content-card .form-select,
+.enterprise-wrapper .content-card textarea { width: 100%; min-width: 0; }
+@media (max-width: 991.98px) {
+  .enterprise-wrapper > .row.g-4 > .col-lg-3,
+  .enterprise-wrapper > .row.g-4 > .col-lg-9 { flex: 0 0 100%; max-width: 100%; }
+}
+
 /* Perbaikan responsif untuk seluruh menu, formulir, dan tabel aplikasi utama */
 .enterprise-wrapper { width: min(100% - 24px, 1600px) !important; max-width: 1600px !important; }
 .enterprise-wrapper > .row { --bs-gutter-x: 1.5rem; }
@@ -361,6 +376,8 @@ HTML_TEMPLATE = """
         Server Aktif & Aman
     </span>
 </div>
+                </div><!-- /.menu-sidebar -->
+            </div><!-- /.col-lg-3 sidebar -->
 
             <!-- AREA KONTEN -->
             <div class="col-lg-9">
@@ -1651,6 +1668,7 @@ EDUKASI_KELISTRIKAN_TEMPLATE = """
 .player-column{position:sticky;top:18px;min-width:0}.player-card{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 9px 28px #153e5d12}.player-head{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--border)}.player-head-icon{display:grid;place-items:center;width:45px;height:45px;flex-shrink:0;border-radius:13px;background:#e5f3ff;color:var(--blue);font-size:21px}.player-head h2{font-size:17px;font-weight:800;margin:0 0 4px;overflow-wrap:anywhere}.player-head p{font-size:12px;color:#758598;margin:0;line-height:1.5}.video-stage{aspect-ratio:16/9;position:relative;background:radial-gradient(circle at top,#1c466a,#091725 75%);color:#fff;display:grid;place-items:center;padding:22px}.video-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#091725}.empty-state{text-align:center;max-width:390px}.empty-icon{width:58px;height:58px;margin:0 auto 14px;display:grid;place-items:center;border-radius:50%;background:#ffffff1c;font-size:22px}.empty-state h3{font-size:18px;font-weight:800;margin:0 0 8px}.empty-state p{font-size:13px;color:#c4d4e3;line-height:1.6;margin:0}.search-video{display:inline-block;margin-top:14px;text-decoration:none;background:#1769aa;color:white;border-radius:30px;padding:9px 16px;font-size:13px;font-weight:700}.search-video:hover{background:#0e548d;color:white}.player-foot{padding:13px 18px;background:#fbfdff;color:#6b7c8e;font-size:12px;line-height:1.5}.footer-note{margin-top:22px;padding:15px 18px;border-radius:14px;background:#eaf4fd;color:#526a80;font-size:13px;line-height:1.6}
 @media(max-width:1050px){.main-grid{grid-template-columns:1fr}.player-column{position:static;grid-row:1}.topics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.page-wrap{padding:12px 10px 26px}.page-header{padding:20px 17px}.page-header-inner{align-items:flex-start!important;flex-direction:column}.topics-grid{grid-template-columns:1fr}.main-grid{gap:17px}.intro{padding:15px}.player-head{padding:15px}}
+.player-controls .btn{font-weight:700;border-radius:10px}.player-controls .btn:disabled{opacity:.45}.video-stage{min-height:260px}@media(min-width:1200px){.main-grid{grid-template-columns:minmax(0,1.1fr) minmax(440px,.9fr);gap:26px}.topics-grid{gap:18px}}@media(max-width:767px){.page-wrap{padding:16px 12px 28px}.main-grid{grid-template-columns:minmax(0,1fr)}.topics-grid{grid-template-columns:minmax(0,1fr)}.player-column{position:static}.player-controls{gap:8px!important}}
 </style>
 </head><body>
 <div class="page-wrap">
@@ -1721,21 +1739,45 @@ EDUKASI_KELISTRIKAN_TEMPLATE = """
         </button></div>
     </section>
 </main>
-<aside class="player-column"><section class="player-card"><div class="player-head"><div class="player-head-icon"><i class="fa-solid fa-circle-play"></i></div><div><h2 id="playerTitle">Video Pembelajaran</h2><p id="playerSubtitle">Pilih materi di sebelah kiri untuk mulai belajar.</p></div></div><div class="video-stage"><div id="emptyState" class="empty-state"><div class="empty-icon"><i class="fa-solid fa-play"></i></div><h3>Siap untuk belajar?</h3><p>Video akan tampil di panel ini setelah Anda memilih materi.</p></div><iframe id="videoPlayer" title="Video Pembelajaran Kelistrikan" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen hidden></iframe></div><div class="player-foot"><i class="fa-solid fa-circle-info me-1"></i> Materi yang belum memiliki tautan video akan menyediakan pencarian YouTube berdasarkan judul materi.</div></section></aside></div>
+<aside class="player-column"><section class="player-card"><div class="player-head"><div class="player-head-icon"><i class="fa-solid fa-circle-play"></i></div><div><h2 id="playerTitle">Video Pembelajaran</h2><p id="playerSubtitle">Pilih materi di sebelah kiri untuk mulai belajar.</p></div></div><div class="video-stage"><div id="emptyState" class="empty-state"><div class="empty-icon"><i class="fa-solid fa-play"></i></div><h3>Siap untuk belajar?</h3><p>Video akan tampil di panel ini setelah Anda memilih materi.</p></div><iframe id="videoPlayer" title="Video Pembelajaran Kelistrikan" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen hidden></iframe></div><div class="player-controls d-flex flex-wrap gap-2 p-3 border-top bg-white">
+<button type="button" class="btn btn-outline-primary" id="previousVideo" disabled><i class="fa-solid fa-backward-step me-2"></i>Sebelumnya</button>
+<button type="button" class="btn btn-primary" id="nextVideo"><i class="fa-solid fa-forward-step me-2"></i>Video Berikutnya</button>
+<span class="small text-muted align-self-center ms-auto" id="videoPosition">Pilih materi untuk mulai</span>
+</div><div class="player-foot"><i class="fa-solid fa-circle-info me-1"></i> Gunakan tombol Video Berikutnya untuk berpindah materi. Video yang belum memiliki ID khusus akan menampilkan tautan pencarian YouTube.</div></section></aside></div>
 <div class="footer-note"><i class="fa-solid fa-shield-halved me-2"></i>Materi edukasi ditujukan untuk pembelajaran. Untuk pekerjaan operasional, tetap ikuti SOP, izin kerja, dan prosedur K3 yang berlaku.</div>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
  const player=document.getElementById('videoPlayer'),empty=document.getElementById('emptyState'),title=document.getElementById('playerTitle'),subtitle=document.getElementById('playerSubtitle');
- document.querySelectorAll('.topic-item').forEach(function(item){item.addEventListener('click',function(){
-  const topic=item.dataset.topic; title.textContent=topic; subtitle.textContent='Materi pembelajaran: '+topic;
-  document.querySelectorAll('.topic-item').forEach(x=>x.classList.remove('active'));item.classList.add('active');
+ const items=Array.from(document.querySelectorAll('.topic-item'));
+ const previous=document.getElementById('previousVideo'),next=document.getElementById('nextVideo'),position=document.getElementById('videoPosition');
+ let currentIndex=-1;
+ function openTopic(index, autoplay=true){
+  if(!items.length)return;
+  currentIndex=(index+items.length)%items.length;
+  const item=items[currentIndex],topic=item.dataset.topic||'Materi Kelistrikan';
+  title.textContent=topic; subtitle.textContent='Materi '+(currentIndex+1)+' dari '+items.length+': '+topic;
+  position.textContent='Materi '+(currentIndex+1)+' / '+items.length;
+  previous.disabled=currentIndex===0; next.disabled=currentIndex===items.length-1;
+  items.forEach(x=>x.classList.remove('active'));item.classList.add('active');
   const id=(item.dataset.videoId||'').trim();
-  if(id && !id.startsWith('ID_VIDEO_')){player.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?autoplay=1&rel=0';player.hidden=false;empty.hidden=true;return;}
+  if(id && !id.startsWith('ID_VIDEO_')){
+   player.src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?autoplay='+(autoplay?'1':'0')+'&rel=0&enablejsapi=1&origin='+encodeURIComponent(location.origin);
+   player.hidden=false;empty.hidden=true;return;
+  }
   player.src='';player.hidden=true;empty.hidden=false;
-  empty.innerHTML='<div class="empty-icon"><i class="fa-brands fa-youtube"></i></div><h3>Video belum ditautkan</h3><p>Belum ada ID video khusus untuk materi ini. Anda bisa mencari video yang relevan melalui YouTube.</p><a class="search-video" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube me-2"></i>Cari video materi</a>';
-  empty.querySelector('a').href='https://www.youtube.com/results?search_query='+encodeURIComponent(topic+' kelistrikan');
- });});
+  empty.innerHTML='<div class="empty-icon"><i class="fa-brands fa-youtube"></i></div><h3>Video belum ditautkan</h3><p>ID video khusus belum tersedia untuk materi ini. Buka hasil pencarian YouTube untuk memilih video yang sesuai.</p><a class="search-video" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube me-2"></i>Cari video materi</a>';
+  empty.querySelector('a').href='https://www.youtube.com/results?search_query='+encodeURIComponent(topic+' kelistrikan pembelajaran');
+ }
+ items.forEach((item,index)=>item.addEventListener('click',()=>openTopic(index,true)));
+ previous.addEventListener('click',()=>{if(currentIndex>0)openTopic(currentIndex-1,true)});
+ next.addEventListener('click',()=>{if(currentIndex<items.length-1)openTopic(currentIndex+1,true)});
+ // YouTube IFrame API triggers automatic next when a linked video finishes.
+ window.onYouTubeIframeAPIReady=function(){
+  if(!window.YT||!YT.Player)return;
+  try{window.educationYTPlayer=new YT.Player('videoPlayer',{events:{onStateChange:function(event){if(event.data===YT.PlayerState.ENDED && currentIndex<items.length-1)openTopic(currentIndex+1,true);}}});}catch(e){/* tombol Video Berikutnya tetap tersedia */}
+ };
+ const api=document.createElement('script');api.src='https://www.youtube.com/iframe_api';document.head.appendChild(api);
 });
 </script></body></html>
 
