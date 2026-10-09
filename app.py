@@ -1460,6 +1460,33 @@ HTML_TEMPLATE = """
     });
 </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    const videoModal = document.getElementById('videoModal');
+    const youtubePlayer = document.getElementById('youtubePlayer');
+    const videoModalLabel = document.getElementById('videoModalLabel');
+
+    document.querySelectorAll('.video-button').forEach(button => {
+        button.addEventListener('click', function () {
+
+            const videoId = this.getAttribute('data-video-id');
+            const videoTitle = this.getAttribute('data-video-title');
+
+            videoModalLabel.textContent = videoTitle;
+
+            youtubePlayer.src =
+                'https://www.youtube.com/embed/' +
+                videoId +
+                '?autoplay=1&rel=0';
+
+            const modal = new bootstrap.Modal(videoModal);
+            modal.show();
+        });
+    });
+
+    videoModal.addEventListener('hidden.bs.modal', function () {
+        youtubePlayer.src = '';
+    });
+</script>
 </body>
 </html>
 """
