@@ -127,6 +127,9 @@ HTML_TEMPLATE = """
             padding: 1.75rem;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             border: 1px solid rgba(255, 255, 255, 0.4);
+            position: sticky; /* Menjaga sidebar tetap di posisinya saat digulir */
+            top: 2rem;        /* Jarak dari atas browser */
+            z-index: 100;     /* Mengatur lapisan tumpukan agar rapi */
         }
         .menu-btn {
             width: 100%;
