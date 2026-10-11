@@ -127,9 +127,6 @@ HTML_TEMPLATE = """
             padding: 1.75rem;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             border: 1px solid rgba(255, 255, 255, 0.4);
-            position: sticky; /* Menjaga sidebar tetap di posisinya saat digulir */
-            top: 2rem;        /* Jarak dari atas browser */
-            z-index: 100;     /* Mengatur lapisan tumpukan agar rapi */
         }
         .menu-btn {
             width: 100%;
@@ -388,6 +385,31 @@ HTML_TEMPLATE = """
 .enterprise-wrapper .table-responsive table{min-width:720px}
 .enterprise-wrapper .menu-btn,.enterprise-wrapper .submenu-btn{white-space:normal;line-height:1.45}
 @media(max-width:991.98px){.enterprise-wrapper{width:100%!important}.enterprise-wrapper>.row.g-4>.col-lg-3,.enterprise-wrapper>.row.g-4>.col-lg-9{flex:0 0 100%;max-width:100%}.enterprise-wrapper .menu-sidebar{position:static!important;margin-bottom:1rem}.enterprise-wrapper .content-card .card-body{padding:1.25rem!important}}
+/* PATCH TERBATAS: pulihkan ukuran menu dan area konten Bootstrap tanpa mengubah isi form. */
+.enterprise-wrapper { width: min(100% - 24px, 1450px) !important; max-width: 1450px !important; }
+.enterprise-wrapper > .row.g-4 { display: flex; flex-wrap: wrap; align-items: flex-start; }
+@media (min-width: 992px) {
+  .enterprise-wrapper > .row.g-4 > .col-lg-3 { flex: 0 0 25%; width: 25%; max-width: 25%; min-width: 0; }
+  .enterprise-wrapper > .row.g-4 > .col-lg-9 { flex: 0 0 75%; width: 75%; max-width: 75%; min-width: 0; }
+  .enterprise-wrapper .menu-sidebar { position: sticky; top: 2rem; max-height: calc(100vh - 4rem); overflow-y: auto; }
+}
+.enterprise-wrapper .content-card, .enterprise-wrapper .content-card .card-body,
+.enterprise-wrapper .content-card form { min-width: 0; max-width: 100%; box-sizing: border-box; }
+.enterprise-wrapper .content-card .row { width: auto; max-width: none; }
+.enterprise-wrapper .content-card .form-control,
+.enterprise-wrapper .content-card .form-select,
+.enterprise-wrapper .content-card textarea,
+.enterprise-wrapper .content-card input:not([type="checkbox"]):not([type="radio"]),
+.enterprise-wrapper .content-card select { max-width: 100%; box-sizing: border-box; }
+.enterprise-wrapper .table-responsive { width: 100%; max-width: 100%; }
+.enterprise-wrapper .menu-btn, .enterprise-wrapper .submenu-btn { white-space: normal; line-height: 1.45; }
+@media (max-width: 991.98px) {
+  .enterprise-wrapper { width: 100% !important; }
+  .enterprise-wrapper > .row.g-4 > .col-lg-3,
+  .enterprise-wrapper > .row.g-4 > .col-lg-9 { flex: 0 0 100%; width: 100%; max-width: 100%; }
+  .enterprise-wrapper .menu-sidebar { position: static; max-height: none; overflow: visible; margin-bottom: 1rem; }
+  .enterprise-wrapper .content-card .card-body { padding: 1.25rem !important; }
+}
 </style>
 </head>
 <body>
@@ -473,7 +495,7 @@ HTML_TEMPLATE = """
             </div><!-- /.col-lg-3 sidebar -->
 
             <!-- AREA KONTEN -->
-            <div class="col-lg-9" style="margin-left: 20px;">
+            <div class="col-lg-9">
                 
                 <!-- 1. BUAT LAPORAN BARU -->
                 <div class="card content-card mb-4" id="container-buat-laporan-baru" style="display: none;">
@@ -545,7 +567,7 @@ HTML_TEMPLATE = """
                                             <td class="text-center small">{{ item.tanggal }}<br>{{ item.waktu }}</td>
                                             <td class="small">{{ item.kronologi }}</td>
                                             <td class="text-center">
-                                                <a href="/download/{{ item.pdf_name }}" class="btn btn-sm btn-primary px-3 shadow-sm" target="_blank">
+                                                <a href="/download/{{ item.pdf_name }}" class="btn btn-sm btn-primary px-3 shadow-sm">
                                                     <i class="fa-solid fa-download me-1"></i> PDF
                                                 </a>
                                             </td>
@@ -579,7 +601,7 @@ HTML_TEMPLATE = """
                                             <td><i class="fa-solid fa-file-pdf text-danger me-2"></i> {{ file.name }}</td>
                                             <td class="text-center text-muted small">{{ file.date }}</td>
                                             <td class="text-center">
-                                                <a href="/download/{{ file.name }}" class="btn btn-sm btn-primary px-3 shadow-sm" target="_blank">
+                                                <a href="/download/{{ file.name }}" class="btn btn-sm btn-primary px-3 shadow-sm">
                                                     <i class="fa-solid fa-download me-1"></i> Unduh
                                                 </a>
                                             </td>
@@ -1876,8 +1898,16 @@ document.addEventListener('DOMContentLoaded', function () {
    }
    if (ytPlayer && typeof ytPlayer.stopVideo === 'function') ytPlayer.stopVideo();
    iframe.hidden = true; iframe.removeAttribute('src'); empty.hidden = false;
-   empty.innerHTML = '<div class="empty-icon"><i class="fa-brands fa-youtube"></i></div><h3>Video perlu dipilih</h3><p>Untuk menghindari tautan video yang salah, pilih video relevan dari pencarian YouTube. Setelah ID video resmi ditetapkan, materi ini dapat diputar langsung di panel ini.</p><a class="search-video" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube me-2"></i>Cari video materi</a>';
+   empty.innerHTML = '<div class="empty-icon"><i class="fa-brands fa-youtube"></i></div><h3>Video materi belum ditautkan</h3><p>Tempel URL atau ID video YouTube untuk memutarnya langsung di aplikasi.</p><form class="inline-video-form" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px"><input class="video-id-input" type="text" aria-label="URL atau ID video YouTube" placeholder="URL atau ID video YouTube" style="width:min(100%,290px);padding:9px 12px;border:1px solid #b8c8d8;border-radius:9px;color:#203449"><button class="search-video" type="submit" style="border:0;margin-top:0;cursor:pointer"><i class="fa-solid fa-play me-1"></i>Putar di aplikasi</button></form><a class="search-video" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube me-2"></i>Cari video materi di YouTube</a>';
    empty.querySelector('a').href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(topic + ' kelistrikan K3 pembelajaran');
+   empty.querySelector('.inline-video-form').addEventListener('submit', function (event) {
+     event.preventDefault();
+     const value = empty.querySelector('.video-id-input').value.trim();
+     const match = value.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/) || value.match(/^([A-Za-z0-9_-]{11})$/);
+     if (!match) { alert('Masukkan URL YouTube yang valid atau ID video 11 karakter.'); return; }
+     item.dataset.videoId = match[1];
+     openTopic(currentIndex, true);
+   });
  }
  items.forEach((item, index) => item.addEventListener('click', () => openTopic(index, true)));
  previous.addEventListener('click', () => { if (currentIndex > 0) openTopic(currentIndex - 1, true); });
