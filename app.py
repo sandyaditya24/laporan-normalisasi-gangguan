@@ -473,7 +473,7 @@ HTML_TEMPLATE = """
             </div><!-- /.col-lg-3 sidebar -->
 
             <!-- AREA KONTEN -->
-            <div class="col-lg-9">
+            <div class="col-lg-9" style="margin-left: 20px;">
                 
                 <!-- 1. BUAT LAPORAN BARU -->
                 <div class="card content-card mb-4" id="container-buat-laporan-baru" style="display: none;">
