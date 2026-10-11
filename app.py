@@ -410,7 +410,72 @@ HTML_TEMPLATE = """
   .enterprise-wrapper .menu-sidebar { position: static; max-height: none; overflow: visible; margin-bottom: 1rem; }
   .enterprise-wrapper .content-card .card-body { padding: 1.25rem !important; }
 }
-</style>
+
+/* FIX KHUSUS: cegah CSS halaman struktural menyempitkan layout aplikasi utama */
+html, body { width: 100% !important; min-width: 320px; }
+.enterprise-wrapper.container {
+    display: block !important;
+    width: calc(100% - 32px) !important;
+    max-width: 1450px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+.enterprise-wrapper > .row.g-4 {
+    display: flex !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.enterprise-wrapper > .row.g-4 > .col-lg-3 {
+    flex: 0 0 25% !important;
+    width: 25% !important;
+    max-width: 25% !important;
+}
+.enterprise-wrapper > .row.g-4 > .col-lg-9 {
+    flex: 0 0 75% !important;
+    width: 75% !important;
+    max-width: 75% !important;
+}
+#container-struktural-pegawai-wrapper {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: auto;
+}
+#container-struktural-pegawai-wrapper > #container-struktural-pegawai {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+#container-struktural-pegawai-wrapper .container,
+#container-struktural-pegawai-wrapper .container-fluid {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+#container-struktural-pegawai-wrapper img,
+#container-struktural-pegawai-wrapper svg,
+#container-struktural-pegawai-wrapper canvas {
+    max-width: 100%;
+}
+@media (max-width: 991.98px) {
+    .enterprise-wrapper.container { width: calc(100% - 20px) !important; }
+    .enterprise-wrapper > .row.g-4 > .col-lg-3,
+    .enterprise-wrapper > .row.g-4 > .col-lg-9 {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+    </style>
 </head>
 <body>
     <div class="container mt-4 mb-5 enterprise-wrapper">
@@ -1395,7 +1460,24 @@ HTML_TEMPLATE = """
             fetch('/get-struktural-pegawai')
                 .then(res => res.text())
                 .then(html => {
-                    document.getElementById('container-struktural-pegawai-wrapper').innerHTML = html;
+                    const wrapper = document.getElementById('container-struktural-pegawai-wrapper');
+                    wrapper.innerHTML = html;
+                    // Lindungi grid aplikasi dari CSS global yang ikut terbawa halaman struktural.
+                    wrapper.style.display = 'block';
+                    wrapper.style.width = '100%';
+                    wrapper.style.maxWidth = '100%';
+                    wrapper.style.minWidth = '0';
+                    wrapper.style.boxSizing = 'border-box';
+                    const structural = wrapper.querySelector('#container-struktural-pegawai');
+                    if (structural) {
+                        structural.style.width = '100%';
+                        structural.style.maxWidth = '100%';
+                        structural.style.minWidth = '0';
+                        structural.style.boxSizing = 'border-box';
+                    }
+                })
+                .catch(error => {
+                    console.error('Gagal memuat struktur pegawai:', error);
                 });
         });
 
