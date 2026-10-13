@@ -1342,11 +1342,14 @@ HTML_TEMPLATE = """
             subPindahLineKsbJtl.style.display = 'none';
             subMiniHydro.style.display = 'none';
 
-            if (val.includes('GARDU INDUK 70')) {
+            if (!val) return;
+
+            // Pencocokan substring yang fleksibel & teruji
+            if (val.includes('GARDU INDUK 70') || val.includes('TRIP (GARDU INDUK')) {
                 subGiCurug.style.display = 'block';
-            } else if (val.includes('JATILUHUR KE KOSAMBI')) {
+            } else if (val.includes('JATILUHUR KE KOSAMBI') || val.includes('JATILUHUR -> KOSAMBI')) {
                 subPindahLineJtlKsb.style.display = 'block';
-            } else if (val.includes('KOSAMBI KE JATILUHUR')) {
+            } else if (val.includes('KOSAMBI KE JATILUHUR') || val.includes('KOSAMBI -> JATILUHUR')) {
                 subPindahLineKsbJtl.style.display = 'block';
             } else if (val.includes('MINI HYDRO')) {
                 subMiniHydro.style.display = 'block';
@@ -1793,9 +1796,33 @@ def generate_checklist():
     else:
         story.append(Paragraph("<b>Detail Checklist Otomatis / Manuver:</b>", styles["Heading3"]))
         story.append(Spacer(1, 5))
-        story.append(Paragraph(f"Mode Otomatis terpilih untuk checklist: <b>{escape(jenis_gangguan)}</b>", body_style))
-        story.append(Spacer(1, 5))
-        story.append(Paragraph("Semua item prosedur/maneuver checklist operasional telah dicatat dan divalidasi oleh sistem.", body_style))
+        story.append(Paragraph(f"Mode Otomatis terpilih: <b>{escape(jenis_gangguan)}</b>", body_style))
+        story.append(Spacer(1, 10))
+
+        # Menangkap item form checklist otomatis yang diisi
+        form_keys = request.form.keys()
+        auto_items = []
+        for key in form_keys:
+            if key.startswith("pos_") or key.startswith("jam_") or key.startswith("paraf_") or key.startswith("ket_"):
+                val = request.form.get(key, "").strip()
+                if val:
+                    key_label = key.replace("pos_", "Posisi ").replace("jam_", "Pukul ").replace("paraf_", "Paraf ").replace("ket_", "Keterangan ")
+                    auto_items.append([Paragraph(escape(key_label), body_style), Paragraph(escape(val), body_style)])
+
+        if auto_items:
+            table_auto = [[Paragraph("<b>Item / Parameter</b>", body_style), Paragraph("<b>Nilai / Status Terisi</b>", body_style)]] + auto_items
+            t_auto = Table(table_auto, colWidths=[200, 330])
+            t_auto.setStyle(TableStyle([
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1e293b")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#cbd5e1")),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("PADDING", (0, 0), (-1, -1), 4),
+            ]))
+            story.append(t_auto)
+        else:
+            story.append(Paragraph("Semua item prosedur/maneuver checklist operasional telah divalidasi dan tercatat dalam sistem.", body_style))
 
     doc.build(story)
 
