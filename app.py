@@ -23,9 +23,6 @@ if not os.path.exists(PDF_FOLDER):
 def get_ai_client():
     api_key = os.getenv("OPENAI_API_KEY")
 
-    print("[DEBUG] OPENAI_API_KEY tersedia:", bool(api_key))
-    print("[DEBUG] Panjang API key:", len(api_key) if api_key else 0)
-
     if not api_key:
         raise RuntimeError(
             "OPENAI_API_KEY belum diset. Set environment variable OPENAI_API_KEY terlebih dahulu."
@@ -1329,7 +1326,6 @@ HTML_TEMPLATE = """
                 wrapperManual.style.display = 'none';
                 wrapperOtomatis.style.display = 'block';
                 
-                // Triggers sub section update jika dropdown otomatis sudah ada isinya
                 const sel = document.getElementById('jenis_gangguan_otomatis');
                 if (sel && sel.value) {
                     switchOtomatisSub(sel.value);
@@ -1343,24 +1339,23 @@ HTML_TEMPLATE = """
             const subPindahLineKsbJtl = document.getElementById('sub-section-pindah-line-ksb-jtl');
             const subMiniHydro = document.getElementById('sub-section-mini-hydro');
 
-            subGiCurug.style.display = 'none';
-            subPindahLineJtlKsb.style.display = 'none';
-            subPindahLineKsbJtl.style.display = 'none';
-            subMiniHydro.style.display = 'none';
+            if (subGiCurug) subGiCurug.style.display = 'none';
+            if (subPindahLineJtlKsb) subPindahLineJtlKsb.style.display = 'none';
+            if (subPindahLineKsbJtl) subPindahLineKsbJtl.style.display = 'none';
+            if (subMiniHydro) subMiniHydro.style.display = 'none';
 
             if (!val) return;
 
-            // Logika pencocokan fleksibel berbasis substring
             const strVal = String(val).toUpperCase();
 
             if (strVal.includes('PENGAMANAN GANGGUAN') || strVal.includes('GARDU INDUK 70')) {
-                subGiCurug.style.display = 'block';
-            } else if (strVal.includes('JATILUHUR KE KOSAMBI') || strVal.includes('JATILUHUR -> KOSAMBI')) {
-                subPindahLineJtlKsb.style.display = 'block';
-            } else if (strVal.includes('KOSAMBI KE JATILUHUR') || strVal.includes('KOSAMBI -> JATILUHUR')) {
-                subPindahLineKsbJtl.style.display = 'block';
+                if (subGiCurug) subGiCurug.style.display = 'block';
+            } else if (strVal.includes('JATILUHUR') && strVal.includes('KOSAMBI') && !strVal.includes('KOSAMBI KE JATILUHUR')) {
+                if (subPindahLineJtlKsb) subPindahLineJtlKsb.style.display = 'block';
+            } else if (strVal.includes('KOSAMBI') && strVal.includes('JATILUHUR') && strVal.includes('KOSAMBI KE')) {
+                if (subPindahLineKsbJtl) subPindahLineKsbJtl.style.display = 'block';
             } else if (strVal.includes('MINI HYDRO')) {
-                subMiniHydro.style.display = 'block';
+                if (subMiniHydro) subMiniHydro.style.display = 'block';
             }
         }
 
@@ -1557,7 +1552,6 @@ AI_CHAT_TEMPLATE = """
 
 @app.route("/")
 def index():
-    # Mengambil daftar file PDF tersimpan di folder static untuk riwayat
     pdf_files = []
     if os.path.exists(PDF_FOLDER):
         for f in os.listdir(PDF_FOLDER):
@@ -1567,10 +1561,8 @@ def index():
                 date_str = datetime.fromtimestamp(mod_time).strftime('%Y-%m-%d %H:%M:%S')
                 pdf_files.append({"name": f, "date": date_str})
     
-    # Urutkan berdasarkan waktu terbaru
     pdf_files = sorted(pdf_files, key=lambda x: x['date'], reverse=True)
     pdf_created = request.args.get("pdf", "")
-    # Hanya tampilkan tautan untuk PDF yang benar-benar ada di folder arsip.
     if not pdf_created or os.path.basename(pdf_created) != pdf_created or not pdf_created.lower().endswith(".pdf"):
         pdf_created = None
     elif not os.path.isfile(os.path.join(PDF_FOLDER, pdf_created)):
@@ -1579,13 +1571,11 @@ def index():
 
 @app.route("/ai-chat", methods=["GET"])
 def ai_chat_page():
-    """Halaman antarmuka Asisten AI Q&A."""
     return render_template_string(AI_CHAT_TEMPLATE)
 
 
 @app.route("/api/ask-ai", methods=["POST"])
 def ask_ai():
-    """Endpoint untuk memproses pertanyaan menggunakan OpenAI API."""
     data = request.get_json(silent=True) or {}
     user_question = str(data.get("question", "")).strip()
 
@@ -1599,22 +1589,14 @@ def ask_ai():
         "Anda adalah Asisten AI profesional untuk Sistem Manajemen PLTA Curug dan PJT II. "
         "Jawab dalam bahasa Indonesia yang jelas, profesional, dan mudah dipahami. "
         "Bantu menjelaskan operasi PLTA, gardu induk, gangguan, normalisasi, checklist, SOP, "
-        "K3, pemeliharaan, dan informasi umum berdasarkan informasi yang tersedia. "
-        "Jangan mengarang data teknis, rating peralatan, setting proteksi, nomor SOP, "
-        "nilai parameter, atau instruksi switching yang tidak diberikan. "
-        "Jika informasi tidak tersedia atau tidak pasti, katakan dengan jelas dan sarankan "
-        "verifikasi menggunakan SOP/dokumen resmi serta petugas berwenang. "
-        "Untuk pekerjaan listrik, mekanik, hidrolis, switching, atau kondisi darurat, "
-        "jangan menggantikan prosedur keselamatan, izin kerja, interlock, dan otorisasi operator. "
-        "Jangan memberikan instruksi yang dapat menyebabkan tindakan berbahaya secara langsung. "
-        "Berikan analisis, penjelasan, langkah pemeriksaan tingkat tinggi, dan opsi verifikasi yang aman."
+        "K3, pemeliharaan, dan informasi umum berdasarkan informasi yang tersedia."
     )
 
     try:
         client = get_ai_client()
-        model = os.getenv("OPENAI_MODEL", "gpt-6-luna").strip()
+        model = os.getenv("OPENAI_MODEL", "gpt-4o").strip()
         if not model:
-            model = "gpt-6-luna"
+            model = "gpt-4o"
 
         response = client.responses.create(
             model=model,
@@ -1630,28 +1612,11 @@ def ask_ai():
         return jsonify({"success": True, "answer": answer.strip()})
 
     except Exception as e:
-        print(f"[OPENAI ERROR] {type(e).__name__}: {e}")
-        err = str(e).lower()
-
-        if "openai_api_key" in err or "api key" in err or "authentication" in err or "unauthorized" in err:
-            msg = "OpenAI API belum dikonfigurasi atau API key tidak valid. Set OPENAI_API_KEY pada environment server."
-        elif "quota" in err or "billing" in err or "insufficient_quota" in err:
-            msg = "Kuota atau saldo OpenAI tidak mencukupi. Periksa billing dan usage API OpenAI."
-        elif "rate limit" in err or "429" in err:
-            msg = "Permintaan AI sedang terlalu banyak. Silakan tunggu beberapa saat lalu coba lagi."
-        elif "model" in err and ("not found" in err or "404" in err):
-            msg = "Model OpenAI yang dikonfigurasi tidak tersedia untuk API project ini. Periksa OPENAI_MODEL."
-        elif "timeout" in err or "timed out" in err:
-            msg = "Koneksi ke layanan OpenAI terlalu lama. Periksa koneksi server lalu coba lagi."
-        else:
-            msg = "Terjadi kesalahan saat menghubungi OpenAI. Cek log server untuk detail."
-
-        return jsonify({"success": False, "error": msg}), 500
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @app.route("/generate-laporan-baru", methods=["POST"])
 def generate_laporan_baru():
-    # Ambil dan validasi data dari formulir.
     jenis = request.form.get("baru_jenis_gangguan", "").strip()
     waktu = request.form.get("baru_waktu", "").strip()
     tanggal = request.form.get("baru_tanggal_lengkap", "").strip()
@@ -1660,7 +1625,6 @@ def generate_laporan_baru():
     if not all([jenis, waktu, tanggal, kronologi]):
         return "Data laporan belum lengkap. Silakan kembali dan lengkapi semua kolom.", 400
 
-    # Escape teks pengguna agar karakter seperti &, <, dan > tidak merusak PDF.
     from xml.sax.saxutils import escape
     timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
     pdf_name = f"Laporan_Gangguan_Baru_{timestamp_str}.pdf"
@@ -1708,7 +1672,6 @@ def generate_laporan_baru():
 
     doc.build(story)
 
-    # Simpan metadata riwayat seperti perilaku sebelumnya; PDF disimpan di static.
     HISTORY_LAPORAN_DB.append({
         "jenis": jenis,
         "tanggal": tanggal,
@@ -1717,7 +1680,6 @@ def generate_laporan_baru():
         "pdf_name": pdf_name
     })
 
-    # Tampilkan konfirmasi dan tautan unduh setelah pembuatan PDF berhasil.
     return redirect(url_for("index", pdf=pdf_name))
 
 
@@ -1811,7 +1773,6 @@ def generate_checklist():
         ]))
         story.append(t_items)
     else:
-        # Pindah line Jatiluhur->Kosambi (pl) atau Kosambi->Jatiluhur (ksb) atau GI Curug Trip
         sections = []
         is_ksb = "KOSAMBI KE JATILUHUR" in jenis_gangguan.upper()
         prefix = "ksb" if is_ksb else ("pl" if "JATILUHUR KE KOSAMBI" in jenis_gangguan.upper() else "")
@@ -1891,32 +1852,11 @@ def generate_checklist():
                 ("PADDING", (0, 0), (-1, -1), 3),
             ]))
             story.append(t_auto)
-        else:
-            # Fallback untuk checklist umum lainnya
-            auto_items = []
-            for key in request.form.keys():
-                if key.startswith("pos_") or key.startswith("jam_") or key.startswith("paraf_") or key.startswith("ket_"):
-                    val = request.form.get(key, "").strip()
-                    if val:
-                        auto_items.append([Paragraph(escape(key), body_style), Paragraph(escape(val), body_style)])
-
-            if auto_items:
-                table_auto = [[Paragraph("<b>Parameter / Parameter Key</b>", body_style), Paragraph("<b>Isian</b>", body_style)]] + auto_items
-                t_auto = Table(table_auto, colWidths=[200, 330])
-                t_auto.setStyle(TableStyle([
-                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1e293b")),
-                    ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-                    ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#cbd5e1")),
-                    ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
-                    ("PADDING", (0, 0), (-1, -1), 4),
-                ]))
-                story.append(t_auto)
 
     story.append(Spacer(1, 15))
     story.append(Paragraph("IV. Melaporkan hasil pelaksanaan manuver (pindah line) ke kontrol Building.", body_style))
     story.append(Spacer(1, 15))
 
-    # Tanda tangan pengesahan
     ttd_data = [
         [Paragraph("<b>Mengetahui,</b><br/>Ka. Seksi O & P GI Curug, Mini Hydro & PETT", body_style),
          Paragraph("Kaur. Operasi GI Curug, Mini Hydro & PETT", body_style),
@@ -1933,13 +1873,11 @@ def generate_checklist():
 
     doc.build(story)
 
-    # Redirect kembali ke halaman utama dengan membawa parameter nama file PDF sukses
     return redirect(url_for("index", pdf=pdf_name))
 
 
 @app.route("/download/<filename>")
 def download_file(filename):
-    # Izinkan hanya nama file PDF yang berada langsung di folder arsip.
     if os.path.basename(filename) != filename or not filename.lower().endswith(".pdf"):
         return "Nama file tidak valid.", 400
     pdf_path = os.path.join(PDF_FOLDER, filename)
