@@ -1,0 +1,8 @@
+{
+  "name": "Sistem Manajemen PLTA Curug - PJT II",
+  "description": "Platform pelaporan operasional, normalisasi gangguan, checklist teknis gardu induk, dan asisten AI terintegrasi untuk Perum Jasa Tirta II.",
+  "requestUserLocation": false,
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
