@@ -687,7 +687,7 @@ HTML_TEMPLATE = """
                                     </div>
                                 </div>
 
-                                <!-- SUB-SECTION 2: CHECK LIST PINDAH LINE (JATILUHUR -> KOSAMBI) -->
+                                <!-- SUB-SECTION 2: CHECK LIST PINDAH LINE (JATILUHUR -> KOSAMBI) [F-20/DPL/IK.12-01] -->
                                 <div id="sub-section-pindah-line-jtl-ksb" style="display: none;">
                                     <div class="alert alert-primary border-0 shadow-sm rounded-4 text-center">
                                         <b>CHECK LIST PINDAH LINE / PENGHANTAR 70 KV DARI JATILUHUR KE KOSAMBI (F-20/DPL/IK.12-01)</b>
@@ -1328,6 +1328,12 @@ HTML_TEMPLATE = """
                 otomatisSec.style.display = 'block';
                 wrapperManual.style.display = 'none';
                 wrapperOtomatis.style.display = 'block';
+                
+                // Triggers sub section update jika dropdown otomatis sudah ada isinya
+                const sel = document.getElementById('jenis_gangguan_otomatis');
+                if (sel && sel.value) {
+                    switchOtomatisSub(sel.value);
+                }
             }
         }
 
@@ -1344,14 +1350,16 @@ HTML_TEMPLATE = """
 
             if (!val) return;
 
-            // Pencocokan substring yang fleksibel & teruji
-            if (val.includes('GARDU INDUK 70') || val.includes('TRIP (GARDU INDUK')) {
+            // Logika pencocokan fleksibel berbasis substring
+            const strVal = String(val).toUpperCase();
+
+            if (strVal.includes('PENGAMANAN GANGGUAN') || strVal.includes('GARDU INDUK 70')) {
                 subGiCurug.style.display = 'block';
-            } else if (val.includes('JATILUHUR KE KOSAMBI') || val.includes('JATILUHUR -> KOSAMBI')) {
+            } else if (strVal.includes('JATILUHUR KE KOSAMBI') || strVal.includes('JATILUHUR -> KOSAMBI')) {
                 subPindahLineJtlKsb.style.display = 'block';
-            } else if (val.includes('KOSAMBI KE JATILUHUR') || val.includes('KOSAMBI -> JATILUHUR')) {
+            } else if (strVal.includes('KOSAMBI KE JATILUHUR') || strVal.includes('KOSAMBI -> JATILUHUR')) {
                 subPindahLineKsbJtl.style.display = 'block';
-            } else if (val.includes('MINI HYDRO')) {
+            } else if (strVal.includes('MINI HYDRO')) {
                 subMiniHydro.style.display = 'block';
             }
         }
@@ -1715,7 +1723,8 @@ def generate_laporan_baru():
 
 @app.route("/generate", methods=["POST"])
 def generate_checklist():
-    # Ambil data dari formulir utama checklist normalisasi
+    from xml.sax.saxutils import escape
+
     kategori = request.form.get("kategori", "").strip()
     mode = request.form.get("mode_pencatatan", "manual").strip()
     jenis_gangguan = request.form.get("jenis_gangguan_manual" if mode == "manual" else "jenis_gangguan_otomatis", "").strip()
@@ -1726,7 +1735,6 @@ def generate_checklist():
     if not kategori or not waktu:
         return "Data kategori dan waktu belum lengkap. Silakan kembali dan lengkapi formulir.", 400
 
-    from xml.sax.saxutils import escape
     timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
     pdf_name = f"Checklist_Normalisasi_{timestamp_str}.pdf"
     pdf_path = os.path.join(PDF_FOLDER, pdf_name)
@@ -1739,32 +1747,35 @@ def generate_checklist():
     story = []
 
     title_style = ParagraphStyle(
-        "TitleStyle", parent=styles["Heading1"], fontSize=13,
-        leading=16, alignment=1, textColor=colors.HexColor("#0f172a")
+        "TitleStyle", parent=styles["Heading1"], fontSize=11,
+        leading=14, alignment=1, textColor=colors.HexColor("#0f172a")
+    )
+    subtitle_style = ParagraphStyle(
+        "SubtitleStyle", parent=styles["Heading2"], fontSize=10,
+        leading=13, alignment=1, textColor=colors.HexColor("#1e293b")
     )
     body_style = ParagraphStyle(
-        "ReportBody", parent=styles["BodyText"], fontSize=9,
-        leading=12, wordWrap="CJK"
+        "ReportBody", parent=styles["BodyText"], fontSize=8,
+        leading=10, wordWrap="CJK"
     )
 
     story.append(Paragraph("<b>PERUM JASA TIRTA II</b>", title_style))
-    story.append(Paragraph("<b>FORM LAPORAN NORMALISASI &amp; CHECKLIST OPERASIONAL</b>", title_style))
-    story.append(Spacer(1, 10))
+    story.append(Paragraph(f"<b>{escape(jenis_gangguan.upper() if jenis_gangguan else 'CHECK LIST OPERASIONAL')}</b>", subtitle_style))
+    story.append(Spacer(1, 8))
 
     data_info = [
         [Paragraph("<b>Kategori / Lokasi:</b>", body_style), Paragraph(escape(kategori), body_style)],
-        [Paragraph("<b>Jenis Gangguan / Operasi:</b>", body_style), Paragraph(escape(jenis_gangguan), body_style)],
         [Paragraph("<b>Waktu Kejadian:</b>", body_style), Paragraph(escape(waktu), body_style)],
         [Paragraph("<b>Group / Tim:</b>", body_style), Paragraph(escape(nama_group), body_style)],
         [Paragraph("<b>Petugas Pelaksana:</b>", body_style), Paragraph(escape(nama_petugas), body_style)],
     ]
-    t_info = Table(data_info, colWidths=[140, 390], repeatRows=0)
+    t_info = Table(data_info, colWidths=[120, 410], repeatRows=0)
     t_info.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#f8fafc")),
-        ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#cbd5e1")),
+        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#cbd5e1")),
         ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
         ("VALIGN", (0, 0), (-1, -1), "TOP"),
-        ("PADDING", (0, 0), (-1, -1), 5),
+        ("PADDING", (0, 0), (-1, -1), 4),
     ]))
     story.append(t_info)
     story.append(Spacer(1, 10))
@@ -1774,55 +1785,151 @@ def generate_checklist():
         jams = request.form.getlist("jam_item[]")
         statuses = request.form.getlist("status_item[]")
 
-        table_data = [[Paragraph("<b>No</b>", body_style), Paragraph("<b>Jenis Penanganan</b>", body_style), Paragraph("<b>Jam</b>", body_style), Paragraph("<b>Status</b>", body_style)]]
+        table_data = [[
+            Paragraph("<b>No</b>", body_style),
+            Paragraph("<b>Jenis Penanganan / Uraian</b>", body_style),
+            Paragraph("<b>Jam / Pukul</b>", body_style),
+            Paragraph("<b>Keadaan / Status</b>", body_style)
+        ]]
         for i in range(len(penanganans)):
-            table_data.append([
-                Paragraph(str(i+1), body_style),
-                Paragraph(escape(penanganans[i]), body_style),
-                Paragraph(escape(jams[i] if i < len(jams) else ""), body_style),
-                Paragraph(escape(statuses[i] if i < len(statuses) else ""), body_style)
-            ])
+            if penanganans[i].strip():
+                table_data.append([
+                    Paragraph(str(i+1), body_style),
+                    Paragraph(escape(penanganans[i]), body_style),
+                    Paragraph(escape(jams[i] if i < len(jams) else ""), body_style),
+                    Paragraph(escape(statuses[i] if i < len(statuses) else ""), body_style)
+                ])
         
-        t_items = Table(table_data, colWidths=[30, 260, 100, 140])
+        t_items = Table(table_data, colWidths=[25, 265, 90, 150])
         t_items.setStyle(TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0f172a")),
             ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
             ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#cbd5e1")),
             ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
             ("VALIGN", (0, 0), (-1, -1), "TOP"),
-            ("PADDING", (0, 0), (-1, -1), 5),
+            ("PADDING", (0, 0), (-1, -1), 4),
         ]))
         story.append(t_items)
     else:
-        story.append(Paragraph("<b>Detail Checklist Otomatis / Manuver:</b>", styles["Heading3"]))
-        story.append(Spacer(1, 5))
-        story.append(Paragraph(f"Mode Otomatis terpilih: <b>{escape(jenis_gangguan)}</b>", body_style))
-        story.append(Spacer(1, 10))
+        # Pindah line Jatiluhur->Kosambi (pl) atau Kosambi->Jatiluhur (ksb) atau GI Curug Trip
+        sections = []
+        is_ksb = "KOSAMBI KE JATILUHUR" in jenis_gangguan.upper()
+        prefix = "ksb" if is_ksb else ("pl" if "JATILUHUR KE KOSAMBI" in jenis_gangguan.upper() else "")
 
-        # Menangkap item form checklist otomatis yang diisi
-        form_keys = request.form.keys()
-        auto_items = []
-        for key in form_keys:
-            if key.startswith("pos_") or key.startswith("jam_") or key.startswith("paraf_") or key.startswith("ket_"):
-                val = request.form.get(key, "").strip()
-                if val:
-                    key_label = key.replace("pos_", "Posisi ").replace("jam_", "Pukul ").replace("paraf_", "Paraf ").replace("ket_", "Keterangan ")
-                    auto_items.append([Paragraph(escape(key_label), body_style), Paragraph(escape(val), body_style)])
+        if prefix:
+            sec_defs = [
+                ("A. RUANG PANEL 6 KV", [
+                    ("1", "PMT/CB panel Trafo 500 KVA / Trafo I", f"pos_{prefix}_a1", f"jam_{prefix}_a1"),
+                    ("2", "PMT/CB panel Trafo 500 KVA / Trafo II", f"pos_{prefix}_a2", f"jam_{prefix}_a2"),
+                    ("3", "PMT/CB panel keluaran 6 MB2", f"pos_{prefix}_a3", f"jam_{prefix}_a3"),
+                    ("4", "PMT/CB panel masukan dari Trafo II", f"pos_{prefix}_a4", f"jam_{prefix}_a4"),
+                    ("5", "PMT/CB panel masukan dari Trafo III", f"pos_{prefix}_a5", f"jam_{prefix}_a5"),
+                ]),
+                ("B. RUANG PANEL 20 KV BUILDING", [
+                    ("1", "PMT/CB Masukan dari trafo I", f"pos_{prefix}_b1", f"jam_{prefix}_b1"),
+                    ("2", "PMT/CB Trafo I 20 / 70 KV 10 MVA", f"pos_{prefix}_b2", f"jam_{prefix}_b2"),
+                    ("3", "PMT/CB Trafo II 70 / 6,3 KV 5 MVA", f"pos_{prefix}_b3", f"jam_{prefix}_b3"),
+                    ("4", "PMT/CB Trafo III 70 / 6,3 KV 5 MVA", f"pos_{prefix}_b4", f"jam_{prefix}_b4"),
+                ]),
+                ("C. PMT JATILUHUR BAY" if not is_ksb else "C. PMT KOSAMBI BAY", [
+                    ("1", "PMT / CB 70 KV Bay", f"pos_{prefix}_c1", f"jam_{prefix}_c1"),
+                    ("2", "PMS / DS Line 70 KV Bay", f"pos_{prefix}_c2", f"jam_{prefix}_c2"),
+                    ("3", "PMS / DS Arde Line 70 KV Bay", f"pos_{prefix}_c3", f"jam_{prefix}_c3"),
+                    ("4", "PMS / DS Rel 70 KV Bay", f"pos_{prefix}_c4", f"jam_{prefix}_c4"),
+                    ("5", "PMS / DS Arde Rel 70 KV Bay", f"pos_{prefix}_c5", f"jam_{prefix}_c5"),
+                ]),
+                ("D. PMT KOSAMBI BAY" if not is_ksb else "D. PMT JATILUHUR BAY", [
+                    ("1", "PMS / DS Arde Line 70 KV Bay", f"pos_{prefix}_d1", f"jam_{prefix}_d1"),
+                    ("2", "PMS / DS Line 70 KV Bay", f"pos_{prefix}_d2", f"jam_{prefix}_d2"),
+                    ("3", "PMS / DS Arde Rel 70 KV Bay", f"pos_{prefix}_d3", f"jam_{prefix}_d3"),
+                    ("4", "PMS / DS Rel 70 KV Bay", f"pos_{prefix}_d4", f"jam_{prefix}_d4"),
+                    ("5", "PMT / CB 70 KV Bay", f"pos_{prefix}_d5", f"jam_{prefix}_d5"),
+                ]),
+                ("E. RUANG PANEL 20 KV BUILDING", [
+                    ("1", "PMT/CB Trafo I 20 / 70 KV 10 MVA", f"pos_{prefix}_e1", f"jam_{prefix}_e1"),
+                    ("2", "PMT/CB Masukan dari trafo I", f"pos_{prefix}_e2", f"jam_{prefix}_e2"),
+                    ("3", "PMT/CB Trafo II 70 / 6,3 KV 5 MVA Posisi TC", f"pos_{prefix}_e3", f"jam_{prefix}_e3"),
+                    ("4", "PMT/CB Trafo III 70 / 6,3 KV 5 MVA Posisi TC", f"pos_{prefix}_e4", f"jam_{prefix}_e4"),
+                ]),
+                ("F. RUANG PANEL 6 KV", [
+                    ("1", "PMT/CB panel masukan dari Trafo II", f"pos_{prefix}_f1", f"jam_{prefix}_f1"),
+                    ("2", "PMT/CB panel masukan dari Trafo III", f"pos_{prefix}_f2", f"jam_{prefix}_f2"),
+                    ("3", "PMT/CB panel Trafo 500 KVA / Trafo I", f"pos_{prefix}_f3", f"jam_{prefix}_f3"),
+                    ("4", "PMT/CB panel Trafo 500 KVA / Trafo II", f"pos_{prefix}_f4", f"jam_{prefix}_f4"),
+                    ("5", "PMT/CB panel keluaran 6 MB2", f"pos_{prefix}_f5", f"jam_{prefix}_f5"),
+                ])
+            ]
 
-        if auto_items:
-            table_auto = [[Paragraph("<b>Item / Parameter</b>", body_style), Paragraph("<b>Nilai / Status Terisi</b>", body_style)]] + auto_items
-            t_auto = Table(table_auto, colWidths=[200, 330])
+            table_data = [[
+                Paragraph("<b>No</b>", body_style),
+                Paragraph("<b>Uraian</b>", body_style),
+                Paragraph("<b>Keadaan/Posisi</b>", body_style),
+                Paragraph("<b>Pukul</b>", body_style)
+            ]]
+
+            for sec_title, items in sec_defs:
+                table_data.append([Paragraph(f"<b>{escape(sec_title)}</b>", body_style), "", "", ""])
+                for no, uraian, pos_key, jam_key in items:
+                    pos_val = request.form.get(pos_key, "")
+                    jam_val = request.form.get(jam_key, "")
+                    table_data.append([
+                        Paragraph(no, body_style),
+                        Paragraph(escape(uraian), body_style),
+                        Paragraph(escape(pos_val), body_style),
+                        Paragraph(escape(jam_val), body_style)
+                    ])
+
+            t_auto = Table(table_data, colWidths=[30, 280, 130, 90])
             t_auto.setStyle(TableStyle([
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1e293b")),
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0f172a")),
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("SPAN", (0, 1), (-1, 1)),
+                ("BACKGROUND", (0, 1), (-1, 1), colors.HexColor("#f1f5f9")),
                 ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#cbd5e1")),
-                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
-                ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                ("PADDING", (0, 0), (-1, -1), 4),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#cbd5e1")),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("PADDING", (0, 0), (-1, -1), 3),
             ]))
             story.append(t_auto)
         else:
-            story.append(Paragraph("Semua item prosedur/maneuver checklist operasional telah divalidasi dan tercatat dalam sistem.", body_style))
+            # Fallback untuk checklist umum lainnya
+            auto_items = []
+            for key in request.form.keys():
+                if key.startswith("pos_") or key.startswith("jam_") or key.startswith("paraf_") or key.startswith("ket_"):
+                    val = request.form.get(key, "").strip()
+                    if val:
+                        auto_items.append([Paragraph(escape(key), body_style), Paragraph(escape(val), body_style)])
+
+            if auto_items:
+                table_auto = [[Paragraph("<b>Parameter / Parameter Key</b>", body_style), Paragraph("<b>Isian</b>", body_style)]] + auto_items
+                t_auto = Table(table_auto, colWidths=[200, 330])
+                t_auto.setStyle(TableStyle([
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1e293b")),
+                    ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                    ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#cbd5e1")),
+                    ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
+                    ("PADDING", (0, 0), (-1, -1), 4),
+                ]))
+                story.append(t_auto)
+
+    story.append(Spacer(1, 15))
+    story.append(Paragraph("IV. Melaporkan hasil pelaksanaan manuver (pindah line) ke kontrol Building.", body_style))
+    story.append(Spacer(1, 15))
+
+    # Tanda tangan pengesahan
+    ttd_data = [
+        [Paragraph("<b>Mengetahui,</b><br/>Ka. Seksi O & P GI Curug, Mini Hydro & PETT", body_style),
+         Paragraph("Kaur. Operasi GI Curug, Mini Hydro & PETT", body_style),
+         Paragraph("<b>Curug, ....................</b><br/>Yang melaksanakan", body_style)],
+        [Spacer(1, 25), Spacer(1, 25), Spacer(1, 25)],
+        [Paragraph("NIK. ....................", body_style), Paragraph("NIK. ....................", body_style), Paragraph("NIK. ....................", body_style)]
+    ]
+    t_ttd = Table(ttd_data, colWidths=[180, 180, 170])
+    t_ttd.setStyle(TableStyle([
+        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+    ]))
+    story.append(t_ttd)
 
     doc.build(story)
 
