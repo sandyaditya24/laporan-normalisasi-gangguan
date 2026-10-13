@@ -6,6 +6,7 @@ import { HistoryGangguan } from './components/HistoryGangguan';
 import { SejarahCurug } from './components/SejarahCurug';
 import { StrukturalPegawai } from './components/StrukturalPegawai';
 import { FaqSection } from './components/FaqSection';
+import { EdukasiVideoOperasional } from './components/EdukasiVideoOperasional';
 import { ChecklistForm } from './components/ChecklistForm';
 import { AiAssistantModal } from './components/AiAssistantModal';
 import { LaporanBaru, ChecklistArchive } from './types';
@@ -156,6 +157,8 @@ export const App: React.FC = () => {
         return 'Struktural Pegawai';
       case 'faq':
         return 'Pusat Info & FAQ PJT II';
+      case 'edukasi-video':
+        return 'Edukasi & Video Panduan';
       default:
         return 'Beranda Sistem Operasi';
     }
@@ -293,6 +296,14 @@ export const App: React.FC = () => {
             </button>
             <button
               type="button"
+              className={`btn btn-sm rounded-pill text-nowrap px-3 ${activeMenu === 'edukasi-video' ? 'btn-danger text-white shadow-xs' : 'btn-white bg-white text-secondary border'}`}
+              onClick={() => { setActiveMenu('edukasi-video'); setMobileMenuOpen(false); }}
+              style={{ fontSize: '0.78rem' }}
+            >
+              <i className="fa-solid fa-circle-play me-1.5 text-danger"></i> Video Panduan
+            </button>
+            <button
+              type="button"
               className="btn btn-sm rounded-pill text-nowrap px-3 btn-dark text-cyan-300"
               onClick={() => { setAiModalOpen(true); setMobileMenuOpen(false); }}
               style={{ fontSize: '0.78rem' }}
@@ -371,6 +382,10 @@ export const App: React.FC = () => {
             <FaqSection onClose={() => setActiveMenu(null)} />
           )}
 
+          {activeMenu === 'edukasi-video' && (
+            <EdukasiVideoOperasional onClose={() => setActiveMenu(null)} />
+          )}
+
           {activeMenu === 'form' && (
             <ChecklistForm
               onSaveChecklist={handleSaveChecklist}
@@ -385,7 +400,7 @@ export const App: React.FC = () => {
               <i className="fa-solid fa-bolt-lightning text-primary fs-1 mb-3"></i>
               <h4 className="fw-bold text-dark">Sistem Manajemen PLTA Curug</h4>
               <p className="text-muted max-w-md mx-auto mb-4">
-                Silakan pilih menu di atas atau di samping untuk membuat laporan gangguan, membuka form checklist normalisasi, meninjau sejarah, atau berkonsultasi dengan asisten AI operasional.
+                Silakan pilih menu di atas atau di samping untuk membuat laporan gangguan, membuka form checklist normalisasi, menonton video edukasi panduan operasional, meninjau sejarah, atau berkonsultasi dengan asisten AI operasional.
               </p>
               <div className="d-flex flex-wrap justify-content-center gap-2">
                 <button
@@ -394,6 +409,13 @@ export const App: React.FC = () => {
                   onClick={() => setActiveMenu('form')}
                 >
                   <i className="fa-solid fa-clipboard-list me-2"></i> Buka Form Checklist
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline-danger px-4 py-2.5 rounded-pill shadow-xs"
+                  onClick={() => setActiveMenu('edukasi-video')}
+                >
+                  <i className="fa-solid fa-circle-play me-2"></i> Edukasi &amp; Video Panduan
                 </button>
                 <button
                   type="button"

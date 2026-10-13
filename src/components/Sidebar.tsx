@@ -7,6 +7,7 @@ export type ActiveMenu =
   | 'sejarah'
   | 'struktural-pegawai'
   | 'faq'
+  | 'edukasi-video'
   | null;
 
 export const SOP_OPTIONS_DATA = [
@@ -266,7 +267,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <span className="text-start">Pusat Informasi &amp; Pengetahuan PJT II</span>
           </button>
 
-          {/* 6. Asisten AI Operasional */}
+          {/* 6. Edukasi Animasi & Video Panduan PLTA Curug */}
+          <button
+            type="button"
+            className={`btn menu-btn ${activeMenu === 'edukasi-video' ? 'active' : ''}`}
+            onClick={() => handleMenuSelect('edukasi-video')}
+          >
+            <i className="fa-solid fa-circle-play fa-fw text-danger fs-6"></i>
+            <span className="text-start flex-grow-1">Edukasi Animasi &amp; Video PLTA</span>
+            <span className="badge bg-danger-subtle text-danger border border-danger-subtle px-1.5 py-0.5 rounded-pill small" style={{ fontSize: '0.68rem' }}>
+              Video 4K
+            </span>
+          </button>
+
+          {/* 7. Asisten AI Operasional */}
           <button
             type="button"
             className="btn menu-btn border-primary-subtle"
