@@ -258,7 +258,16 @@ HTML_TEMPLATE = """
 </head>
 <body>
     <div class="container mt-4 mb-5 enterprise-wrapper">
-        
+        {% if pdf_created %}
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <strong><i class="fa-solid fa-circle-check me-2"></i>Laporan berhasil disimpan dan PDF berhasil dibuat.</strong>
+            <div class="mt-2">
+                <a class="btn btn-sm btn-success me-2" href="{{ url_for('download_file', filename=pdf_created) }}"><i class="fa-solid fa-download me-1"></i> Unduh PDF Laporan</a>
+                <button type="button" class="btn btn-sm btn-outline-success" onclick="pilihMenu('history-gangguan')">Lihat Riwayat Gangguan</button>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
+        </div>
+        {% endif %}
         <!-- HEADER UTAMA -->
         <div class="row justify-content-center mb-4">
             <div class="col-md-12">
@@ -1549,7 +1558,13 @@ def index():
     
     # Urutkan berdasarkan waktu terbaru
     pdf_files = sorted(pdf_files, key=lambda x: x['date'], reverse=True)
-    return render_template_string(HTML_TEMPLATE, pdf_files=pdf_files, history_laporan_baru=HISTORY_LAPORAN_DB)
+    pdf_created = request.args.get("pdf", "")
+    # Hanya tampilkan tautan untuk PDF yang benar-benar ada di folder arsip.
+    if not pdf_created or os.path.basename(pdf_created) != pdf_created or not pdf_created.lower().endswith(".pdf"):
+        pdf_created = None
+    elif not os.path.isfile(os.path.join(PDF_FOLDER, pdf_created)):
+        pdf_created = None
+    return render_template_string(HTML_TEMPLATE, pdf_files=pdf_files, history_laporan_baru=HISTORY_LAPORAN_DB, pdf_created=pdf_created)
 
 @app.route("/ai-chat", methods=["GET"])
 def ai_chat_page():
@@ -1625,54 +1640,64 @@ def ask_ai():
 
 @app.route("/generate-laporan-baru", methods=["POST"])
 def generate_laporan_baru():
-    jenis = request.form.get("baru_jenis_gangguan")
-    waktu = request.form.get("baru_waktu")
-    tanggal = request.form.get("baru_tanggal_lengkap")
-    kronologi = request.form.get("baru_kronologi")
-    
-    timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # Ambil dan validasi data dari formulir.
+    jenis = request.form.get("baru_jenis_gangguan", "").strip()
+    waktu = request.form.get("baru_waktu", "").strip()
+    tanggal = request.form.get("baru_tanggal_lengkap", "").strip()
+    kronologi = request.form.get("baru_kronologi", "").strip()
+
+    if not all([jenis, waktu, tanggal, kronologi]):
+        return "Data laporan belum lengkap. Silakan kembali dan lengkapi semua kolom.", 400
+
+    # Escape teks pengguna agar karakter seperti &, <, dan > tidak merusak PDF.
+    from xml.sax.saxutils import escape
+    timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
     pdf_name = f"Laporan_Gangguan_Baru_{timestamp_str}.pdf"
     pdf_path = os.path.join(PDF_FOLDER, pdf_name)
-    
-    doc = SimpleDocTemplate(pdf_path, pagesize=letter, rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36)
+
+    doc = SimpleDocTemplate(
+        pdf_path, pagesize=letter,
+        rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36
+    )
     styles = getSampleStyleSheet()
     story = []
-    
+
     title_style = ParagraphStyle(
-        'TitleStyle',
-        parent=styles['Heading1'],
-        fontSize=14,
-        leading=18,
-        alignment=1,
-        textColor=colors.HexColor('#0f172a')
+        "TitleStyle", parent=styles["Heading1"], fontSize=14,
+        leading=18, alignment=1, textColor=colors.HexColor("#0f172a")
     )
-    
+    body_style = ParagraphStyle(
+        "ReportBody", parent=styles["BodyText"], fontSize=10,
+        leading=14, wordWrap="CJK"
+    )
+
     story.append(Paragraph("<b>PERUM JASA TIRTA II</b>", title_style))
-    story.append(Paragraph("<b>LAPORAN GANGGUAN OPERASIONAL & KRONOLOGI</b>", title_style))
+    story.append(Paragraph("<b>LAPORAN GANGGUAN OPERASIONAL &amp; KRONOLOGI</b>", title_style))
     story.append(Spacer(1, 15))
-    
+
     data_info = [
-        [Paragraph("<b>Jenis Gangguan:</b>", styles['Normal']), Paragraph(jenis, styles['Normal'])],
-        [Paragraph("<b>Tanggal Kejadian:</b>", styles['Normal']), Paragraph(tanggal, styles['Normal'])],
-        [Paragraph("<b>Waktu (Jam):</b>", styles['Normal']), Paragraph(waktu, styles['Normal'])],
+        [Paragraph("<b>Jenis Gangguan:</b>", body_style), Paragraph(escape(jenis), body_style)],
+        [Paragraph("<b>Tanggal Kejadian:</b>", body_style), Paragraph(escape(tanggal), body_style)],
+        [Paragraph("<b>Waktu (Jam):</b>", body_style), Paragraph(escape(waktu), body_style)],
     ]
-    t_info = Table(data_info, colWidths=[120, 420])
+    t_info = Table(data_info, colWidths=[120, 420], repeatRows=0)
     t_info.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#f8fafc')),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#cbd5e1')),
-        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#e2e8f0')),
-        ('VALIGN', (0,0), (-1,-1), 'TOP'),
-        ('PADDING', (0,0), (-1,-1), 6),
+        ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#f8fafc")),
+        ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#cbd5e1")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("PADDING", (0, 0), (-1, -1), 6),
     ]))
     story.append(t_info)
     story.append(Spacer(1, 15))
-    
-    story.append(Paragraph("<b>Kronologi Kejadian:</b>", styles['Heading3']))
+    story.append(Paragraph("<b>Kronologi Kejadian:</b>", styles["Heading3"]))
     story.append(Spacer(1, 5))
-    story.append(Paragraph(kronologi.replace('\n', '<br/>'), styles['Normal']))
-    
+    safe_kronologi = escape(kronologi).replace("\r\n", "\n").replace("\n", "<br/>")
+    story.append(Paragraph(safe_kronologi, body_style))
+
     doc.build(story)
-    
+
+    # Simpan metadata riwayat seperti perilaku sebelumnya; PDF disimpan di static.
     HISTORY_LAPORAN_DB.append({
         "jenis": jenis,
         "tanggal": tanggal,
@@ -1680,12 +1705,19 @@ def generate_laporan_baru():
         "kronologi": kronologi,
         "pdf_name": pdf_name
     })
-    
-    return redirect(url_for('index'))
+
+    # Tampilkan konfirmasi dan tautan unduh setelah pembuatan PDF berhasil.
+    return redirect(url_for("index", pdf=pdf_name))
 
 @app.route("/download/<filename>")
 def download_file(filename):
-    return send_file(os.path.join(PDF_FOLDER, filename), as_attachment=True)
+    # Izinkan hanya nama file PDF yang berada langsung di folder arsip.
+    if os.path.basename(filename) != filename or not filename.lower().endswith(".pdf"):
+        return "Nama file tidak valid.", 400
+    pdf_path = os.path.join(PDF_FOLDER, filename)
+    if not os.path.isfile(pdf_path):
+        return "File PDF tidak ditemukan.", 404
+    return send_file(pdf_path, as_attachment=True, download_name=filename)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
