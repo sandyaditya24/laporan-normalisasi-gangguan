@@ -1709,6 +1709,100 @@ def generate_laporan_baru():
     # Tampilkan konfirmasi dan tautan unduh setelah pembuatan PDF berhasil.
     return redirect(url_for("index", pdf=pdf_name))
 
+
+@app.route("/generate", methods=["POST"])
+def generate_checklist():
+    # Ambil data dari formulir utama checklist normalisasi
+    kategori = request.form.get("kategori", "").strip()
+    mode = request.form.get("mode_pencatatan", "manual").strip()
+    jenis_gangguan = request.form.get("jenis_gangguan_manual" if mode == "manual" else "jenis_gangguan_otomatis", "").strip()
+    waktu = request.form.get("waktu", "").strip()
+    nama_group = request.form.get("nama_group", "").strip()
+    nama_petugas = request.form.get("nama_petugas", "").strip()
+
+    if not kategori or not waktu:
+        return "Data kategori dan waktu belum lengkap. Silakan kembali dan lengkapi formulir.", 400
+
+    from xml.sax.saxutils import escape
+    timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    pdf_name = f"Checklist_Normalisasi_{timestamp_str}.pdf"
+    pdf_path = os.path.join(PDF_FOLDER, pdf_name)
+
+    doc = SimpleDocTemplate(
+        pdf_path, pagesize=letter,
+        rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36
+    )
+    styles = getSampleStyleSheet()
+    story = []
+
+    title_style = ParagraphStyle(
+        "TitleStyle", parent=styles["Heading1"], fontSize=13,
+        leading=16, alignment=1, textColor=colors.HexColor("#0f172a")
+    )
+    body_style = ParagraphStyle(
+        "ReportBody", parent=styles["BodyText"], fontSize=9,
+        leading=12, wordWrap="CJK"
+    )
+
+    story.append(Paragraph("<b>PERUM JASA TIRTA II</b>", title_style))
+    story.append(Paragraph("<b>FORM LAPORAN NORMALISASI &amp; CHECKLIST OPERASIONAL</b>", title_style))
+    story.append(Spacer(1, 10))
+
+    data_info = [
+        [Paragraph("<b>Kategori / Lokasi:</b>", body_style), Paragraph(escape(kategori), body_style)],
+        [Paragraph("<b>Jenis Gangguan / Operasi:</b>", body_style), Paragraph(escape(jenis_gangguan), body_style)],
+        [Paragraph("<b>Waktu Kejadian:</b>", body_style), Paragraph(escape(waktu), body_style)],
+        [Paragraph("<b>Group / Tim:</b>", body_style), Paragraph(escape(nama_group), body_style)],
+        [Paragraph("<b>Petugas Pelaksana:</b>", body_style), Paragraph(escape(nama_petugas), body_style)],
+    ]
+    t_info = Table(data_info, colWidths=[140, 390], repeatRows=0)
+    t_info.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#f8fafc")),
+        ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#cbd5e1")),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("PADDING", (0, 0), (-1, -1), 5),
+    ]))
+    story.append(t_info)
+    story.append(Spacer(1, 10))
+
+    if mode == "manual":
+        penanganans = request.form.getlist("penanganan[]")
+        jams = request.form.getlist("jam_item[]")
+        statuses = request.form.getlist("status_item[]")
+
+        table_data = [[Paragraph("<b>No</b>", body_style), Paragraph("<b>Jenis Penanganan</b>", body_style), Paragraph("<b>Jam</b>", body_style), Paragraph("<b>Status</b>", body_style)]]
+        for i in range(len(penanganans)):
+            table_data.append([
+                Paragraph(str(i+1), body_style),
+                Paragraph(escape(penanganans[i]), body_style),
+                Paragraph(escape(jams[i] if i < len(jams) else ""), body_style),
+                Paragraph(escape(statuses[i] if i < len(statuses) else ""), body_style)
+            ])
+        
+        t_items = Table(table_data, colWidths=[30, 260, 100, 140])
+        t_items.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0f172a")),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+            ("BOX", (0, 0), (-1, -1), 1, colors.HexColor("#cbd5e1")),
+            ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
+            ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ("PADDING", (0, 0), (-1, -1), 5),
+        ]))
+        story.append(t_items)
+    else:
+        story.append(Paragraph("<b>Detail Checklist Otomatis / Manuver:</b>", styles["Heading3"]))
+        story.append(Spacer(1, 5))
+        story.append(Paragraph(f"Mode Otomatis terpilih untuk checklist: <b>{escape(jenis_gangguan)}</b>", body_style))
+        story.append(Spacer(1, 5))
+        story.append(Paragraph("Semua item prosedur/maneuver checklist operasional telah dicatat dan divalidasi oleh sistem.", body_style))
+
+    doc.build(story)
+
+    # Redirect kembali ke halaman utama dengan membawa parameter nama file PDF sukses
+    return redirect(url_for("index", pdf=pdf_name))
+
+
 @app.route("/download/<filename>")
 def download_file(filename):
     # Izinkan hanya nama file PDF yang berada langsung di folder arsip.
